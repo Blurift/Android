@@ -1,6 +1,7 @@
 package com.game;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.game.managers.GameManager;
 
 /**
@@ -10,7 +11,8 @@ public class Main implements ApplicationListener {
     private GameManager gameManager;
 
     @Override
-    public void create() {
+    public void create()
+    {
         gameManager = new GameManager();
     }
 
@@ -21,7 +23,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render() {
-
+        gameManager.Render();
     }
 
     @Override
