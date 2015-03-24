@@ -3,6 +3,7 @@ package com.game.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.game.controllers.CharacterController;
 
 /**
@@ -14,6 +15,9 @@ public class GameManager {
 
     private CharacterController mainPlayer;
     private MapManager mapManager;
+
+    private SpriteBatch sb;
+
 
     public GameManager()
     {
