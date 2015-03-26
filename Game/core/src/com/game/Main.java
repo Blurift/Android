@@ -9,7 +9,6 @@ import com.game.screenManager.ScreenManager;
  * Created by Keirron on 22/03/2015.
  */
 public class Main implements ApplicationListener {
-    private GameManager gameManager;
     private ScreenManager screenManager;
 
     @Override
@@ -42,6 +41,6 @@ public class Main implements ApplicationListener {
 
     @Override
     public void dispose() {
-
+        screenManager.Dispose();
     }
 }

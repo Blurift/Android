@@ -16,9 +16,11 @@ public class ScreenManager {
 
     public void Render()
     {
-        for (int i = 0; i < screens.size(); i++)
+        for (int i = screens.size()-1; i >= 0; i--)
         {
+            screens.get(i).Update();
             screens.get(i).Render();
+
         }
     }
 
