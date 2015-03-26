@@ -7,17 +7,17 @@ public class Screen {
     public boolean removeScreen = false;
 
 
-    public void Update()
+    public void update()
     {
 
     }
 
-    public void Render()
+    public void render()
     {
 
     }
 
-    public void Dispose()
+    public void dispose()
     {
 
     }
