@@ -18,15 +18,9 @@ public class ScreenManager {
     {
         for (int i = screens.size()-1; i >= 0; i--)
         {
-<<<<<<< HEAD
             Screen s = screens.get(i);
-            s.Update();
-            s.Render();
-=======
-            screens.get(i).update();
-            screens.get(i).render();
->>>>>>> Sean
-
+            s.update();
+            s.render();
             if(s.removeScreen)
                 screens.remove(s);
         }
