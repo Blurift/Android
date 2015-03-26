@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.game.controllers.CharacterController;
 
 /**
@@ -15,6 +16,8 @@ public class GameManager {
 
     private CharacterController mainPlayer;
     private MapManager mapManager;
+    private UIManager uiManager;
+
 
     private SpriteBatch sb;
 
@@ -28,19 +31,32 @@ public class GameManager {
         camera.setToOrtho(false, w/3,h/3);
         camera.update();
 
-        mainPlayer = new CharacterController();
-        mapManager = new MapManager(camera, "");
+        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
+        mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
+
+        mapManager.addObject(mainPlayer.getMapObject());
     }
 
-    public void Render()
+    public void render()
     {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
 
+        float delta = Gdx.graphics.getDeltaTime();
+
         uiCamera.update();
         camera.update();
 
+        mapManager.render();
+        uiManager.render();
 
-        mapManager.Render();
+        mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
+        mainPlayer.update(delta);
+    }
+
+    public void dispose(){
+        mainPlayer.dispose();
+        uiManager.dispose();
+        mapManager.dispose();
     }
 }

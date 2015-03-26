@@ -23,7 +23,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render() {
-        gameManager.Render();
+        gameManager.render();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Main implements ApplicationListener {
     }
 
     @Override
-    public void dispose() {
-
+    public void dispose( ) {
+        gameManager.dispose();
     }
 }
