@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.game.controllers.CharacterController;
+import com.game.screenManager.Screen;
 
 /**
  * Created by Keirron on 22/03/2015.
  */
-public class GameManager {
+public class GameManager extends Screen {
     private OrthographicCamera uiCamera;
     private OrthographicCamera camera;
 
@@ -31,6 +32,7 @@ public class GameManager {
         camera.setToOrtho(false, w/3,h/3);
         camera.update();
 
+<<<<<<< HEAD
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
 
@@ -38,6 +40,14 @@ public class GameManager {
     }
 
     public void render()
+=======
+        mainPlayer = new CharacterController("", Vector2.Zero);
+        mapManager = new MapManager(camera, "");
+    }
+
+    @Override
+    public void Render()
+>>>>>>> parent of a5431bc... Revert "Screen Manager Incorporated"
     {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
@@ -58,5 +68,10 @@ public class GameManager {
         mainPlayer.dispose();
         uiManager.dispose();
         mapManager.dispose();
+    }
+
+    @Override
+    public void Dispose()
+    {
     }
 }
