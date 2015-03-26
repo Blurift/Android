@@ -4,14 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.game.controllers.CharacterController;
-import com.game.screenManager.Screen;
 
 /**
  * Created by Keirron on 22/03/2015.
  */
-public class GameManager extends Screen {
+public class GameManager {
     private OrthographicCamera uiCamera;
     private OrthographicCamera camera;
 
@@ -30,11 +28,10 @@ public class GameManager extends Screen {
         camera.setToOrtho(false, w/3,h/3);
         camera.update();
 
-        mainPlayer = new CharacterController("", Vector2.Zero);
+        mainPlayer = new CharacterController();
         mapManager = new MapManager(camera, "");
     }
 
-    @Override
     public void Render()
     {
         Gdx.gl.glClearColor(1,1,1,1);
@@ -45,10 +42,5 @@ public class GameManager extends Screen {
 
 
         mapManager.Render();
-    }
-
-    @Override
-    public void Dispose()
-    {
     }
 }

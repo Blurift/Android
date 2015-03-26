@@ -22,14 +22,6 @@ public class ScreenManager {
         }
     }
 
-    public void Dispose()
-    {
-        for (int i = 0; i < screens.size(); i++)
-        {
-            screens.get(i).Dispose();
-        }
-    }
-
     ///Manipulation
     public void AddScreen(Screen screen)
     {
