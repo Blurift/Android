@@ -15,7 +15,6 @@ import java.util.List;
  * Created by Keirron on 22/03/2015.
  */
 public class MapManager {
-
     private OrthographicCamera camera;
 
     //Tiled map
@@ -32,12 +31,16 @@ public class MapManager {
 
         tiledMap = new TmxMapLoader().load(mapName);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+
+
+
         objectLayer = tiledMap.getLayers().get("objects");
         collisionLayer = tiledMap.getLayers().get("collisions");
     }
 
     public void render()
     {
+        tiledMapRenderer.setView(camera); // TODO can probably move this to create method
         tiledMapRenderer.render();
     }
 

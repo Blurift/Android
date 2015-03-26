@@ -31,7 +31,9 @@ public class UIManager{
 
         //Set up Stage
         stage = new Stage();
-        //stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+        //Set up camera
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
         //Set UI Skins
         skin = new Skin(Gdx.files.internal("UI/uiskin.json"));
@@ -52,7 +54,7 @@ public class UIManager{
         //Touchpad
         touchpadSkin = new Skin();
         touchpadSkin.add("touchBackground", new Texture("UI/touchpad/touchBackground.png"));
-        touchpadSkin.add("touchKnob", new Texture("UI/touchpadtouchKnob.png"));
+        touchpadSkin.add("touchKnob", new Texture("UI/touchpad/touchKnob.png"));
         touchpadStyle = new Touchpad.TouchpadStyle();
         touchBackground = touchpadSkin.getDrawable("touchBackground");
         touchKnob = touchpadSkin.getDrawable("touchKnob");

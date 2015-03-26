@@ -12,7 +12,6 @@ import com.game.screenManager.Screen;
  * Created by Keirron on 22/03/2015.
  */
 public class GameManager extends Screen {
-    private OrthographicCamera uiCamera;
     private OrthographicCamera camera;
 
     private CharacterController mainPlayer;
@@ -47,14 +46,17 @@ public class GameManager extends Screen {
 
         float delta = Gdx.graphics.getDeltaTime();
 
-        uiCamera.update();
         camera.update();
-
         mapManager.render();
         uiManager.render();
 
         mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
         mainPlayer.update(delta);
+
+        //Camera follow player
+        float defaultCamX = mainPlayer.getMapObject().getX() + (mainPlayer.getMapObject().getTextureRegion().getRegionWidth() / 2);
+        float defaultCamY = mainPlayer.getMapObject().getY() + (mainPlayer.getMapObject().getTextureRegion().getRegionHeight() / 2);
+        camera.position.set(defaultCamX, defaultCamY, 0);
     }
 
     @Override
