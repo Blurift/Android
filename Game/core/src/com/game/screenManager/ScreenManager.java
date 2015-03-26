@@ -18,9 +18,12 @@ public class ScreenManager {
     {
         for (int i = screens.size()-1; i >= 0; i--)
         {
-            screens.get(i).Update();
-            screens.get(i).Render();
+            Screen s = screens.get(i);
+            s.Update();
+            s.Render();
 
+            if(s.removeScreen)
+                screens.remove(s);
         }
     }
 
