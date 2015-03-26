@@ -6,17 +6,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.game.controllers.CharacterController;
-import com.game.screenManager.Screen;
 
 /**
  * Created by Keirron on 22/03/2015.
  */
-public class GameManager extends Screen {
+public class GameManager {
     private OrthographicCamera uiCamera;
     private OrthographicCamera camera;
 
     private CharacterController mainPlayer;
     private MapManager mapManager;
+    private UIManager uiManager;
+
 
     private SpriteBatch sb;
 
@@ -30,25 +31,32 @@ public class GameManager extends Screen {
         camera.setToOrtho(false, w/3,h/3);
         camera.update();
 
-        mainPlayer = new CharacterController("", Vector2.Zero);
-        mapManager = new MapManager(camera, "");
+        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
+        mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
+
+        mapManager.addObject(mainPlayer.getMapObject());
     }
 
-    @Override
-    public void Render()
+    public void render()
     {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
 
+        float delta = Gdx.graphics.getDeltaTime();
+
         uiCamera.update();
         camera.update();
 
+        mapManager.render();
+        uiManager.render();
 
-        mapManager.Render();
+        mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
+        mainPlayer.update(delta);
     }
 
-    @Override
-    public void Dispose()
-    {
+    public void dispose(){
+        mainPlayer.dispose();
+        uiManager.dispose();
+        mapManager.dispose();
     }
 }
