@@ -3,17 +3,20 @@ package com.game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.game.managers.GameManager;
+import com.game.screenManager.ScreenManager;
 
 /**
  * Created by Keirron on 22/03/2015.
  */
 public class Main implements ApplicationListener {
     private GameManager gameManager;
+    private ScreenManager screenManager;
 
     @Override
     public void create()
     {
-        gameManager = new GameManager();
+        screenManager = new ScreenManager();
+        screenManager.AddScreen(new GameManager());
     }
 
     @Override
@@ -23,7 +26,8 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render() {
-        gameManager.Render();
+        screenManager.Render();
+
     }
 
     @Override
