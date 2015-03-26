@@ -34,12 +34,13 @@ public class GameManager extends Screen {
 
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
+        uiManager = new UIManager();
 
         mapManager.addObject(mainPlayer.getMapObject());
     }
 
     @Override
-    public void Render()
+    public void render()
     {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
@@ -57,7 +58,7 @@ public class GameManager extends Screen {
     }
 
     @Override
-    public void Dispose()
+    public void dispose()
     {
         mainPlayer.dispose();
         uiManager.dispose();

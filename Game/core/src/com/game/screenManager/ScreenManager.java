@@ -14,29 +14,34 @@ public class ScreenManager {
 
     }
 
-    public void Render()
+    public void render()
     {
         for (int i = screens.size()-1; i >= 0; i--)
         {
+<<<<<<< HEAD
             Screen s = screens.get(i);
             s.Update();
             s.Render();
+=======
+            screens.get(i).update();
+            screens.get(i).render();
+>>>>>>> Sean
 
             if(s.removeScreen)
                 screens.remove(s);
         }
     }
 
-    public void Dispose()
+    public void dispose()
     {
         for (int i = 0; i < screens.size(); i++)
         {
-            screens.get(i).Dispose();
+            screens.get(i).dispose();
         }
     }
 
     ///Manipulation
-    public void AddScreen(Screen screen)
+    public void addScreen(Screen screen)
     {
         if(!screens.contains(screen))
         {
@@ -44,7 +49,7 @@ public class ScreenManager {
         }
     }
 
-    public void RemoveScreen(Screen screen)
+    public void removeScreen(Screen screen)
     {
         if(screens.contains(screen))
         {

@@ -15,7 +15,7 @@ public class Main implements ApplicationListener {
     public void create()
     {
         screenManager = new ScreenManager();
-        screenManager.AddScreen(new GameManager());
+        screenManager.addScreen(new GameManager());
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render() {
-        screenManager.Render();
+        screenManager.render();
 
     }
 
@@ -41,6 +41,6 @@ public class Main implements ApplicationListener {
 
     @Override
     public void dispose() {
-        screenManager.Dispose();
+        screenManager.dispose();
     }
 }
