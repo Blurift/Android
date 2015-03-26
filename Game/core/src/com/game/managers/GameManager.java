@@ -32,22 +32,14 @@ public class GameManager extends Screen {
         camera.setToOrtho(false, w/3,h/3);
         camera.update();
 
-<<<<<<< HEAD
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
 
         mapManager.addObject(mainPlayer.getMapObject());
     }
 
-    public void render()
-=======
-        mainPlayer = new CharacterController("", Vector2.Zero);
-        mapManager = new MapManager(camera, "");
-    }
-
     @Override
     public void Render()
->>>>>>> parent of a5431bc... Revert "Screen Manager Incorporated"
     {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
@@ -64,14 +56,11 @@ public class GameManager extends Screen {
         mainPlayer.update(delta);
     }
 
-    public void dispose(){
-        mainPlayer.dispose();
-        uiManager.dispose();
-        mapManager.dispose();
-    }
-
     @Override
     public void Dispose()
     {
+        mainPlayer.dispose();
+        uiManager.dispose();
+        mapManager.dispose();
     }
 }

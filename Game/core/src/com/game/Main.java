@@ -9,10 +9,6 @@ import com.game.screenManager.ScreenManager;
  * Created by Keirron on 22/03/2015.
  */
 public class Main implements ApplicationListener {
-<<<<<<< HEAD
-=======
-    private GameManager gameManager;
->>>>>>> parent of a5431bc... Revert "Screen Manager Incorporated"
     private ScreenManager screenManager;
 
     @Override
