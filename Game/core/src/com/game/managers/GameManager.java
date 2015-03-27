@@ -28,14 +28,14 @@ public class GameManager extends Screen {
         float h = Gdx.graphics.getHeight();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, w/3,h/3);
+        camera.setToOrtho(false, w/3,h/3); // TODO the /3 makes it bigger, there is a better way to do this...
         camera.update();
 
-        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(50, 50));
+        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(500, 500));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
         uiManager = new UIManager();
 
-        mapManager.addObject(mainPlayer.getMapObject());
+        mapManager.addObject(mainPlayer.getSprite());
     }
 
     @Override
@@ -54,8 +54,8 @@ public class GameManager extends Screen {
         mainPlayer.update(delta);
 
         //Camera follow player
-        float defaultCamX = mainPlayer.getMapObject().getX() + (mainPlayer.getMapObject().getTextureRegion().getRegionWidth() / 2);
-        float defaultCamY = mainPlayer.getMapObject().getY() + (mainPlayer.getMapObject().getTextureRegion().getRegionHeight() / 2);
+        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
+        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
         camera.position.set(defaultCamX, defaultCamY, 0);
     }
 

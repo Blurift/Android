@@ -40,7 +40,7 @@ public class UIManager{
 
         //Cast Spell Button
         castSpellBtn = new TextButton("Cast Spell",skin);
-        castSpellBtn.setPosition(200, 100);
+        castSpellBtn.setPosition(Gdx.graphics.getWidth()-200, 100);
         castSpellBtn.setScale(5, 5);
         castSpellBtn.addListener(new ClickListener() {
             @Override
@@ -68,6 +68,9 @@ public class UIManager{
         //Add components to stage
         stage.addActor(castSpellBtn);
         stage.addActor(touchpad);
+
+        //Set the input as this stage
+        Gdx.input.setInputProcessor(stage);
     }
 
     public float getKnobPercentY(){
