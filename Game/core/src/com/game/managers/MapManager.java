@@ -54,7 +54,7 @@ public class MapManager {
     }
 
     //Finding the object layer and rendering sprites on it
-    private void renderTileMap(){
+    private void renderTileMap(){ // TODO Render objects by Lowest to Hightest Y
         for(int i = 0; i < tiledMap.getLayers().getCount(); i++){
             tiledMapRenderer.render(new int[]{i});
             if(tiledMap.getLayers().get(i).equals(objectLayer)){

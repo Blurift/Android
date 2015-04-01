@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.game.UI.UIManager;
 import com.game.controllers.CharacterController;
 import com.game.screenManager.Screen;
 
@@ -50,7 +51,7 @@ public class GameManager extends Screen {
         mapManager.render();
         uiManager.render();
 
-        mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
+        //mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
         mainPlayer.update(delta);
 
         //Camera follow player

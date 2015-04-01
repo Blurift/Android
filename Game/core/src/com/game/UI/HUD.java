@@ -1,4 +1,4 @@
-package com.game.managers;
+package com.game.UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,13 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
- * Created by Keirron on 22/03/2015.
+ * Created by Sean on 1/04/2015.
+ *
+ * Allows moving the player through a touch pad, going to options menu and going to casting menu.
+ *
+ * TODO Needs to give the PLAYER CLASS knob coordinates
+ *
  */
-public class UIManager{
+public class HUD{
 
     private Stage stage;
-
-    private Skin skin;
 
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -27,29 +30,19 @@ public class UIManager{
 
     private TextButton castSpellBtn;
 
-    public UIManager(){ // TODO Screen width/height inputs to size the interace correctly
+    public HUD(final UIManager ui, Stage stage, Skin skin){
+        this.stage = stage;
 
-        //Set up Stage
-        stage = new Stage();
-
-        //Set up camera
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
-        //Set UI Skins
-        skin = new Skin(Gdx.files.internal("UI/uiskin.json"));
-
-        //Cast Spell Button
-        castSpellBtn = new TextButton("Cast Spell",skin);
+        castSpellBtn = new TextButton("SpellCasting", skin);
         castSpellBtn.setPosition(Gdx.graphics.getWidth()-200, 100);
         castSpellBtn.setScale(5, 5);
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO direct to spellcasting class
-
+                clear();
+                ui.activateSpellCasting();
             }
         });
-
 
         //Touchpad
         touchpadSkin = new Skin();
@@ -65,9 +58,7 @@ public class UIManager{
         touchpad.setBounds(15, 15, 200, 200);
         touchpad.setPosition(100,100);
 
-        //Add components to stage
-        stage.addActor(castSpellBtn);
-        stage.addActor(touchpad);
+
 
         //Set the input as this stage
         Gdx.input.setInputProcessor(stage);
@@ -81,15 +72,20 @@ public class UIManager{
         return touchpad.getKnobPercentX();
     }
 
-    public void render(){
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+
+    //Fills UIMananger stage with hud compnents
+    public void fill(){
+        stage.addActor(castSpellBtn);
+        stage.addActor(touchpad);
+    }
+
+    //CLears UIManager stage of hud components
+    public void clear(){
+        touchpad.remove();
+        castSpellBtn.remove();
     }
 
     public void dispose(){
-        stage.dispose();
-        skin.dispose();
         touchpadSkin.dispose();
     }
-
 }
