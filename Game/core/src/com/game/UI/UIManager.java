@@ -3,6 +3,7 @@ package com.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.game.managers.FilterManager;
 
 /**
  * Created by Keirron on 22/03/2015.
@@ -24,7 +25,7 @@ public class UIManager{
     private SpellCasting spellCasting;
     private SpellBook spellBook;
 
-    public UIManager() { // TODO Screen width/height inputs to size the interace correctly
+    public UIManager(FilterManager filterManager) { // TODO Screen width/height inputs to size the interace correctly
 
         //Set up Stage
         stage = new Stage();
@@ -40,7 +41,7 @@ public class UIManager{
 
         //Create screens
         hud = new HUD(this, stage, skin);
-        spellCasting = new SpellCasting(this, stage, skin);
+        spellCasting = new SpellCasting(this, stage, skin, filterManager);
         spellBook = new SpellBook(this, stage, skin);
 
         //Set default to HUD
@@ -48,6 +49,11 @@ public class UIManager{
 
         //Set default screen
 
+    }
+
+    //For where the knob is
+    public HUD getHUD(){
+        return hud;
     }
 
     //Actiate sets active screen to revelent screen
@@ -64,6 +70,7 @@ public class UIManager{
     }
 
     public void render(){
+        spellCasting.render();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

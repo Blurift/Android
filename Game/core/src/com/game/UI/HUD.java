@@ -1,6 +1,7 @@
 package com.game.UI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.game.managers.FilterManager;
 
 /**
  * Created by Sean on 1/04/2015.
@@ -32,6 +34,7 @@ public class HUD{
 
     public HUD(final UIManager ui, Stage stage, Skin skin){
         this.stage = stage;
+
 
         castSpellBtn = new TextButton("SpellCasting", skin);
         castSpellBtn.setPosition(Gdx.graphics.getWidth()-200, 100);
@@ -77,6 +80,7 @@ public class HUD{
     public void fill(){
         stage.addActor(castSpellBtn);
         stage.addActor(touchpad);
+
     }
 
     //CLears UIManager stage of hud components

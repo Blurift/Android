@@ -18,7 +18,7 @@ public class GameManager extends Screen {
     private CharacterController mainPlayer;
     private MapManager mapManager;
     private UIManager uiManager;
-
+    private FilterManager filterManager;
 
     private SpriteBatch sb;
 
@@ -34,7 +34,9 @@ public class GameManager extends Screen {
 
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(500, 500));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
-        uiManager = new UIManager();
+        filterManager = new FilterManager();
+        uiManager = new UIManager(filterManager);
+
 
         mapManager.addObject(mainPlayer.getSprite());
     }
@@ -48,10 +50,17 @@ public class GameManager extends Screen {
         float delta = Gdx.graphics.getDeltaTime();
 
         camera.update();
+
+        //Render Mao
         mapManager.render();
+
+        //Render Filters
+        filterManager.render();
+
+        //Render UI
         uiManager.render();
 
-        //mainPlayer.updateVelocity(uiManager.getKnobPercentX(), uiManager.getKnobPercentY());
+        mainPlayer.updateVelocity(uiManager.getHUD().getKnobPercentX(), uiManager.getHUD().getKnobPercentY());
         mainPlayer.update(delta);
 
         //Camera follow player
