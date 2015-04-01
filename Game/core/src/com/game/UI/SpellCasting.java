@@ -31,6 +31,7 @@ public class SpellCasting{
     private SpellDrawing spellDrawing;
 
     //Line drawing
+    private final static float LINE_SIZE = 10f; // TODO change on resolution
     private Vector2 lineStart; //Start of a line in the middle of being drawn
     private Vector2 lineEnd; //If the player has started drawing, this is where their finger is
 
@@ -123,10 +124,10 @@ public class SpellCasting{
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(new Color(255, 255, 255, 1));
             for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
-                shapeRenderer.rectLine(edge.p1, edge.p2, 5f);
+                shapeRenderer.rectLine(edge.p1, edge.p2, LINE_SIZE);
             }
             if (lineStart != null && lineEnd != null) {
-                shapeRenderer.rectLine(lineStart, lineEnd, 5f);
+                shapeRenderer.rectLine(lineStart, lineEnd, LINE_SIZE);
 //
             }
             shapeRenderer.end();
