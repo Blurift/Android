@@ -20,7 +20,7 @@ public class Projectile{
         private Sprite projSprite;
         private Vector2 direction;
 
-        private static final float PROJECTILE_SPEED = 60;
+        private static final float PROJECTILE_SPEED = 1;
 
         /**
          * Bullet constructor. Just initialize variables.
@@ -42,7 +42,7 @@ public class Projectile{
             // update bullet position
             position.add(direction.x*delta*PROJECTILE_SPEED, direction.y*delta*PROJECTILE_SPEED);
             projSprite.setPosition(position.x, position.y);
-
+            Gdx.app.log("BulPos", position.toString());
         }
 
         public Sprite getSprite() {

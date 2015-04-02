@@ -54,6 +54,8 @@ public class SpellAiming {
                         ui.getGameManager().getPlayer().getPosition(),
                         new Vector2(screenX, 1080 - screenY));
                 clear();
+                Gdx.app.log("Bul From", ui.getGameManager().getPlayer().getPosition().toString());
+                Gdx.app.log("Bul To", new Vector2(screenX, 1080 - screenY).toString());
                 ui.activateHUD();
                 return true;
             }
