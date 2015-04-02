@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.game.managers.FilterManager;
+import com.game.managers.GameManager;
 
 /**
  * Created by Keirron on 22/03/2015.
@@ -24,8 +25,11 @@ public class UIManager{
     private HUD hud;
     private SpellCasting spellCasting;
     private SpellBook spellBook;
+    private SpellAiming spellAiming;
+    private GameManager gm;
 
-    public UIManager(FilterManager filterManager) { // TODO Screen width/height inputs to size the interace correctly
+    public UIManager(GameManager gm) { // TODO Screen width/height inputs to size the interace correctly
+        this.gm = gm;
 
         //Set up Stage
         stage = new Stage();
@@ -41,8 +45,9 @@ public class UIManager{
 
         //Create screens
         hud = new HUD(this, stage, skin);
-        spellCasting = new SpellCasting(this, stage, skin, filterManager);
+        spellCasting = new SpellCasting(this, stage, skin, gm.getFilterManager());
         spellBook = new SpellBook(this, stage, skin);
+        spellAiming = new SpellAiming(this, stage, skin);
 
         //Set default to HUD
         hud.fill();
@@ -59,6 +64,10 @@ public class UIManager{
     //Actiate sets active screen to revelent screen
     public void activateSpellCasting(){
         spellCasting.fill();
+    }
+
+    public void activateSpellAiming(){
+        spellAiming.fill();
     }
 
     public void activateHUD(){
@@ -79,6 +88,10 @@ public class UIManager{
         stage.dispose();
         skin.dispose();
         hud.dispose();
+    }
+
+    public GameManager getGameManager(){
+        return gm;
     }
 
 }

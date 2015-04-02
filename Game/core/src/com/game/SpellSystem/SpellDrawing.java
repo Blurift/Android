@@ -1,4 +1,4 @@
-package com.game.UI;
+package com.game.SpellSystem;
 
 import com.badlogic.gdx.math.Vector2;
 

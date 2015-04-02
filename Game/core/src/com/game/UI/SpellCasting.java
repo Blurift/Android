@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.game.SpellSystem.SpellDrawing;
 import com.game.managers.FilterManager;
 
 /**
@@ -96,7 +97,7 @@ public class SpellCasting{
         if(spellDrawing.getEdges().size() == 3){
             clear();
             spellDrawing.clearEdges();
-            ui.activateHUD();
+            ui.activateSpellAiming();
         }
 
     }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.game.SpellSystem.Projectile;
+import com.game.SpellSystem.ProjectileManager;
 import com.game.UI.UIManager;
 import com.game.controllers.CharacterController;
 import com.game.screenManager.Screen;
@@ -19,6 +21,7 @@ public class GameManager extends Screen {
     private MapManager mapManager;
     private UIManager uiManager;
     private FilterManager filterManager;
+    private ProjectileManager projectileManager;
 
     private SpriteBatch sb;
 
@@ -35,10 +38,11 @@ public class GameManager extends Screen {
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(500, 500));
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
         filterManager = new FilterManager();
-        uiManager = new UIManager(filterManager);
+        uiManager = new UIManager(this);
+        projectileManager = new ProjectileManager();
 
+        //Add objects to sprite
 
-        mapManager.addObject(mainPlayer.getSprite());
     }
 
     @Override
@@ -47,11 +51,19 @@ public class GameManager extends Screen {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
 
+        mapManager.clearObjects();
+        mapManager.addObject(mainPlayer.getSprite());
+        for(Projectile projectile : projectileManager.getProjectiles()){
+            mapManager.addObject(projectile.getSprite());
+        }
+
+        projectileManager.update();
+
         float delta = Gdx.graphics.getDeltaTime();
 
         camera.update();
 
-        //Render Mao
+        //Render Map
         mapManager.render();
 
         //Render Filters
@@ -67,6 +79,18 @@ public class GameManager extends Screen {
         float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
         float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
         camera.position.set(defaultCamX, defaultCamY, 0);
+    }
+
+    public ProjectileManager getProjectileManager(){
+        return projectileManager;
+    }
+
+    public FilterManager getFilterManager(){
+        return filterManager;
+    }
+
+    public CharacterController getPlayer(){
+        return mainPlayer;
     }
 
     @Override

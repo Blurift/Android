@@ -78,6 +78,10 @@ public class MapManager {
         objectList.add(obj);
     }
 
+    public void clearObjects(){
+        objectList.clear();
+    }
+
     //Remove the objecting being rendered,
     public void removeObject(TextureMapObject obj){
         objectLayer.getObjects().remove(obj);
