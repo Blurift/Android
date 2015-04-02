@@ -20,7 +20,7 @@ import com.game.managers.FilterManager;
  * TODO Needs to give the PLAYER CLASS knob coordinates
  *
  */
-public class HUD{
+public class HUD implements IUIScreen{
 
     private Stage stage;
 
@@ -42,8 +42,7 @@ public class HUD{
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clear();
-                ui.activateSpellCasting();
+                ui.activateUIScreen(ui.getSpellCasting());
             }
         });
 
@@ -88,6 +87,8 @@ public class HUD{
         touchpad.remove();
         castSpellBtn.remove();
     }
+
+    public void render(){};
 
     public void dispose(){
         touchpadSkin.dispose();

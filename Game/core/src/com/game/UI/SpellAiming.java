@@ -20,7 +20,7 @@ import com.game.managers.FilterManager;
  * TODO remove player ink
  *
  */
-public class SpellAiming {
+public class SpellAiming implements IUIScreen{
     private Stage stage;
     private UIManager ui;
 
@@ -41,8 +41,7 @@ public class SpellAiming {
         cancelBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clear();
-                ui.activateHUD();
+                ui.activateUIScreen(ui.getHUD());
             }
         });
         multiplexer.addProcessor(stage);
@@ -53,10 +52,9 @@ public class SpellAiming {
                 ui.getGameManager().getProjectileManager().shootProjectile(
                         ui.getGameManager().getPlayer().getPosition(),
                         new Vector2(screenX, 1080 - screenY));
-                clear();
                 Gdx.app.log("Bul From", ui.getGameManager().getPlayer().getPosition().toString());
                 Gdx.app.log("Bul To", new Vector2(screenX, 1080 - screenY).toString());
-                ui.activateHUD();
+                ui.activateUIScreen(ui.getHUD());
                 return true;
             }
         });
@@ -78,6 +76,10 @@ public class SpellAiming {
         isActive = false;
         cancelBtn.remove();
         Gdx.input.setInputProcessor(stage);
+    }
+
+    public void render() {
+
     }
 
 }

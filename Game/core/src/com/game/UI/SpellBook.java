@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 /**
  * Created by Sean on 1/04/2015.
  */
-public class SpellBook{
+public class SpellBook implements IUIScreen{
     private Stage stage;
 
     private TextButton cancelBtn;
@@ -25,22 +25,21 @@ public class SpellBook{
         cancelBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clear();
-                ui.activateSpellCasting();
+                ui.activateUIScreen(ui.getSpellCasting());
             }
         });
 
 
     }
 
-    //Fills UIManager stage with SpellBook components
     public void fill(){
         stage.addActor(cancelBtn);
     }
 
-    //Clears UI Managers stage of spellbook components
     public void clear(){
         cancelBtn.remove();
     }
+
+    public void render(){};
 
 }

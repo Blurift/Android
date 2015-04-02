@@ -23,7 +23,7 @@ public class GameManager extends Screen {
     private FilterManager filterManager;
     private ProjectileManager projectileManager;
 
-    private SpriteBatch sb;
+    private float gameSpeed = 1;
 
 
     public GameManager()
@@ -35,7 +35,11 @@ public class GameManager extends Screen {
         camera.setToOrtho(false, w/3,h/3); // TODO the /3 makes it bigger, there is a better way to do this...
         camera.update();
 
+        //Create Main Player
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(500, 500));
+
+        //Intantiate Managers
+
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
         filterManager = new FilterManager();
         uiManager = new UIManager(this);
@@ -48,9 +52,12 @@ public class GameManager extends Screen {
     @Override
     public void render()
     {
-        Gdx.gl.glClearColor(1,1,1,1);
-        Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
 
+        float delta = Gdx.graphics.getDeltaTime() * gameSpeed;
+
+        /**
+         * Updates
+          */
         mapManager.clearObjects();
         mapManager.addObject(mainPlayer.getSprite());
         for(Projectile projectile : projectileManager.getProjectiles()){
@@ -59,10 +66,23 @@ public class GameManager extends Screen {
 
         projectileManager.update();
 
-        float delta = Gdx.graphics.getDeltaTime();
 
+
+
+        mainPlayer.updateVelocity(uiManager.getHUD().getKnobPercentX(), uiManager.getHUD().getKnobPercentY());
+        mainPlayer.update(delta);
+
+        //Camera follow player
+        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
+        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
+        camera.position.set(defaultCamX, defaultCamY, 0);
         camera.update();
 
+        /**
+         * Render
+         */
+        Gdx.gl.glClearColor(1,1,1,1);
+        Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
         //Render Map
         mapManager.render();
 
@@ -72,15 +92,12 @@ public class GameManager extends Screen {
         //Render UI
         uiManager.render();
 
-        mainPlayer.updateVelocity(uiManager.getHUD().getKnobPercentX(), uiManager.getHUD().getKnobPercentY());
-        mainPlayer.update(delta);
-
-        //Camera follow player
-        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
-        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
-        camera.position.set(defaultCamX, defaultCamY, 0);
     }
 
+
+    /**
+     * Getters
+     */
     public ProjectileManager getProjectileManager(){
         return projectileManager;
     }
@@ -92,6 +109,10 @@ public class GameManager extends Screen {
     public CharacterController getPlayer(){
         return mainPlayer;
     }
+
+    /**
+     * Setters
+     */
 
     @Override
     public void dispose()

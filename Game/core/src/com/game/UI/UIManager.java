@@ -3,7 +3,6 @@ package com.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.game.managers.FilterManager;
 import com.game.managers.GameManager;
 
 /**
@@ -28,6 +27,8 @@ public class UIManager{
     private SpellAiming spellAiming;
     private GameManager gm;
 
+    private IUIScreen currentUIScreen;
+
     public UIManager(GameManager gm) { // TODO Screen width/height inputs to size the interace correctly
         this.gm = gm;
 
@@ -49,37 +50,45 @@ public class UIManager{
         spellBook = new SpellBook(this, stage, skin);
         spellAiming = new SpellAiming(this, stage, skin);
 
-        //Set default to HUD
+        //Set default screen to HUD
+        currentUIScreen = hud;
         hud.fill();
 
         //Set default screen
 
     }
 
-    //For where the knob is
+    //Getters
+
+    public GameManager getGameManager(){
+        return gm;
+    }
+
     public HUD getHUD(){
         return hud;
     }
 
-    //Actiate sets active screen to revelent screen
-    public void activateSpellCasting(){
-        spellCasting.fill();
+    public SpellCasting getSpellCasting(){
+        return spellCasting;
     }
 
-    public void activateSpellAiming(){
-        spellAiming.fill();
+    public SpellBook getSpellBook(){
+        return spellBook;
     }
 
-    public void activateHUD(){
-        hud.fill();
+    public SpellAiming getSpellAiming(){
+        return spellAiming;
     }
 
-    public void activateSpellBook(){
-        spellBook.fill();
+
+    public void activateUIScreen(IUIScreen toActivate){
+        currentUIScreen.clear();
+        currentUIScreen = toActivate;
+        currentUIScreen.fill();
     }
 
     public void render(){
-        spellCasting.render();
+        currentUIScreen.render();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
@@ -88,10 +97,6 @@ public class UIManager{
         stage.dispose();
         skin.dispose();
         hud.dispose();
-    }
-
-    public GameManager getGameManager(){
-        return gm;
     }
 
 }

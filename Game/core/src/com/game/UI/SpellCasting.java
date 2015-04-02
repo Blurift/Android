@@ -17,7 +17,7 @@ import com.game.managers.FilterManager;
 /**
  * Created by Sean on 1/04/2015.
  */
-public class SpellCasting{
+public class SpellCasting implements IUIScreen{
     private Stage stage;
     private FilterManager filterManager;
     private UIManager ui;
@@ -48,9 +48,8 @@ public class SpellCasting{
         cancelBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clear();
                 spellDrawing.clearEdges();
-                ui.activateHUD();
+                ui.activateUIScreen(ui.getHUD());
             }
         });
 
@@ -60,8 +59,7 @@ public class SpellCasting{
         spellBookBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                clear();
-                ui.activateSpellBook();
+                ui.activateUIScreen(ui.getSpellBook());
             }
         });
 
@@ -95,9 +93,8 @@ public class SpellCasting{
 
     private void spellCheck(){
         if(spellDrawing.getEdges().size() == 3){
-            clear();
             spellDrawing.clearEdges();
-            ui.activateSpellAiming();
+            ui.activateUIScreen(ui.getSpellAiming());
         }
 
     }
@@ -118,7 +115,8 @@ public class SpellCasting{
     }
 
     public void render(){
-        if(isActive) {
+
+        //Render drawn lines
             ShapeRenderer shapeRenderer = new ShapeRenderer();
 
             shapeRenderer.setAutoShapeType(true);
@@ -129,10 +127,8 @@ public class SpellCasting{
             }
             if (lineStart != null && lineEnd != null) {
                 shapeRenderer.rectLine(lineStart, lineEnd, LINE_SIZE);
-//
             }
             shapeRenderer.end();
-        }
     }
 
     //Clears UIManager stage of spellcasting screen components
