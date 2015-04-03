@@ -14,9 +14,8 @@ public class CharacterController {
     private float movementX = 0;
     private float movementY = 0;
 
-    private float moveSpeed = 100f; //Working out how to scale this to meters instead of pixels
+    private float moveSpeed = 6f; //Working out how to scale this to meters instead of pixels
 
-    // TODO http://blog.xoppa.com/pixels/ Think in meters, not scale... not sure how to implement for position
     private Vector2 pos;
 
     private Texture texture;
@@ -31,6 +30,7 @@ public class CharacterController {
         texture = new Texture(Gdx.files.internal(spriteName));
         currentRegion = new TextureRegion(texture);
         charSprite = new Sprite(currentRegion);
+        charSprite.setSize(2f, 2f);
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
 
