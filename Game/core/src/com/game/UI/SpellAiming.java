@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -51,9 +52,7 @@ public class SpellAiming implements IUIScreen{
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 ui.getGameManager().getProjectileManager().shootProjectile(
                         ui.getGameManager().getPlayer().getPosition(),
-                        new Vector2(screenX, 1080 - screenY));
-                Gdx.app.log("Bul From", ui.getGameManager().getPlayer().getPosition().toString());
-                Gdx.app.log("Bul To", new Vector2(screenX, 1080 - screenY).toString());
+                        new Vector3(screenX, screenY, 0));
                 ui.activateUIScreen(ui.getHUD());
                 return true;
             }

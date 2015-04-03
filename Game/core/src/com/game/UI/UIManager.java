@@ -29,6 +29,9 @@ public class UIManager{
 
     private IUIScreen currentUIScreen;
 
+    //Margin around screen
+    private float margin = 0.10f;
+
     public UIManager(GameManager gm) { // TODO Screen width/height inputs to size the interace correctly
         this.gm = gm;
 
@@ -37,7 +40,7 @@ public class UIManager{
 
         //Set up camera
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-
+        stage.getViewport().setWorldSize(gm.getVIRTUAL_WIDTH(), gm.getVIRTUAL_HEIGHT());
         //Set UI Skins
         skin = new Skin(Gdx.files.internal("UI/uiskin.json"));
 

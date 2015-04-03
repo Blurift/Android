@@ -58,7 +58,8 @@ public class HUD implements IUIScreen{
         touchpadStyle.knob = touchKnob;
         touchpad = new Touchpad(10, touchpadStyle);
         touchpad.setBounds(15, 15, 200, 200);
-        touchpad.setPosition(100,100);
+        //touchpad.setSize(5f,5f);
+        touchpad.setPosition(5f,5f);
 
 
 

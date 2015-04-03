@@ -2,6 +2,8 @@ package com.game.SpellSystem;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.game.managers.GameManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,16 +16,18 @@ import java.util.List;
  */
 public class ProjectileManager {
     private List<Projectile> projectiles;
-
-    public ProjectileManager(){
+    private GameManager gm;
+    public ProjectileManager(GameManager gm){
         projectiles = new LinkedList<Projectile>();
+        this.gm = gm;
     }
 
-    public void shootProjectile(Vector2 from, Vector2 to){
+    public void shootProjectile(Vector2 from, Vector3 screenLoc){
+        Vector3 unproject = gm.getCamera().unproject(screenLoc);
+        Vector2 to = new Vector2(unproject.x, unproject.y);
         Vector2 direction = to.sub(from);
-        Projectile projectile = new Projectile(from.x, from.y, direction);
+        Projectile projectile = new Projectile(from.x, from.y, direction.nor());
         projectiles.add(projectile);
-        Gdx.app.log("MyTag", "my informative message");
     }
 
     public void update(){

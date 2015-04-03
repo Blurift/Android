@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -37,7 +38,7 @@ public class SpellCasting implements IUIScreen{
     private Vector2 lineEnd; //If the player has started drawing, this is where their finger is
 
 
-    public SpellCasting(final UIManager ui, Stage stage, Skin skin, FilterManager filterManager){
+    public SpellCasting(final UIManager ui, final Stage stage, Skin skin, FilterManager filterManager){
         this.stage = stage;
         this.filterManager = filterManager;
         this.ui = ui;
@@ -68,14 +69,16 @@ public class SpellCasting implements IUIScreen{
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new InputAdapter() {
             @Override
-            public boolean touchDown (int x, int y, int pointer, int button) {
-                    lineStart = new Vector2(x, 1080 - y);
+            public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+                Vector2 clickCoordinates = new Vector2(screenX,screenY);
+                lineStart = stage.getViewport().unproject(clickCoordinates);
                 return true;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                spellDrawing.addEdge(lineStart, new Vector2(screenX, 1080 - screenY));
+                Vector2 clickCoordinates = new Vector2(screenX,screenY);
+                spellDrawing.addEdge(lineStart, stage.getViewport().unproject(clickCoordinates));
                     lineStart = null;
                     lineEnd = null;
                 spellCheck();
@@ -83,7 +86,8 @@ public class SpellCasting implements IUIScreen{
             }
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                    lineEnd = new Vector2(screenX, 1080 - screenY);
+                Vector2 clickCoordinates = new Vector2(screenX,screenY);
+                lineEnd = stage.getViewport().unproject(clickCoordinates);
                 return true;
             }
         });

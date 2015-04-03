@@ -16,7 +16,8 @@ import com.game.screenManager.Screen;
  */
 public class GameManager extends Screen {
     private OrthographicCamera camera;
-
+    private float VIRTUAL_HEIGHT = 11;
+    private float VIRTUAL_WIDTH;
     private CharacterController mainPlayer;
     private MapManager mapManager;
     private UIManager uiManager;
@@ -28,22 +29,24 @@ public class GameManager extends Screen {
 
     public GameManager()
     {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+
+        VIRTUAL_WIDTH = VIRTUAL_HEIGHT * width / height;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, w/3,h/3); // TODO the /3 makes it bigger, there is a better way to do this...
+        camera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         camera.update();
 
         //Create Main Player
-        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(500, 500));
+        mainPlayer = new CharacterController("testCharacter.png" , new Vector2(5, 5));
 
         //Intantiate Managers
 
         mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
         filterManager = new FilterManager();
         uiManager = new UIManager(this);
-        projectileManager = new ProjectileManager();
+        projectileManager = new ProjectileManager(this);
 
         //Add objects to sprite
 
@@ -108,6 +111,18 @@ public class GameManager extends Screen {
 
     public CharacterController getPlayer(){
         return mainPlayer;
+    }
+
+    public OrthographicCamera getCamera(){
+        return camera;
+    }
+
+    public float getVIRTUAL_HEIGHT(){
+        return VIRTUAL_HEIGHT;
+    }
+
+    public float getVIRTUAL_WIDTH(){
+        return VIRTUAL_WIDTH;
     }
 
     /**

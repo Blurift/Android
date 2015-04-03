@@ -39,7 +39,7 @@ public class MapManager {
         this.camera = camera;
 
         tiledMap = new TmxMapLoader().load(mapName);
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / 32f);
 
         objectList = new ArrayList<Sprite>();
 
