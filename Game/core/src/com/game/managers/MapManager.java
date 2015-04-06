@@ -6,11 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +31,13 @@ public class MapManager {
 
     //Layers
     private MapLayer objectLayer; //Objects like player, monster, items
-    private MapLayer collisionLayer; //Layer containing collisions boxes
 
     //Objects List
     private List<Sprite> objectList;
 
     private SpriteBatch sb = new SpriteBatch();
 
-    public MapManager(OrthographicCamera camera, String mapName)
+    public MapManager(GameManager gm, OrthographicCamera camera, String mapName)
     {
         this.camera = camera;
 
@@ -44,7 +47,19 @@ public class MapManager {
         objectList = new ArrayList<Sprite>();
 
         objectLayer = tiledMap.getLayers().get("objects");
-        collisionLayer = tiledMap.getLayers().get("collisions");
+
+        TiledMapTileLayer collisionObjectLayer =
+                (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
+        MapObjects objects = collisionObjectLayer.getObjects();
+
+// there are several other types, Rectangle is probably the most common one
+        for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
+
+            Rectangle rectangle = rectangleObject.getRectangle();
+            if (Intersector.overlaps(rectangle, gm.getPlayer().getCollision())) {
+                // collision ha
+            }
+        }
     }
 
     public void render()
@@ -80,6 +95,11 @@ public class MapManager {
 
     public void clearObjects(){
         objectList.clear();
+    }
+
+    //getters
+    public TiledMap getTiledMap(){
+        return tiledMap;
     }
 
     //Remove the objecting being rendered,

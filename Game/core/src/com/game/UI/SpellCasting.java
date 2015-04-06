@@ -78,9 +78,10 @@ public class SpellCasting implements IUIScreen{
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 Vector2 clickCoordinates = new Vector2(screenX,screenY);
-                spellDrawing.addEdge(lineStart, stage.getViewport().unproject(clickCoordinates));
-                    lineStart = null;
-                    lineEnd = null;
+                if(lineStart!= null && lineEnd !=  null)
+                    spellDrawing.addEdge(lineStart, stage.getViewport().unproject(clickCoordinates));
+                lineStart = null;
+                lineEnd = null;
                 spellCheck();
                 return true;
             }

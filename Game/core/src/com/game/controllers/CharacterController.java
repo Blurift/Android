@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.math.Vector2;
+
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by Keirron on 22/03/2015.
@@ -22,6 +23,9 @@ public class CharacterController {
     private TextureRegion currentRegion; //used for later animation
     private Sprite charSprite;
 
+    private Rectangle collision;
+
+
     public CharacterController(String spriteName, Vector2 startPos)
     {
 
@@ -33,7 +37,7 @@ public class CharacterController {
         charSprite.setSize(2f, 2f);
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
-
+        Rectangle collision = new Rectangle(pos.x, pos.y, 2f, 1f);
     }
 
     //Getters
@@ -51,6 +55,8 @@ public class CharacterController {
         pos.y = + pos.y + movementY * delta;
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
+        collision.setX(pos.x);
+        collision.setY(pos.y);
     }
 
     //Updates the velocity from touchpad widget
@@ -62,4 +68,10 @@ public class CharacterController {
     public void dispose(){
         texture.dispose();
     }
+
+    //Getters
+    public Rectangle getCollision(){
+        return collision;
+    }
+
 }

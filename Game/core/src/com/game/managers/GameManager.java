@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.game.SpellSystem.Projectile;
 import com.game.SpellSystem.ProjectileManager;
 import com.game.UI.UIManager;
+import com.game.controllers.AIController;
 import com.game.controllers.CharacterController;
 import com.game.screenManager.Screen;
 
@@ -23,17 +24,21 @@ public class GameManager extends Screen {
     private UIManager uiManager;
     private FilterManager filterManager;
     private ProjectileManager projectileManager;
+    private AIManager aiManager;
 
     private float gameSpeed = 1;
 
 
     public GameManager()
     {
+
+        //Get virtual dimensions of game
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
         VIRTUAL_WIDTH = VIRTUAL_HEIGHT * width / height;
 
+        //Set up game camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         camera.update();
@@ -42,13 +47,11 @@ public class GameManager extends Screen {
         mainPlayer = new CharacterController("testCharacter.png" , new Vector2(5, 5));
 
         //Intantiate Managers
-
-        mapManager = new MapManager(camera, "map/MyCrappyMap.tmx");
+        mapManager = new MapManager(this, camera, "map/MyCrappyMap.tmx");
         filterManager = new FilterManager();
         uiManager = new UIManager(this);
         projectileManager = new ProjectileManager(this);
-
-        //Add objects to sprite
+        aiManager = new AIManager(this);
 
     }
 
@@ -66,7 +69,9 @@ public class GameManager extends Screen {
         for(Projectile projectile : projectileManager.getProjectiles()){
             mapManager.addObject(projectile.getSprite());
         }
-
+        for(AIController ai : aiManager.getEnemies()){
+            mapManager.addObject(ai.getSprite());
+        }
         projectileManager.update();
 
 
@@ -108,6 +113,8 @@ public class GameManager extends Screen {
     public FilterManager getFilterManager(){
         return filterManager;
     }
+
+    public MapManager getMapManager() { return mapManager; }
 
     public CharacterController getPlayer(){
         return mainPlayer;

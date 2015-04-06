@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="15">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
   <image source="image.png" width="512" height="512"/>
+  <tile id="222">
+   <properties>
+    <property name="Spawn" value="1"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Tile Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0LEJACAMRNHbMOvGDXQrLSxsDwOC/OKVlw8JSWHIpZmbSvTp06dPn/4P/TxuOqr6fRumV/8HAAD3JowwVOE=
+   eJzt0LEJACAMBdFsmHXjBjqFq2hhYScfBRGveGVyJG5mLoguiTMn0V/36+f306dPn/4L/Zh2Kk7181BEt/4PAAD2NYVoVXE=
   </data>
  </layer>
  <objectgroup name="objects"/>
@@ -14,4 +19,13 @@
    eJzt1DkOwjAQhWFfBQL0hKVnSx+2nvWw4QZwA7gBafI3EQHZBVIyg9A86StSPdmeiXPvaaGNCB100XNy6SPGAEOMMBbsn2CKGeZYIBHsT7HECmtssBXs32GPA4444SzYb/kuGS6K/VfcFPvveCj2P5FXvu09Xu+hcRfV9/ilu9DI52xamkto1qV2IDTrTe9Aeb7QrNe5A767LM8XmvU6d8B3l5I77uuS3HH7n1gs/5UC27k5dg==
   </data>
  </layer>
+ <objectgroup name="Collision">
+  <object id="8" x="525" y="317" width="32" height="25"/>
+  <object id="9" x="652" y="413" width="35" height="28"/>
+  <object id="10" x="751" y="480" width="35" height="28"/>
+  <object id="11" x="784" y="669" width="29" height="24"/>
+  <object id="12" x="594" y="673" width="25" height="19"/>
+  <object id="13" x="534" y="736" width="20" height="26"/>
+  <object id="14" x="375" y="757" width="19" height="32"/>
+ </objectgroup>
 </map>
