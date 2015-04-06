@@ -32,6 +32,9 @@ public class MapManager {
     //Layers
     private MapLayer objectLayer; //Objects like player, monster, items
 
+    //Collisions on map
+    MapObjects collidables;
+
     //Objects List
     private List<Sprite> objectList;
 
@@ -48,18 +51,7 @@ public class MapManager {
 
         objectLayer = tiledMap.getLayers().get("objects");
 
-        TiledMapTileLayer collisionObjectLayer =
-                (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
-        MapObjects objects = collisionObjectLayer.getObjects();
-
-// there are several other types, Rectangle is probably the most common one
-        for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
-
-            Rectangle rectangle = rectangleObject.getRectangle();
-            if (Intersector.overlaps(rectangle, gm.getPlayer().getCollision())) {
-                // collision ha
-            }
-        }
+        collidables = tiledMap.getLayers().get("Collision").getObjects();
     }
 
     public void render()
@@ -101,6 +93,8 @@ public class MapManager {
     public TiledMap getTiledMap(){
         return tiledMap;
     }
+    public MapObjects getCollidables(){ return collidables; }
+
 
     //Remove the objecting being rendered,
     public void removeObject(TextureMapObject obj){
