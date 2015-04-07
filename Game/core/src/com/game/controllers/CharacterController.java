@@ -2,6 +2,7 @@ package com.game.controllers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.game.Animator;
 import com.game.managers.GameManager;
 
 /**
@@ -31,32 +33,49 @@ public class CharacterController {
     private Rectangle collision;
     private GameManager gm;
 
-    public CharacterController(GameManager gm, String spriteName, Vector2 startPos)
+    private String moving = "";
+
+
+    //Animations
+    private Animation currentAnimation;
+    private float aniTime;
+
+    public CharacterController(GameManager gm, String spriteSheet, Vector2 startPos)
     {
 
         this.pos = startPos;
         this.gm = gm;
-
-        texture = new Texture(Gdx.files.internal(spriteName));
-        currentRegion = new TextureRegion(texture);
+        aniTime = 0f;
+        texture = new Texture(Gdx.files.internal(spriteSheet));
+        currentRegion = new TextureRegion(texture, 33, 1, 32, 32);
         charSprite = new Sprite(currentRegion);
         charSprite.setSize(2f, 2f);
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
         collision = new Rectangle(pos.x, pos.y, 2f, 1f);
+
+
     }
 
     //Getters
-    public Vector2 getPosition() { return pos; }
+    public Vector2 getPosition() {
+        return pos;
+    }
 
-    public Sprite getSprite(){ return charSprite; }
+    public Sprite getSprite(){
+        return charSprite;
+    }
+
+    public Rectangle getCollision(){
+        return collision;
+    }
 
     //Setters
     public void setPosition(Vector2 pos) { this.pos = pos; }
 
     //Updates for the player at each frame
     public void update(float delta){
-        //Check for collision
+        //TODO has to be an easier way to do this
         boolean onlyX = false;
         boolean onlyY = false;
         String dir = "";
@@ -124,9 +143,6 @@ public class CharacterController {
                     }
                 }
 
-
-
-                Gdx.app.log("direction", dir);
             }
         }
         //Update position
@@ -149,23 +165,58 @@ public class CharacterController {
         charSprite.setY(pos.y);
         collision.setX(pos.x);
         collision.setY(pos.y);
+
+        //Update animation
+        aniTime += delta;
+        if (currentAnimation != null)
+            charSprite.setRegion(currentAnimation.getKeyFrame(aniTime, true));
+
     }
 
     //Updates the velocity from touchpad widget
     public void updateVelocity(float movementX, float movementY){
-        this.dirX = movementX;
-        this.dirY = movementY;
-        this.movementX = movementX * moveSpeed;
-        this.movementY = movementY * moveSpeed;
+        //TODO the vector2 'test' removes acceleration and keeps player the same speed. Keep this?
+        Vector2 test = new Vector2(movementX, movementY).nor();
+        this.dirX = test.x;
+        this.dirY = test.y;
+        //Create animation
+        Animator animator = new Animator();
+        Animation currentAnimation = null;
+        String moving = "Still";
+        //Update sprite depending on where player is walking
+        if(dirX == 0 && dirY == 0){
+            moving = "Still";
+            this.currentAnimation = null;
+            charSprite.setRegion(currentRegion);
+        }else if(dirY <= 0.60f && dirY > -0.60f && dirX > 0){
+            moving = "Right";
+            currentAnimation = animator.animate(texture, 1, 65, 32, 32, 3, 0.2f);
+        }else if(dirY <= 0.60f && dirY > -0.60f && dirX < 0){
+            moving = "Left";
+            currentAnimation = animator.animate(texture, 1, 33, 32, 32, 3, 0.2f);
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY > 0){
+            moving = "Up";
+            currentAnimation = animator.animate(texture, 1, 97, 32, 32, 3, 0.2f);
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY < 0){
+            moving = "Down";
+            currentAnimation = animator.animate(texture, 1, 1, 32, 32, 3, 0.2f);
+        }
+
+        if(moving != this.moving && !moving.equals("Still")){
+            aniTime = 0f;
+            this.moving = moving;
+            this.currentAnimation = currentAnimation;
+        }
+
+
+        this.movementX = test.x * moveSpeed;
+        this.movementY = test.y * moveSpeed;
+
+        Gdx.app.log("Moving", "X: " + dirX + "Y: " + dirY + " " + moving);
     }
 
     public void dispose(){
         texture.dispose();
-    }
-
-    //Getters
-    public Rectangle getCollision(){
-        return collision;
     }
 
 }

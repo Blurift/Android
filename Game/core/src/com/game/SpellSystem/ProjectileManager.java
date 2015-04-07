@@ -13,6 +13,8 @@ import java.util.List;
  *
  * Handles projectiles within the game
  *
+ * TODO use a pool to handle all projectiles
+ *
  */
 public class ProjectileManager {
     private List<Projectile> projectiles;

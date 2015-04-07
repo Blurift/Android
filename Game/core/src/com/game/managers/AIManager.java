@@ -10,6 +10,9 @@ import java.util.List;
 
 /**
  * Created by Keirron on 22/03/2015.
+ *
+ * TODO use a pool to handle all monsters
+ *
  */
 public class AIManager {
     private MapManager map;
@@ -36,7 +39,7 @@ public class AIManager {
         Gdx.app.log("g", "sdf");
         for(Vector2 spawner : spawns){
             Gdx.app.log("g", "sdf");
-            AIController enemy = new AIController("testCharacter.png" , new Vector2(spawner.x, spawner.y));
+            AIController enemy = new AIController("character/testCharacter.png" , new Vector2(spawner.x, spawner.y));
             monsters.add(enemy);
         }
     }

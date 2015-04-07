@@ -44,7 +44,7 @@ public class GameManager extends Screen {
         camera.update();
 
         //Create Main Player
-        mainPlayer = new CharacterController(this, "testCharacter.png" , new Vector2(5, 5));
+        mainPlayer = new CharacterController(this, "character/CharSheet.png" , new Vector2(5, 5));
 
         //Intantiate Managers
         mapManager = new MapManager(this, camera, "map/MyCrappyMap.tmx");
