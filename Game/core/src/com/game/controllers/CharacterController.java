@@ -33,11 +33,13 @@ public class CharacterController {
     private Rectangle collision;
     private GameManager gm;
 
-    private String moving = "";
+    //Movement checks
+    private boolean isMoving;
+    private String isFacing = "Down";
 
 
     //Animations
-    private Animation currentAnimation;
+    private AnimState currentAnimation;
     private float aniTime;
 
     public CharacterController(GameManager gm, String spriteSheet, Vector2 startPos)
@@ -168,8 +170,13 @@ public class CharacterController {
 
         //Update animation
         aniTime += delta;
+        AnimState currentAnimation = getAnimation();
+        if(this.currentAnimation != currentAnimation){
+            aniTime = 0f;
+            this.currentAnimation = currentAnimation;
+        }
         if (currentAnimation != null)
-            charSprite.setRegion(currentAnimation.getKeyFrame(aniTime, true));
+            charSprite.setRegion(getAnimation(currentAnimation).getKeyFrame(aniTime, true));
 
     }
 
@@ -177,44 +184,98 @@ public class CharacterController {
     public void updateVelocity(float movementX, float movementY){
         //TODO the vector2 'test' removes acceleration and keeps player the same speed. Keep this?
         Vector2 test = new Vector2(movementX, movementY).nor();
-        this.dirX = test.x;
-        this.dirY = test.y;
-        //Create animation
-        Animator animator = new Animator();
-        Animation currentAnimation = null;
-        String moving = "Still";
-        //Update sprite depending on where player is walking
-        if(dirX == 0 && dirY == 0){
-            moving = "Still";
-            this.currentAnimation = null;
-            charSprite.setRegion(currentRegion);
-        }else if(dirY <= 0.60f && dirY > -0.60f && dirX > 0){
-            moving = "Right";
-            currentAnimation = animator.animate(texture, 1, 65, 32, 32, 3, 0.2f);
-        }else if(dirY <= 0.60f && dirY > -0.60f && dirX < 0){
-            moving = "Left";
-            currentAnimation = animator.animate(texture, 1, 33, 32, 32, 3, 0.2f);
-        }else if(dirX <= 0.80f && dirX > -0.80f && dirY > 0){
-            moving = "Up";
-            currentAnimation = animator.animate(texture, 1, 97, 32, 32, 3, 0.2f);
-        }else if(dirX <= 0.80f && dirX > -0.80f && dirY < 0){
-            moving = "Down";
-            currentAnimation = animator.animate(texture, 1, 1, 32, 32, 3, 0.2f);
-        }
-
-        if(moving != this.moving && !moving.equals("Still")){
-            aniTime = 0f;
-            this.moving = moving;
-            this.currentAnimation = currentAnimation;
-        }
-
+        this.dirX = movementX;
+        this.dirY = movementY;
 
         this.movementX = test.x * moveSpeed;
         this.movementY = test.y * moveSpeed;
-
-        Gdx.app.log("Moving", "X: " + dirX + "Y: " + dirY + " " + moving);
     }
 
+    /**
+     * Animation functions
+    */
+    public String isFacing(){
+
+        if(dirY <= 0.60f && dirY > -0.60f && dirX > 0){
+            isFacing = "Right";
+        }else if(dirY <= 0.60f && dirY > -0.60f && dirX < 0){
+            isFacing = "Left";
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY > 0){
+            isFacing = "Up";
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY < 0){
+            isFacing = "Down";
+        }
+
+        return isFacing;
+    }
+
+    public boolean isMoving(){
+        if(movementX == 0 && movementY == 0)
+            isMoving = false;
+        else
+            isMoving = true;
+        return isMoving;
+    }
+
+    private AnimState getAnimation(){
+        AnimState currentAnimation = null;
+        if(!isMoving()) {
+            if(isFacing().equals("Left")) //stillLeft
+                currentAnimation = AnimState.STILL_LEFT;
+            if(isFacing().equals("Right")) //stillRight
+                currentAnimation = AnimState.STILL_RIGHT;
+            if(isFacing().equals("Up")) //stillUp
+                currentAnimation = AnimState.STILL_UP;
+            if(isFacing().equals("Down")) //stillDown
+                currentAnimation = AnimState.STILL_DOWN;
+        }else if(isMoving()) {
+            if(isFacing().equals("Left")) //walkLeft
+                currentAnimation = AnimState.WALK_LEFT;
+            if(isFacing().equals("Right")) //walkRight
+                currentAnimation = AnimState.WALK_RIGHT;
+            if(isFacing().equals("Up")) //walkUp
+                currentAnimation = AnimState.WALK_UP;
+            if(isFacing().equals("Down")) //walkDown
+                currentAnimation = AnimState.WALK_DOWN;
+        }
+        return currentAnimation;
+    }
+
+    private Animation getAnimation(AnimState state){
+        Animator animator = new Animator();
+        Animation currentAnimation = null;
+
+        switch(state) {
+            case STILL_LEFT:
+                return animator.animate(texture, 33, 33, 32, 32, 1, 0.2f);
+            case STILL_RIGHT:
+                return animator.animate(texture, 33, 65, 32, 32, 1, 0.2f);
+            case STILL_UP:
+                return animator.animate(texture, 33, 97, 32, 32, 1, 0.2f);
+            case STILL_DOWN:
+                return animator.animate(texture, 33, 1, 32, 32, 1, 0.2f);
+            case WALK_LEFT:
+                return animator.animate(texture, 1, 33, 32, 32, 3, 0.2f);
+            case WALK_RIGHT:
+                return animator.animate(texture, 1, 65, 32, 32, 3, 0.2f);
+            case WALK_UP:
+                return animator.animate(texture, 1, 97, 32, 32, 3, 0.2f);
+            case WALK_DOWN:
+                return animator.animate(texture, 1, 1, 32, 32, 3, 0.2f);
+            default:
+                return null;
+       }
+    }
+
+
+    private enum AnimState {
+        //TODO merge the aboe this somehow
+        STILL_LEFT, STILL_RIGHT, STILL_UP, STILL_DOWN,
+        WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN;
+
+    }
+
+    //Dispose
     public void dispose(){
         texture.dispose();
     }
