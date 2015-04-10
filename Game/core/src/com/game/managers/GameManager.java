@@ -64,6 +64,8 @@ public class GameManager extends Screen {
         /**
          * Updates
           */
+
+        //Organize objects to render
         mapManager.clearObjects();
         mapManager.addObject(mainPlayer.getSprite());
         for(Projectile projectile : projectileManager.getProjectiles()){

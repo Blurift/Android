@@ -54,7 +54,7 @@ public class CharacterController {
         charSprite.setSize(2f, 2f);
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
-        collision = new Rectangle(pos.x, pos.y, 2f, 1f);
+        collision = new Rectangle(pos.x + 0.5f, pos.y, 1f, 1f);
 
 
     }

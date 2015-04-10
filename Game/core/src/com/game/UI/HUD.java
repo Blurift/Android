@@ -56,7 +56,7 @@ public class HUD implements IUIScreen{
         //Apply the Drawables to the TouchPad Style
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
-        touchpad = new Touchpad(10, touchpadStyle);
+        touchpad = new Touchpad(20, touchpadStyle);
         touchpad.setBounds(15, 15, 200, 200);
         //touchpad.setSize(5f,5f);
         touchpad.setPosition(5f,5f);
