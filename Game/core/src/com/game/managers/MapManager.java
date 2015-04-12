@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.game.tools.MapBodyBuilder;
 
 import java.util.Comparator;
 
@@ -50,6 +51,11 @@ public class MapManager {
         objectLayer = tiledMap.getLayers().get("Objects");
 
         collidables = tiledMap.getLayers().get("Collision").getObjects();
+
+        //Populate World with collisions
+        MapBodyBuilder mapBodyBuilder = new MapBodyBuilder();
+        mapBodyBuilder.buildShapes(tiledMap, gm.PIXELS_TO_METRES, gm.getWorld());
+
     }
 
     public void render()
@@ -116,7 +122,12 @@ public class MapManager {
     public TiledMap getTiledMap(){
         return tiledMap;
     }
+
     public MapObjects getCollidables(){ return collidables; }
+
+    public SpriteBatch getSpriteBatch() {
+        return sb;
+    }
 
 
     //Remove the objecting being rendered,

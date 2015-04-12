@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.game.SpellSystem.Projectile;
 import com.game.SpellSystem.ProjectileManager;
 import com.game.UI.UIManager;
@@ -17,7 +20,7 @@ import com.game.screenManager.Screen;
  */
 public class GameManager extends Screen {
     private OrthographicCamera camera;
-    private float VIRTUAL_HEIGHT = 11;
+    private float VIRTUAL_HEIGHT = 7; //11
     private float VIRTUAL_WIDTH;
     private CharacterController mainPlayer;
     private MapManager mapManager;
@@ -26,7 +29,15 @@ public class GameManager extends Screen {
     private ProjectileManager projectileManager;
     private AIManager aiManager;
 
-    private float gameSpeed = 1;
+    //Box2d
+    World world;
+    Box2DDebugRenderer debugRenderer;
+    Matrix4 debugMatrix;
+
+    public static final float PIXELS_TO_METRES = 32f;
+    public static final float DEFAULT_GAMESPEED = 1f;
+    private float gameSpeed = 1f;
+
 
 
     public GameManager()
@@ -43,8 +54,11 @@ public class GameManager extends Screen {
         camera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
         camera.update();
 
+        //Box2d set up
+        world = new World(new Vector2(0,0), true);
+        debugRenderer = new Box2DDebugRenderer();
         //Create Main Player
-        mainPlayer = new CharacterController(this, "character/CharSheet.png" , new Vector2(5, 5));
+        mainPlayer = new CharacterController(this, "character/druid_sheet.png" , new Vector2(5, 5));
 
         //Intantiate Managers
         mapManager = new MapManager(this, camera, "map/MyCrappyMap.tmx");
@@ -52,6 +66,11 @@ public class GameManager extends Screen {
         uiManager = new UIManager(this);
         projectileManager = new ProjectileManager(this);
         aiManager = new AIManager(this);
+
+
+    }
+
+    public void update(){
 
     }
 
@@ -78,15 +97,23 @@ public class GameManager extends Screen {
 
 
 
-
+        //Update player velocity with UI inputs
         mainPlayer.updateVelocity(uiManager.getHUD().getKnobPercentX(), uiManager.getHUD().getKnobPercentY());
+
+        //Update player
         mainPlayer.update(delta);
 
-        //Camera follow player
-        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
-        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
-        camera.position.set(defaultCamX, defaultCamY, 0);
-        camera.update();
+        //Update physics
+        // Advance the world, by the amount of time that has elapsed since the
+        //last frame
+        // Generally in a real game, dont do this in the render loop, as you are
+        //tying the physics
+        // update rate to the frame rate, and vice versa
+        world.step(1f/60f, 6, 2);
+
+        debugMatrix = mapManager.getSpriteBatch().getProjectionMatrix().cpy().scale(PIXELS_TO_METRES,
+                PIXELS_TO_METRES, 0);
+
 
         /**
          * Render
@@ -102,6 +129,13 @@ public class GameManager extends Screen {
         //Render UI
         uiManager.render();
 
+       //debugRenderer.render(world, debugMatrix);
+
+        //Camera follow player
+        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
+        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
+        camera.position.set(defaultCamX, defaultCamY, 0);
+        camera.update();
     }
 
 
@@ -132,6 +166,14 @@ public class GameManager extends Screen {
 
     public float getVIRTUAL_WIDTH(){
         return VIRTUAL_WIDTH;
+    }
+
+    public float getGameSpeed(){
+        return gameSpeed;
+    }
+
+    public World getWorld(){
+        return world;
     }
 
     /**
