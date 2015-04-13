@@ -118,7 +118,7 @@ public class GameManager extends Screen {
         /**
          * Render
          */
-        Gdx.gl.glClearColor(1,1,1,1);
+        Gdx.gl.glClearColor(140,231,140,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
         //Render Map
         mapManager.render();
@@ -132,9 +132,9 @@ public class GameManager extends Screen {
        //debugRenderer.render(world, debugMatrix);
 
         //Camera follow player
-        float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
-        float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
-        camera.position.set(defaultCamX, defaultCamY, 0);
+        //float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
+        //float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
+        //camera.position.set(defaultCamX, defaultCamY, 0);
         camera.update();
     }
 

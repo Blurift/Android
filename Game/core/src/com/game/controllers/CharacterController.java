@@ -1,6 +1,7 @@
 package com.game.controllers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.game.Animator;
 import com.game.managers.GameManager;
+
+import java.math.BigDecimal;
 
 /**
  * Created by Keirron on 22/03/2015.
@@ -42,6 +45,9 @@ public class CharacterController {
     private boolean isMoving;
     private String isFacing = "Down";
 
+    //Cam movements
+    private float camModifierY = 0;
+    private float camModifierX = 0;
 
     //Animations
     private AnimState currentAnimation;
@@ -131,6 +137,79 @@ public class CharacterController {
         if (currentAnimation != null)
             charSprite.setRegion(getAnimation(currentAnimation).getKeyFrame(aniTime, true));
 
+
+        //TODO move this code
+        //Player Camera Movement
+        float defaultCamX = charSprite.getX() + (charSprite.getWidth() / 2);
+        float defaultCamY = charSprite.getY() + (charSprite.getHeight() / 2);
+        float camSpeed = 0.5f;
+        float camBackSpeed = 1;
+        Camera camera = gm.getCamera();
+        float maxX = dirX*0.5f;
+        float maxY = dirY*0.5f;
+
+        if(dirX > 0){
+            if(camModifierX < maxX){
+                camModifierX += Gdx.graphics.getDeltaTime() * camSpeed;
+            }else{
+                camModifierX = maxX;
+            }
+        }else if(dirX < 0){
+            if(camModifierX > maxX){
+                camModifierX -= Gdx.graphics.getDeltaTime() * camSpeed;
+            }else{
+                camModifierX = maxX;
+            }
+        }
+
+        if(dirY > 0){
+            if(camModifierY < maxY){
+                camModifierY += Gdx.graphics.getDeltaTime() * camSpeed;
+            }else{
+                camModifierY = maxY;
+            }
+        }else if(dirY < 0){
+            if(camModifierY > maxY){
+                camModifierY -= Gdx.graphics.getDeltaTime() * camSpeed;
+            }else{
+                camModifierY = maxY;
+            }
+        }
+
+        if(dirX == 0){
+            if(camModifierX > 0){
+                camModifierX -= Gdx.graphics.getDeltaTime() * camBackSpeed;
+                if(camModifierX < 0)
+                    camModifierX = 0;
+            }
+            if(camModifierX < 0){
+                camModifierX += Gdx.graphics.getDeltaTime() * camBackSpeed;
+                if(camModifierX > 0)
+                    camModifierX = 0;
+            }
+        }
+        if(dirY == 0){
+            if(camModifierY > 0){
+                camModifierY -= Gdx.graphics.getDeltaTime() * camBackSpeed;
+                if(camModifierY < 0)
+                    camModifierY = 0;
+            }
+            if(camModifierY < 0){
+                camModifierY += Gdx.graphics.getDeltaTime() * camBackSpeed;
+                if(camModifierY > 0)
+                    camModifierY = 0;
+            }
+        }
+
+
+        camera.position.set(defaultCamX + (camModifierX), defaultCamY + (camModifierY), 0);
+    }
+
+    //Remove some decimals...
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 
     //Updates the velocity from touchpad widget
@@ -214,7 +293,7 @@ public class CharacterController {
             case WALK_UP:
                 return animator.animate(texture, 64, 64, 64, 64, 1, 0.2f);
             case WALK_DOWN:
-                return animator.animate(texture, 64, 0, 64, 64, 1, 0.2f);
+                return animator.animate(texture, 64, 0, 64, 64, 4, 0.15f);
             default:
                 return null;
        }
