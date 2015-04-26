@@ -1,12 +1,13 @@
-package com.game;
+package com.game.ECS;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.game.ECS.Managers.EntityManager;
+import com.game.ECS.Managers.WorldManager;
 import com.game.ECS.Screen.GameScreen;
 
 /**
@@ -24,7 +25,7 @@ public class Main extends Game {
         SpriteBatch sb = new SpriteBatch();
         entityManager = new EntityManager(engine, sb);
 
-        setScreen(new GameScreen(stage, entityManager.getPlayer()));
+        //setScreen(new GameScreen(stage, player));
     }
 
     @Override
@@ -34,9 +35,6 @@ public class Main extends Game {
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         //Get everything from UI
         stage.act(Gdx.graphics.getDeltaTime());
 
@@ -65,4 +63,3 @@ public class Main extends Game {
 
     }
 }
-

@@ -33,7 +33,7 @@ public class SpellCasting implements IUIScreen{
     private SpellDrawing spellDrawing;
 
     //Line drawing
-    private final static float LINE_SIZE = 10f; // TODO change on resolution
+    private float LINE_SIZE = 10f; // TODO change on resolution
     private Vector2 lineStart; //Start of a line in the middle of being drawn
     private Vector2 lineEnd; //If the player has started drawing, this is where their finger is
 
@@ -42,9 +42,11 @@ public class SpellCasting implements IUIScreen{
         this.stage = stage;
         this.filterManager = filterManager;
         this.ui = ui;
+        LINE_SIZE = 10f*ui.getScale();
         //Cancel Button
         cancelBtn = new TextButton("Cancel SpellCasting", skin);
-        cancelBtn.setPosition(Gdx.graphics.getWidth()-200, Gdx.graphics.getHeight()-100);
+        cancelBtn.setPosition(stage.getViewport().getCamera().viewportWidth-200,
+                stage.getViewport().getCamera().viewportHeight-100);
         cancelBtn.setScale(5, 5);
         cancelBtn.addListener(new ClickListener() {
             @Override
@@ -56,7 +58,7 @@ public class SpellCasting implements IUIScreen{
 
         //SpellBook Button
         spellBookBtn = new TextButton("See Spells", skin);
-        spellBookBtn.setPosition(Gdx.graphics.getWidth()-200, 100);
+        spellBookBtn.setPosition(stage.getViewport().getCamera().viewportWidth-200, 100);
         spellBookBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -72,6 +74,8 @@ public class SpellCasting implements IUIScreen{
             public boolean touchDown (int screenX, int screenY, int pointer, int button) {
                 Vector2 clickCoordinates = new Vector2(screenX,screenY);
                 lineStart = stage.getViewport().unproject(clickCoordinates);
+
+
                 return true;
             }
 

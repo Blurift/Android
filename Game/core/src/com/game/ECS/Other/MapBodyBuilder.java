@@ -1,4 +1,4 @@
-package com.game.tools;
+package com.game.ECS.Other;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.Map;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,11 +18,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.game.ECS.Other.B2DVars;
 
 import java.math.BigDecimal;
 
@@ -44,10 +45,10 @@ public class MapBodyBuilder {
     private static float ppt = 0;
     private static World pWorld = null;
 
-    public static Array<Body> buildShapes(Map map, float pixels, World world) {
+    public static Array<Body> buildShapes(Map map, String layer, float pixels, World world) {
         ppt = pixels;
         pWorld = world;
-        MapObjects objects = map.getLayers().get("Collision").getObjects();
+        MapObjects objects = map.getLayers().get(layer).getObjects();
 
         Array<Body> bodies = new Array<Body>();
 
@@ -88,10 +89,28 @@ public class MapBodyBuilder {
             }
 
             if(shape != null) {
+                FixtureDef fdef = new FixtureDef();
+                fdef.shape = shape;
+                fdef.density = 1;
                 BodyDef bd = new BodyDef();
                 bd.type = BodyDef.BodyType.StaticBody;
                 body = pWorld.createBody(bd);
-                body.createFixture(shape, 1);
+                if(layer.equals("Hitbox")) {
+                    fdef.filter.categoryBits = B2DVars.BIT_HITBOX;
+                    fdef.filter.maskBits = B2DVars.BIT_PROJECTILE;
+                }
+                if(layer.equals("Collision")) {
+                    fdef.filter.categoryBits = B2DVars.BIT_COLLISION;
+                    fdef.filter.maskBits = B2DVars.BIT_HUSK;
+                }
+                Fixture fixture = body.createFixture(fdef);
+                //TODO reorganize this
+                if(layer.equals("Hitbox")) {
+                    fixture.setUserData("hitbox");
+                }
+                if(layer.equals("Collision")) {
+                    fixture.setUserData("collision");
+                }
                 shape.dispose();
                 bodies.add(body);
             }

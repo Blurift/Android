@@ -34,6 +34,14 @@ public class ScreenManager {
         }
     }
 
+    public void resize()
+    {
+        for (int i = 0; i < screens.size(); i++)
+        {
+            screens.get(i).resize();
+        }
+    }
+
     ///Manipulation
     public void addScreen(Screen screen)
     {

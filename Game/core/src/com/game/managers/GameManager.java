@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.game.MyContactListener;
 import com.game.SpellSystem.Projectile;
 import com.game.SpellSystem.ProjectileManager;
 import com.game.UI.UIManager;
@@ -15,12 +18,15 @@ import com.game.controllers.AIController;
 import com.game.controllers.CharacterController;
 import com.game.screenManager.Screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Keirron on 22/03/2015.
  */
 public class GameManager extends Screen {
     private OrthographicCamera camera;
-    private float VIRTUAL_HEIGHT = 7; //11
+    private float VIRTUAL_HEIGHT = 8; //11
     private float VIRTUAL_WIDTH;
     private CharacterController mainPlayer;
     private MapManager mapManager;
@@ -36,9 +42,10 @@ public class GameManager extends Screen {
 
     public static final float PIXELS_TO_METRES = 32f;
     public static final float DEFAULT_GAMESPEED = 1f;
-    private float gameSpeed = 1f;
+    private float gameSpeed = DEFAULT_GAMESPEED;
 
-
+    //List of bodies to destory after world step
+    private List<Body> bodiesToDestroy;
 
     public GameManager()
     {
@@ -56,46 +63,41 @@ public class GameManager extends Screen {
 
         //Box2d set up
         world = new World(new Vector2(0,0), true);
+        world.setContactListener(new MyContactListener(this));
         debugRenderer = new Box2DDebugRenderer();
+
+        bodiesToDestroy = new ArrayList<Body>();
+
         //Create Main Player
         mainPlayer = new CharacterController(this, "character/druid_sheet.png" , new Vector2(5, 5));
 
         //Intantiate Managers
-        mapManager = new MapManager(this, camera, "map/MyCrappyMap.tmx");
+        mapManager = new MapManager(this, camera, "map/WorldMap.tmx");
         filterManager = new FilterManager();
         uiManager = new UIManager(this);
         projectileManager = new ProjectileManager(this);
         aiManager = new AIManager(this);
 
-
+        //Set player at start spawn
+        mainPlayer.setPosition(mapManager.getPlayerSpawn());
     }
 
+        private double accumulator;
+        private double currentTime;
+        private float step = 1.0f / 60.0f;
     public void update(){
-
-    }
-
-    @Override
-    public void render()
-    {
-
         float delta = Gdx.graphics.getDeltaTime() * gameSpeed;
-
-        /**
-         * Updates
-          */
-
         //Organize objects to render
         mapManager.clearObjects();
-        mapManager.addObject(mainPlayer.getSprite());
+        mapManager.addObject(mainPlayer);
         for(Projectile projectile : projectileManager.getProjectiles()){
-            mapManager.addObject(projectile.getSprite());
+            mapManager.addObject(projectile);
         }
         for(AIController ai : aiManager.getEnemies()){
-            mapManager.addObject(ai.getSprite());
+            ai.update();
+            mapManager.addObject(ai);
         }
         projectileManager.update();
-
-
 
         //Update player velocity with UI inputs
         mainPlayer.updateVelocity(uiManager.getHUD().getKnobPercentX(), uiManager.getHUD().getKnobPercentY());
@@ -104,20 +106,30 @@ public class GameManager extends Screen {
         mainPlayer.update(delta);
 
         //Update physics
-        // Advance the world, by the amount of time that has elapsed since the
-        //last frame
-        // Generally in a real game, dont do this in the render loop, as you are
-        //tying the physics
-        // update rate to the frame rate, and vice versa
         world.step(1f/60f, 6, 2);
 
+
+        //Destroy physics objects queued for destruction
+        for(Body body : bodiesToDestroy){
+            world.destroyBody(body);
+        }
+        bodiesToDestroy.clear();
+
+        //Update camera
+        camera.update();
+
+        //Update Map (Needs camera updated first
+        mapManager.update();
+
+        //Setup Box2D physics
         debugMatrix = mapManager.getSpriteBatch().getProjectionMatrix().cpy().scale(PIXELS_TO_METRES,
                 PIXELS_TO_METRES, 0);
+    }
 
+    @Override
+    public void render()
+    {
 
-        /**
-         * Render
-         */
         Gdx.gl.glClearColor(140,231,140,1);
         Gdx.gl.glClear((GL20.GL_COLOR_BUFFER_BIT));
         //Render Map
@@ -129,13 +141,17 @@ public class GameManager extends Screen {
         //Render UI
         uiManager.render();
 
-       //debugRenderer.render(world, debugMatrix);
+        //Render Collisions Box2D objects
+       debugRenderer.render(world, debugMatrix);
 
-        //Camera follow player
-        //float defaultCamX = mainPlayer.getSprite().getX() + (mainPlayer.getSprite().getWidth() / 2);
-        //float defaultCamY = mainPlayer.getSprite().getY() + (mainPlayer.getSprite().getHeight() / 2);
-        //camera.position.set(defaultCamX, defaultCamY, 0);
-        camera.update();
+    }
+
+    @Override
+    public void resize()
+    {
+        //TODO fix this
+        camera.setToOrtho(false, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        uiManager.getCamera().setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 
@@ -179,6 +195,10 @@ public class GameManager extends Screen {
     /**
      * Setters
      */
+
+    public void addBodyToDestroy(Body body){
+        bodiesToDestroy.add(body);
+    }
 
     @Override
     public void dispose()

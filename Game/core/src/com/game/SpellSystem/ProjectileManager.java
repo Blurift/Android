@@ -24,11 +24,8 @@ public class ProjectileManager {
         this.gm = gm;
     }
 
-    public void shootProjectile(Vector2 from, Vector3 screenLoc){
-        Vector3 unproject = gm.getCamera().unproject(screenLoc);
-        Vector2 to = new Vector2(unproject.x, unproject.y);
-        Vector2 direction = to.sub(from);
-        Projectile projectile = new Projectile(from.x, from.y, direction.nor());
+    public void shootProjectile(Vector2 from, Vector2 direction){
+        Projectile projectile = new Projectile(gm, from.x, from.y, direction);
         projectiles.add(projectile);
     }
 
@@ -42,4 +39,7 @@ public class ProjectileManager {
         return projectiles;
     }
 
+    public void removeProjectile(Projectile proj){
+        projectiles.remove(proj);
+    }
 }

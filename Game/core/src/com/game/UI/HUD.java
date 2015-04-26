@@ -41,6 +41,7 @@ public class HUD implements IUIScreen{
     private Sprite shadow;
     private Texture shadowTexture;
 
+
     public HUD(final UIManager ui, Stage stage, Skin skin){
         this.stage = stage;
         this.ui = ui;
@@ -55,8 +56,9 @@ public class HUD implements IUIScreen{
         buttonStyle.down = castBtnSkin.getDrawable("down");
         buttonStyle.over = castBtnSkin.getDrawable("over");
         castSpellBtn = new ImageButton(buttonStyle);
-        castSpellBtn.setScale(5, 5);
-        castSpellBtn.setPosition(Gdx.graphics.getWidth()-(45+castSpellBtn.getWidth()), 40);
+        //castSpellBtn.setScale(5, 5);
+        castSpellBtn.setSize(castSpellBtn.getWidth()*ui.getScale(), castSpellBtn.getHeight()*ui.getScale());
+        castSpellBtn.setPosition(stage.getViewport().getCamera().viewportWidth - (45*ui.getScale() + castSpellBtn.getWidth()), 40*ui.getScale());
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -65,7 +67,11 @@ public class HUD implements IUIScreen{
         });
         shadowTexture = new Texture("UI/castButtonShadow.png");
         shadow = new Sprite(shadowTexture);
-        shadow.setPosition(Gdx.graphics.getWidth()-(45+castSpellBtn.getWidth()), 40);
+        shadow.setSize(shadow.getWidth()*ui.getScale(), shadow.getHeight()*ui.getScale());
+        shadow.setPosition(stage.getViewport().getCamera().viewportWidth-(45*ui.getScale()+castSpellBtn.getWidth()), 40*ui.getScale());
+        //For animating Cast Spell button...
+        minButtonHeight = castSpellBtn.getY();
+        maxButtonHeight = castSpellBtn.getY()+10*ui.getScale();
 
         //Touchpad
         touchpadSkin = new Skin();
@@ -77,13 +83,14 @@ public class HUD implements IUIScreen{
         //Apply the Drawables to the TouchPad Style
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
+        touchKnob.setMinWidth(touchKnob.getMinWidth()*ui.getScale());
+        touchKnob.setMinHeight(touchKnob.getMinHeight()*ui.getScale());
         touchpad = new Touchpad(20, touchpadStyle);
         touchpad.setBounds(15, 15, 200, 200);
-        //touchpad.setSize(5f,5f);
-        touchpad.setPosition(5f,5f);
+        touchpad.setPosition(5f*ui.getScale(),5f*ui.getScale());
+        touchpad.setSize(touchpad.getWidth()*ui.getScale(), touchpad.getHeight()*ui.getScale());
 
-        minButtonHeight = castSpellBtn.getY();
-        maxButtonHeight = castSpellBtn.getY()+10;
+
 
 
         //Set the input as this stage

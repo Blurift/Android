@@ -1,6 +1,8 @@
 package com.game.UI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.game.managers.GameManager;
@@ -28,19 +30,27 @@ public class UIManager{
     private GameManager gm;
 
     private IUIScreen currentUIScreen;
+    private OrthographicCamera camera;
 
     //Margin around screen
-    private float margin = 0.10f;
+    private float scale = 1;
+
 
     public UIManager(GameManager gm) { // TODO Screen width/height inputs to size the interace correctly
         this.gm = gm;
-
+        if(Gdx.graphics.getHeight() == 1080){
+            scale = 2;
+        }
         //Set up Stage
         stage = new Stage();
 
         //Set up camera
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-        stage.getViewport().setWorldSize(gm.getVIRTUAL_WIDTH(), gm.getVIRTUAL_HEIGHT());
+        //stage.getViewport().update(800, 480, true);
+        //stage.getViewport().setWorldSize(800, 480);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
+        stage.getViewport().setCamera(camera);
         //Set UI Skins
         skin = new Skin(Gdx.files.internal("UI/uiskin.json"));
 
@@ -83,6 +93,9 @@ public class UIManager{
         return spellAiming;
     }
 
+    public float getScale(){
+        return scale;
+    }
 
     public void activateUIScreen(IUIScreen toActivate){
         currentUIScreen.clear();
@@ -100,6 +113,13 @@ public class UIManager{
         stage.dispose();
         skin.dispose();
         hud.dispose();
+    }
+
+    /**
+     * Getters
+     */
+    public OrthographicCamera getCamera(){
+        return camera;
     }
 
 }

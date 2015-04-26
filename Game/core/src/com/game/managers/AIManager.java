@@ -22,24 +22,11 @@ public class AIManager {
 
     public AIManager(GameManager gm){
         map = gm.getMapManager();
-        spawns = new ArrayList<Vector2>();
+        spawns = gm.getMapManager().getEnemySpawns();
         monsters = new ArrayList<AIController>();
         spawnersInScene = new ArrayList<TiledMapTileLayer.Cell>();
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getTiledMap().getLayers().get(0);
-        for(int x = 0; x < layer.getWidth();x++){
-            for(int y = 0; y < layer.getHeight();y++){
-                TiledMapTileLayer.Cell cell = layer.getCell(x,y);
-                Object property = cell.getTile().getProperties().get("Spawn");
-                if(property != null){
-                    spawnersInScene.add(cell);
-                    spawns.add(new Vector2(x, y));
-                }
-            }
-        }
-        Gdx.app.log("g", "sdf");
         for(Vector2 spawner : spawns){
-            Gdx.app.log("g", "sdf");
-            AIController enemy = new AIController("character/testCharacter.png" , new Vector2(spawner.x, spawner.y));
+            AIController enemy = new AIController(gm, "character/druid_sheet.png" , new Vector2(spawner.x, spawner.y));
             monsters.add(enemy);
         }
     }

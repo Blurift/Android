@@ -17,6 +17,11 @@ public class Screen {
 
     }
 
+    public void resize()
+    {
+
+    }
+
     public void dispose()
     {
 

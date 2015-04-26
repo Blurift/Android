@@ -5,30 +5,32 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.game.Animator;
+import com.game.ECS.Other.B2DVars;
 import com.game.managers.GameManager;
-
-import java.math.BigDecimal;
+import com.game.tools.IDepthObject;
 
 /**
  * Created by Keirron on 22/03/2015.
  */
-public class CharacterController {
+public class CharacterController implements IDepthObject {
+
+
     private float movementX = 0;
     private float movementY = 0;
-    private float dirX = 0;
-    private float dirY = 0;
+
+
+    private float dirX = 0; //Direction from touchpad on x scale
+    private float dirY = 0; //Direction from touchpad on y scale
 
     private float moveSpeed = 6f;
 
@@ -38,7 +40,6 @@ public class CharacterController {
     private TextureRegion currentRegion; //used for later animation
     private Sprite charSprite;
 
-    private Rectangle collision;
     private GameManager gm;
 
     //Movement checks
@@ -48,6 +49,7 @@ public class CharacterController {
     //Cam movements
     private float camModifierY = 0;
     private float camModifierX = 0;
+    private Vector2 camBackSpeed = new Vector2(1f, 1f);
 
     //Animations
     private AnimState currentAnimation;
@@ -55,6 +57,8 @@ public class CharacterController {
 
     //Box2d body
     private Body body;
+
+    public boolean isCamLocked = false;
 
     public CharacterController(GameManager gm, String spriteSheet, Vector2 startPos)
     {
@@ -68,7 +72,6 @@ public class CharacterController {
         charSprite.setSize(2f, 2f);
         charSprite.setX(pos.x);
         charSprite.setY(pos.y);
-        collision = new Rectangle(pos.x + 0.5f, pos.y, 1f, 1f);
 
         //Box2d body for collision
         BodyDef bodyDef = new BodyDef();
@@ -82,26 +85,38 @@ public class CharacterController {
         body = gm.getWorld().createBody(bodyDef);
         // Now define the dimensions of the physics shape
         CircleShape shape = new CircleShape();
-        // FixtureDef is a confusing expression for physical properties
-        // Basically this is where you, in addition to defining the shape of the
-        //body
-        // you also define it's properties like density, restitution and others
-        //we will see shortly
-        // If you are wondering, density and area are used to calculate over all
-        //mass
         shape.setRadius(0.25f/gm.PIXELS_TO_METRES);
+
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-
+        fixtureDef.filter.categoryBits = B2DVars.BIT_HUSK;
+        fixtureDef.filter.maskBits = B2DVars.BIT_COLLISION | B2DVars.BIT_HUSK;
         Fixture fixture = body.createFixture(fixtureDef);
-
         // Shape is the only disposable of the lot, so get rid of it
         shape.dispose();
+    }
+
+    public void draw(SpriteBatch batch){
+        charSprite.draw(batch);
+    }
+
+    /**
+     * Getters
+     */
+
+    //Cast Point is where projectiles spawn from
+    public Vector2 getCastPoint(){
+        if(isFacing.equals("Left")){
+            return new Vector2(pos.x, pos.y + charSprite.getHeight()*0.5f);
+        }else if(isFacing.equals("Right")){
+            return new Vector2(pos.x + charSprite.getWidth(), pos.y + charSprite.getHeight()*0.5f);
+        }else{
+            return new Vector2(pos.x + charSprite.getWidth()*0.5f, pos.y + charSprite.getHeight()*0.5f);
+        }
 
     }
 
-    //Getters
     public Vector2 getPosition() {
         return pos;
     }
@@ -110,12 +125,49 @@ public class CharacterController {
         return charSprite;
     }
 
-    public Rectangle getCollision(){
-        return collision;
+    public float getY(){
+        return charSprite.getY();
     }
 
-    //Setters
-    public void setPosition(Vector2 pos) { this.pos = pos; }
+    /**
+     *  Setters
+     */
+    public void setPosition(Vector2 pos) {
+        this.pos = pos;
+        charSprite.setX(pos.x);
+        charSprite.setY(pos.y);
+        body.setTransform((pos.x + 1f)/gm.PIXELS_TO_METRES, (pos.y)/gm.PIXELS_TO_METRES,
+                body.getAngle());
+    }
+
+    public void setCamModifierX(float x){
+        camModifierX = x;
+    }
+
+    public void setCamModifierY(float y){
+        camModifierY = y;
+    }
+    public void setCamBackSpeed(Vector2 speed){
+        camBackSpeed = speed;
+    }
+
+    //Directly mention where the player is facing
+    public void setFacing(String face){
+        isFacing = face;
+    }
+
+    //Calculate and set where the place is facing based on a x,y dir
+    public void setFacing(float dirX, float dirY){
+        if(dirY <= 0.60f && dirY > -0.60f && dirX > 0){
+            isFacing = "Right";
+        }else if(dirY <= 0.60f && dirY > -0.60f && dirX < 0){
+            isFacing = "Left";
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY > 0){
+            isFacing = "Up";
+        }else if(dirX <= 0.80f && dirX > -0.80f && dirY < 0){
+            isFacing = "Down";
+        }
+    }
 
     //Updates for the player at each frame
     public void update(float delta){
@@ -127,7 +179,7 @@ public class CharacterController {
         charSprite.setX(body.getPosition().x * gm.PIXELS_TO_METRES - 1);
         charSprite.setY(body.getPosition().y * gm.PIXELS_TO_METRES - 0.5f);
 
-        //Update animation
+        //Update animation to render
         aniTime += delta;
         AnimState currentAnimation = getAnimation();
         if(this.currentAnimation != currentAnimation){
@@ -138,15 +190,17 @@ public class CharacterController {
             charSprite.setRegion(getAnimation(currentAnimation).getKeyFrame(aniTime, true));
 
 
-        //TODO move this code
         //Player Camera Movement
         float defaultCamX = charSprite.getX() + (charSprite.getWidth() / 2);
         float defaultCamY = charSprite.getY() + (charSprite.getHeight() / 2);
-        float camSpeed = 0.5f;
-        float camBackSpeed = 1;
+
+        float camSpeed = camBackSpeed.x;
+
         Camera camera = gm.getCamera();
         float maxX = dirX*0.5f;
         float maxY = dirY*0.5f;
+        if(camModifierX < maxX && camModifierY < maxY)
+            camSpeed = 1f;
 
         if(dirX > 0){
             if(camModifierX < maxX){
@@ -178,66 +232,92 @@ public class CharacterController {
 
         if(dirX == 0){
             if(camModifierX > 0){
-                camModifierX -= Gdx.graphics.getDeltaTime() * camBackSpeed;
+                camModifierX -= Gdx.graphics.getDeltaTime() * camBackSpeed.x;
                 if(camModifierX < 0)
                     camModifierX = 0;
             }
             if(camModifierX < 0){
-                camModifierX += Gdx.graphics.getDeltaTime() * camBackSpeed;
+                camModifierX += Gdx.graphics.getDeltaTime() * camBackSpeed.x;
                 if(camModifierX > 0)
                     camModifierX = 0;
             }
+        }else{
+            if(camModifierX < maxX)
+                camBackSpeed.x = 1f;
+            if(camModifierY < maxY)
+                camBackSpeed.y = 1f;//Make sure going back at normal speed
         }
         if(dirY == 0){
             if(camModifierY > 0){
-                camModifierY -= Gdx.graphics.getDeltaTime() * camBackSpeed;
+                camModifierY -= Gdx.graphics.getDeltaTime() * camBackSpeed.y;
                 if(camModifierY < 0)
                     camModifierY = 0;
             }
             if(camModifierY < 0){
-                camModifierY += Gdx.graphics.getDeltaTime() * camBackSpeed;
+                camModifierY += Gdx.graphics.getDeltaTime() * camBackSpeed.y;
                 if(camModifierY > 0)
                     camModifierY = 0;
             }
+        }else{
+            if(camModifierX < maxX)
+                camBackSpeed.x = 2f;
+            if(camModifierY < maxY)
+                camBackSpeed.y = 2f;//Make sure going back at normal speed
         }
 
-
-        camera.position.set(defaultCamX + (camModifierX), defaultCamY + (camModifierY), 0);
-    }
-
-    //Remove some decimals...
-    public static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
+        if(!isCamLocked)
+            camera.position.set(defaultCamX + (camModifierX), defaultCamY + (camModifierY), 0);
     }
 
     //Updates the velocity from touchpad widget
     public void updateVelocity(float movementX, float movementY){
-        //TODO the vector2 'test' removes acceleration and keeps player the same speed. Keep this?
-        Vector2 test = new Vector2(movementX, movementY).nor();
+        //Removes acceleration effect from touchpad, we want that from physics
+        Vector2 normalizedMovement = new Vector2(movementX, movementY).nor();
         this.dirX = movementX;
         this.dirY = movementY;
-        this.movementX = test.x * moveSpeed;
-        this.movementY = test.y * moveSpeed;
-        body.setLinearVelocity(test.x/32 * moveSpeed * gm.getGameSpeed(),test.y/32 * moveSpeed * gm.getGameSpeed());
+        setFacing(dirX, dirY);
+        this.movementX = normalizedMovement.x * moveSpeed;
+        this.movementY = normalizedMovement.y * moveSpeed;
+        //TODO change to add acceleration and decel
+        /*
+        body.setLinearVelocity(normalizedMovement.x/gm.PIXELS_TO_METRES * moveSpeed * gm.getGameSpeed(),
+                normalizedMovement.y/gm.PIXELS_TO_METRES * moveSpeed * gm.getGameSpeed());
+                */
+
+        Vector2 velocity = body.getLinearVelocity();
+        float desiredXVel = 0;
+        float desiredYVel = 0;
+        float maxV = 0.15f;
+        body.setLinearDamping(9f);
+        if(dirX < 0){
+            desiredXVel = dirX;
+        }
+        if(dirX > 0){
+            desiredXVel = dirX;
+        }
+        if(dirY < 0){
+            desiredYVel = dirY;
+        }
+        if(dirY > 0){
+            desiredYVel = dirY;
+        }
+
+        float velXChange = desiredXVel - velocity.x;
+        float velYChange = desiredYVel - velocity.y;
+        float impulseX = body.getMass() * velXChange; //disregard time factor
+        float impulseY = body.getMass() * velYChange; //disregard time factor
+        impulseX /= gm.PIXELS_TO_METRES;
+        impulseY /= gm.PIXELS_TO_METRES;
+        impulseX *= gm.getGameSpeed();
+        impulseY *= gm.getGameSpeed();
+        body.applyLinearImpulse(new Vector2((impulseX), impulseY), body.getWorldCenter(), true);
+
     }
 
     /**
      * Animation functions
     */
     public String isFacing(){
-
-        if(dirY <= 0.60f && dirY > -0.60f && dirX > 0){
-            isFacing = "Right";
-        }else if(dirY <= 0.60f && dirY > -0.60f && dirX < 0){
-            isFacing = "Left";
-        }else if(dirX <= 0.80f && dirX > -0.80f && dirY > 0){
-            isFacing = "Up";
-        }else if(dirX <= 0.80f && dirX > -0.80f && dirY < 0){
-            isFacing = "Down";
-        }
-
         return isFacing;
     }
 
@@ -252,22 +332,22 @@ public class CharacterController {
     private AnimState getAnimation(){
         AnimState currentAnimation = null;
         if(!isMoving()) {
-            if(isFacing().equals("Left")) //stillLeft
+            if(isFacing.equals("Left")) //stillLeft
                 currentAnimation = AnimState.STILL_LEFT;
-            if(isFacing().equals("Right")) //stillRight
+            if(isFacing.equals("Right")) //stillRight
                 currentAnimation = AnimState.STILL_RIGHT;
-            if(isFacing().equals("Up")) //stillUp
+            if(isFacing.equals("Up")) //stillUp
                 currentAnimation = AnimState.STILL_UP;
-            if(isFacing().equals("Down")) //stillDown
+            if(isFacing.equals("Down")) //stillDown
                 currentAnimation = AnimState.STILL_DOWN;
         }else if(isMoving()) {
-            if(isFacing().equals("Left")) //walkLeft
+            if(isFacing.equals("Left")) //walkLeft
                 currentAnimation = AnimState.WALK_LEFT;
-            if(isFacing().equals("Right")) //walkRight
+            if(isFacing.equals("Right")) //walkRight
                 currentAnimation = AnimState.WALK_RIGHT;
-            if(isFacing().equals("Up")) //walkUp
+            if(isFacing.equals("Up")) //walkUp
                 currentAnimation = AnimState.WALK_UP;
-            if(isFacing().equals("Down")) //walkDown
+            if(isFacing.equals("Down")) //walkDown
                 currentAnimation = AnimState.WALK_DOWN;
         }
         return currentAnimation;
@@ -275,7 +355,6 @@ public class CharacterController {
 
     private Animation getAnimation(AnimState state){
         Animator animator = new Animator();
-        Animation currentAnimation = null;
 
         switch(state) {
             case STILL_LEFT:
