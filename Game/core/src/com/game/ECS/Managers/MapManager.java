@@ -2,8 +2,8 @@ package com.game.ECS.Managers;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
@@ -18,8 +18,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpriteComponent;
-import com.game.ECS.Other.Assets;
-import com.game.ECS.Other.GameVars;
+import com.game.ECS.Storage.Assets;
+import com.game.ECS.Storage.GameVars;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class MapManager {
             entity.add(new PositionComponent(objSprite.getX() + objSprite.getWidth() * 0.5f,
                     objSprite.getY() + objSprite.getHeight() * 0.5f))
                     .add(new SpriteComponent(objSprite))
-                    .add(new DepthComponent(0));
+                    .add(new DepthComponent(-objSprite.getHeight() * 0.5f));
             engine.addEntity(entity);
         }
 
@@ -114,6 +114,10 @@ public class MapManager {
 
     public OrthogonalTiledMapRenderer getTiledMapRenderer() {
         return tiledMapRenderer;
+    }
+
+    public Map getMap() {
+        return tiledMap;
     }
 
     private Random rand = new Random();

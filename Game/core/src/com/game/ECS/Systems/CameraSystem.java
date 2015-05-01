@@ -20,7 +20,7 @@ public class CameraSystem extends IteratingSystem {
     private ComponentMapper<CameraComponent> cm;
 
     public CameraSystem(int order) {
-        super(Family.all(CameraComponent.class).get(), order);
+        super(Family.all(PositionComponent.class, CameraComponent.class).get(), order);
 
         pm = ComponentMapper.getFor(PositionComponent.class);
         cm = ComponentMapper.getFor(CameraComponent.class);
@@ -29,19 +29,10 @@ public class CameraSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         CameraComponent cam = cm.get(entity);
+        PositionComponent pos = pm.get(entity);
 
-        if (cam.target == null) {
-            return;
-        }
-
-        PositionComponent target = pm.get(cam.target);
-
-        if (target == null) {
-            return;
-        }
-
-        cam.camera.position.x = target.x;
-        cam.camera.position.y = target.y;
+        cam.camera.position.x = pos.x + cam.offset.x;
+        cam.camera.position.y = pos.y + cam.offset.y;
 
         cam.camera.update(); //TODO maybe move to render
     }

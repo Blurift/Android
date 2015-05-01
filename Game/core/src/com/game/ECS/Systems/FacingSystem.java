@@ -13,31 +13,26 @@ import com.game.ECS.Components.VelocityComponent;
  */
 public class FacingSystem extends IteratingSystem{
     private ComponentMapper<FacingComponent> fm;
-    private ComponentMapper<VelocityComponent> vm;
 
     public FacingSystem() {
-        super(Family.all(FacingComponent.class, VelocityComponent.class).get());
+        super(Family.all(FacingComponent.class).get());
 
         fm = ComponentMapper.getFor(FacingComponent.class);
-        vm = ComponentMapper.getFor(VelocityComponent.class);
 
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Vector2 vel = vm.get(entity).velocity;
-        FacingComponent.Facing facing = fm.get(entity).facing;
-        if(vel.y <= 0.60f && vel.y > -0.60f && vel.x > 0){
-            facing = FacingComponent.Facing.RIGHT;
-        }else if(vel.y <= 0.60f && vel.y> -0.60f && vel.x < 0){
-            facing = FacingComponent.Facing.LEFT;
-        }else if(vel.x <= 0.80f && vel.x > -0.80f && vel.y > 0){
-            facing = FacingComponent.Facing.UP;;
-        }else if(vel.x <= 0.80f && vel.x > -0.80f && vel.y < 0){
-            facing = FacingComponent.Facing.DOWN;
+        FacingComponent facing = fm.get(entity);
+        if(facing.dir.y <= 0.60f && facing.dir.y > -0.60f && facing.dir.x > 0){
+            facing.facing = FacingComponent.Facing.RIGHT;
+        }else if(facing.dir.y <= 0.60f && facing.dir.y> -0.60f && facing.dir.x < 0){
+            facing.facing = FacingComponent.Facing.LEFT;
+        }else if(facing.dir.x <= 0.80f && facing.dir.x > -0.80f && facing.dir.y > 0){
+            facing.facing = FacingComponent.Facing.UP;;
+        }else if(facing.dir.x <= 0.80f && facing.dir.x > -0.80f && facing.dir.y < 0){
+            facing.facing = FacingComponent.Facing.DOWN;
         }
-
-        fm.get(entity).facing = facing;
 
     }
 }

@@ -1,4 +1,4 @@
-package com.game.ECS.Other;
+package com.game.ECS.Storage;
 
 import com.badlogic.gdx.Gdx;
 

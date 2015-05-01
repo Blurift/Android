@@ -1,6 +1,7 @@
 package com.game.ECS.Components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Sean on 27/04/2015.
@@ -14,5 +15,5 @@ public class FacingComponent extends Component {
     }
 
     public Facing facing = Facing.DOWN;
-
+    public Vector2 dir = new Vector2();
 }

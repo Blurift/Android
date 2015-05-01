@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.game.tools.IDepthObject;
-import com.game.ECS.Other.MapBodyBuilder;
+import com.game.ECS.Tools.MapBodyBuilder;
 import com.game.tools.SpriteDepthObject;
 
 import java.util.ArrayList;
@@ -61,8 +61,8 @@ public class MapManager {
 
         //Populate World with collisions
         MapBodyBuilder mapBodyBuilder = new MapBodyBuilder();
-        mapBodyBuilder.buildShapes(tiledMap, "Collision", gm.PIXELS_TO_METRES, gm.getWorld());
-        mapBodyBuilder.buildShapes(tiledMap, "Hitbox", gm.PIXELS_TO_METRES, gm.getWorld());
+        mapBodyBuilder.buildShapes(tiledMap, "Collision", gm.getWorld());
+        mapBodyBuilder.buildShapes(tiledMap, "Hitbox", gm.getWorld());
     }
 
     public void update()

@@ -1,11 +1,9 @@
 package com.game.ECS.Screen;
 
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,9 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.game.ECS.Components.VelocityComponent;
-import com.game.ECS.Other.Assets;
-import com.game.ECS.Other.ResolutionHandler;
+import com.game.ECS.Components.PlayerInputComponent;
+import com.game.ECS.Storage.Assets;
+import com.game.ECS.Tools.ResolutionHandler;
+import com.game.Main;
 
 /**
  * Created by Sean on 26/04/2015.
@@ -27,26 +26,28 @@ import com.game.ECS.Other.ResolutionHandler;
  */
 public class GameScreen implements Screen {
 
+    private Main game;
     private Stage stage;
-    private Entity player;
+    private PlayerInputComponent playerInput;
 
-    float scale;
+    private float scale;
 
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
     private Skin touchpadSkin;
     private Drawable touchBackground;
     private Drawable touchKnob;
-    Texture castTexture;
+    private Texture castTexture;
     private float minButtonHeight;
     private float maxButtonHeight;
     private ImageButton castSpellBtn;
     private Image castSpellBtnShadow;
     private Texture castSpellBtnShadowTexture;
 
-    public GameScreen(Stage stage, Entity player){
+    public GameScreen(Main game, Stage stage, PlayerInputComponent playerInput){
+        this.game = game;
         this.stage = stage;
-        this.player = player;
+        this.playerInput = playerInput;
 
         //Scale of UI
         this.scale = ResolutionHandler.getScale();
@@ -64,6 +65,8 @@ public class GameScreen implements Screen {
         stage.addActor(touchpad);
         stage.addActor(castSpellBtn);
         stage.addActor(castSpellBtnShadow);
+
+        this.playerInput.currentState = PlayerInputComponent.States.FREE;
     }
 
     //For the animation of the cast spell button
@@ -73,9 +76,9 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         //Feed touchpad input to player entity
-        VelocityComponent vel = player.getComponent(VelocityComponent.class);
-        vel.velocity.x = touchpad.getKnobPercentX();
-        vel.velocity.y = touchpad.getKnobPercentY();
+
+        playerInput.touchpadDir.x = touchpad.getKnobPercentX();
+        playerInput.touchpadDir.y = touchpad.getKnobPercentY();
 
         //Animate cast spell button
         //TODO need to lerp book floating up and down
@@ -113,6 +116,10 @@ public class GameScreen implements Screen {
         touchpad.remove();
         castSpellBtn.remove();
         castSpellBtnShadow.remove();
+
+        //No longer giving input
+        playerInput.touchpadDir.x = 0;
+        playerInput.touchpadDir.y = 0;
     }
 
     @Override
@@ -157,7 +164,7 @@ public class GameScreen implements Screen {
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //ui.activateUIScreen(ui.getSpellCasting());
+                game.setScreen(new SpellAimingScreen(game, stage, playerInput));
             }
         });
 

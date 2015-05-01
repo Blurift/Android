@@ -13,7 +13,7 @@ import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Managers.MapManager;
-import com.game.ECS.Other.GameVars;
+import com.game.ECS.Storage.GameVars;
 
 /**
  * Created by Sean on 25/04/2015.

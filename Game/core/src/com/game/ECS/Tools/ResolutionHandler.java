@@ -1,4 +1,4 @@
-package com.game.ECS.Other;
+package com.game.ECS.Tools;
 
 import com.badlogic.gdx.Gdx;
 

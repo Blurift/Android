@@ -1,4 +1,4 @@
-package com.game.ECS.Other;
+package com.game.ECS.Storage;
 
 /**
  * Created by Sean on 22/04/2015.

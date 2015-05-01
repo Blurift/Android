@@ -1,4 +1,4 @@
-package com.game.ECS.Other;
+package com.game.ECS.Storage;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -14,6 +14,8 @@ import java.util.Map;
  * Asset locations
  *
  */
+
+//Todo convert to asset manager
 public class Assets {
 
     //Tiled Map
@@ -22,9 +24,16 @@ public class Assets {
     //UI
     public static String castSpellBtn = "UI/castButton.png";
     public static String castSpellShadow = "UI/castButtonShadow.png";
+    public static String cancelBtn = "UI/cancelButton.png";
 
     //Character Sheets
     public static String druidSheet = "character/DruidSheet.png";
+
+    //Projectiles
+    public static String iceProjEffect = "particles/Ice.p";
+    public static String iceProjParticle = "particles/";
+    public static String iceExplosion = "particles/IceExplosion.p";
+    public static String iceSprite = "projectiles/iceball.png";
 
     //Misc
     public static String blank = "Blank.png";

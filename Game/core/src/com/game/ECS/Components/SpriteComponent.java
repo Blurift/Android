@@ -3,7 +3,8 @@ package com.game.ECS.Components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.game.ECS.Other.Assets;
+import com.badlogic.gdx.math.Vector2;
+import com.game.ECS.Storage.Assets;
 
 /**
  * Created by Sean on 25/04/2015.
@@ -15,6 +16,8 @@ import com.game.ECS.Other.Assets;
  */
 public class SpriteComponent extends Component{
     public Sprite sprite = new Sprite(new Texture(Assets.blank));
+
+    public Vector2 offset = new Vector2(0,0);
 
     public SpriteComponent(){}
     public SpriteComponent(Sprite sprite){

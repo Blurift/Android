@@ -5,19 +5,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.game.ECS.Other.B2DVars;
-import com.game.ECS.Other.GameVars;
-import com.game.MyContactListener;
+import com.game.ECS.Storage.B2DVars;
+import com.game.ECS.Storage.GameVars;
 
 /**
  * Created by Sean on 25/04/2015.
  *
- * WorldManager, a singleton class used to handle the Box2D world.
+ * WorldManager, a class for handling the Box2D world
  *
  */
 public class WorldManager {
@@ -27,7 +25,7 @@ public class WorldManager {
     }
 
     public enum BodyType{
-        HUMANOID
+        HUMANOID, PROJECTILE
     }
 
     private World world;
@@ -39,6 +37,8 @@ public class WorldManager {
                         hitboxW = 0.25f, hitboxH = 0.50f, hitboxOSX = 0f, hitboxOSY = 0.5f;
                 return createBody(posX+offsetX, posY+offsetY, circleRadius,
                         hitboxW, hitboxH, hitboxOSX, hitboxOSY, owner);
+            case PROJECTILE:
+                return createProjectileBody(owner);
         }
         return null;
     }
@@ -56,30 +56,52 @@ public class WorldManager {
         bodyDef.fixedRotation = true;
         body = this.world.createBody(bodyDef);
         //Collision
-        CircleShape shape = new CircleShape();
-        shape.setRadius(collisionRadius/GameVars.PTM);
+        circle = new CircleShape();
+        circle.setRadius(collisionRadius/GameVars.PTM);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
+        fixtureDef.shape = circle;
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = B2DVars.BIT_HUSK;
         fixtureDef.filter.maskBits = B2DVars.BIT_COLLISION | B2DVars.BIT_HUSK;
         body.createFixture(fixtureDef);
-        shape.dispose();
+        circle.dispose();
 
         //Hitbox
-        PolygonShape hitbox = new PolygonShape();
-        hitbox.setAsBox(hitboxW/GameVars.PTM, hitboxH/GameVars.PTM,
+        polygon = new PolygonShape();
+        polygon.setAsBox(hitboxW/GameVars.PTM, hitboxH/GameVars.PTM,
                 new Vector2(offsetX, offsetY/GameVars.PTM), 0);
 
         fixtureDef = new FixtureDef();
-        fixtureDef.shape = hitbox;
+        fixtureDef.shape = polygon;
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = B2DVars.BIT_HITBOX;
         fixtureDef.filter.maskBits = B2DVars.BIT_PROJECTILE;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(owner);
-        hitbox.dispose();
+        polygon.dispose();
         body.setLinearDamping(GameVars.DAMPING);
+        return body;
+    }
+
+    public Body createProjectileBody(Entity owner){
+        Body body;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(0, 0);
+        bodyDef.fixedRotation = true;
+        body = world.createBody(bodyDef);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(0.25f/GameVars.PTM);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        fixtureDef.filter.categoryBits = B2DVars.BIT_PROJECTILE;
+        fixtureDef.filter.maskBits = B2DVars.BIT_HITBOX;
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(owner);
+        shape.dispose();
+
         return body;
     }
 

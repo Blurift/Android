@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.game.Animator;
-import com.game.ECS.Other.B2DVars;
+import com.game.ECS.Storage.B2DVars;
 import com.game.managers.GameManager;
 import com.game.tools.IDepthObject;
 

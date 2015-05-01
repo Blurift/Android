@@ -1,4 +1,4 @@
-package com.game.ECS.Other;
+package com.game.ECS.Tools;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.Map;
@@ -24,7 +24,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.game.ECS.Other.B2DVars;
+import com.game.ECS.Storage.B2DVars;
+import com.game.ECS.Storage.GameVars;
 
 import java.math.BigDecimal;
 
@@ -45,8 +46,8 @@ public class MapBodyBuilder {
     private static float ppt = 0;
     private static World pWorld = null;
 
-    public static Array<Body> buildShapes(Map map, String layer, float pixels, World world) {
-        ppt = pixels;
+    public static Array<Body> buildShapes(Map map, String layer, World world) {
+        ppt = GameVars.PTM;
         pWorld = world;
         MapObjects objects = map.getLayers().get(layer).getObjects();
 
