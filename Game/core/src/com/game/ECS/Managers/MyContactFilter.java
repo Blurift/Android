@@ -43,6 +43,11 @@ public class MyContactFilter implements ContactFilter {
         }
 
         if(fixtureA.getFilterData().categoryBits == B2DVars.BIT_HUSK &&
+                fixtureB.getFilterData().categoryBits == B2DVars.BIT_HUSK){
+            return true;
+        }
+
+        if(fixtureA.getFilterData().categoryBits == B2DVars.BIT_HUSK &&
                 fixtureB.getFilterData().categoryBits == B2DVars.BIT_COLLISION){
             return true;
         }

@@ -133,6 +133,13 @@ public class MapManager {
 
     }
     public Vector2 getRandomEnemySpawn(){
-        return playerSpawns.get(rand.nextInt(enemySpawns.size()-1));
+        if(enemySpawns.size() == 1){
+            return playerSpawns.get(0);
+        }
+        if(enemySpawns.size() != 0){
+            return enemySpawns.get(rand.nextInt(enemySpawns.size()-1));
+        }else{
+            return null;
+        }
     }
 }

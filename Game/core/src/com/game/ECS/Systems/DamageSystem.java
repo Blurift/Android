@@ -22,7 +22,7 @@ public class DamageSystem extends IteratingSystem{
     private ComponentMapper<SpriteComponent> sm;
     private ComponentMapper<DamageComponent> dm;
     private static final int FLASH_AMOUNT = 2; //amount of times sprite flashes red
-    private static final float RED_TIME = 0.5f; //How long sprite is red for
+    private static final float RED_TIME = 0.05f; //How long sprite is red for
     private static final float CLEAR_TIME = 2; //amount of time in betwen red flashes
     private static final Color DMG_COLOR = Color.RED; //Color of damage overlay
 
@@ -32,32 +32,36 @@ public class DamageSystem extends IteratingSystem{
 
     @Override
     public void addedToEngine(Engine engine){
-
+        super.addedToEngine(engine);
         sm = ComponentMapper.getFor(SpriteComponent.class);
         dm = ComponentMapper.getFor(DamageComponent.class);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+
         //Todo fix deltaTime
         SpriteComponent sc = sm.get(entity);
         DamageComponent dc = dm.get(entity);
         if(sc != null) {
             //Start of damange animation
-            if (sc.sprite.getColor().equals(Color.WHITE) && dc.flashes == 0) {
+            if (sc.sprite.getColor() != DMG_COLOR && dc.flashes == 0) {
                 sc.sprite.setColor(DMG_COLOR);
             }
 
             if (dc.animTimer >= RED_TIME){
-                if(sc.sprite.getColor().equals(Color.WHITE))
+                if(sc.sprite.getColor() == Color.WHITE)
                     sc.sprite.setColor(DMG_COLOR);
-                else if(sc.sprite.getColor().equals(DMG_COLOR)){
+                else if(sc.sprite.getColor() == DMG_COLOR){
                     sc.sprite.setColor(Color.WHITE);
                     dc.flashes++;
                 }
-                sc.sprite.setColor(Color.WHITE);
-
                 dc.animTimer = 0;
+                sc.sprite.setColor(Color.BLACK);
+                entity.remove(DamageComponent.class);
+                if(dc.flashes == FLASH_AMOUNT){
+
+                }
             }else{
                 dc.animTimer += 1 * Gdx.graphics.getDeltaTime();
             }

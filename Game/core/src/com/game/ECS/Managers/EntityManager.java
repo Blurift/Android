@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.game.*;
 import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.CameraComponent;
@@ -22,13 +21,16 @@ import com.game.ECS.Components.StateComponent;
 import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Storage.Assets;
 import com.game.ECS.Storage.GameVars;
+import com.game.ECS.Systems.AIDirectorSystem;
+import com.game.ECS.Systems.AISystem;
+import com.game.ECS.Systems.DamageSystem;
 import com.game.ECS.Systems.ProjectileSystem;
 import com.game.ECS.Tools.MapBodyBuilder;
 import com.game.ECS.Systems.AnimationSystem;
 import com.game.ECS.Systems.CameraSystem;
 import com.game.ECS.Systems.CharacterMovementSystem;
 import com.game.ECS.Systems.FacingSystem;
-import com.game.ECS.Systems.InputSystem;
+import com.game.ECS.Systems.PlayerInputSystem;
 import com.game.ECS.Systems.RenderSystem;
 import com.game.ECS.Systems.SpawnSystem;
 import com.game.ECS.Tools.Time;
@@ -62,8 +64,11 @@ public class EntityManager {
 
         //SYSTEM
         //Player Input System
-        InputSystem is = new InputSystem(worldManager);
+        PlayerInputSystem is = new PlayerInputSystem(worldManager);
         engine.addSystem(is);
+        //AI Controller System
+        AISystem ais = new AISystem();
+        engine.addSystem(ais);
         //Movement System
         CharacterMovementSystem cms = new CharacterMovementSystem(0, worldManager.getWorld());
         engine.addSystem(cms);
@@ -73,12 +78,18 @@ public class EntityManager {
         //Spawn System
         SpawnSystem ss = new SpawnSystem(1, mapManager);
         engine.addSystem(ss);
+        //AIDirectorSystem
+        AIDirectorSystem ads = new AIDirectorSystem(mapManager, worldManager);
+        engine.addSystem(ads);
         //Facing System - Where the player is facing
         FacingSystem fs = new FacingSystem();
         engine.addSystem(fs);
         //Animation State System, setting the players current animation
         AnimationSystem as = new AnimationSystem();
         engine.addSystem(as);
+        //Damage System
+        DamageSystem ds = new DamageSystem();
+        engine.addSystem(ds);
         //Camera System
         CameraSystem cs = new CameraSystem(2);
         engine.addSystem(cs);
@@ -160,7 +171,9 @@ public class EntityManager {
         @Override
         public void entityRemoved(Entity entity) {
             Body body = entity.getComponent(BodyComponent.class).body;
-            body.getWorld().destroyBody(body);
+            if(body != null)
+                body.getWorld().destroyBody(body);
+
         }
     }
 

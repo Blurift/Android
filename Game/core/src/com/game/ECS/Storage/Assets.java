@@ -30,9 +30,9 @@ public class Assets {
     public static String druidSheet = "character/DruidSheet.png";
 
     //Projectiles
-    public static String iceProjEffect = "particles/Ice.p";
+    public static String iceProjEffect = "particles/ice.p";
     public static String iceProjParticle = "particles/";
-    public static String iceExplosion = "particles/IceExplosion.p";
+    public static String iceExplosion = "particles/iceExplosion.p";
     public static String iceSprite = "projectiles/iceball.png";
 
     //Misc

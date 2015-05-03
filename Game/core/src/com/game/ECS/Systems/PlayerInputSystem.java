@@ -25,7 +25,7 @@ import javafx.scene.Camera;
 /**
  * Created by Sean on 27/04/2015.
  */
-public class InputSystem extends EntitySystem{
+public class PlayerInputSystem extends EntitySystem{
 
     private WorldManager worldManager;
 
@@ -38,7 +38,7 @@ public class InputSystem extends EntitySystem{
     private ComponentMapper<PositionComponent> pm;
     private ComponentMapper<FacingComponent> fm;
 
-    public InputSystem(WorldManager worldManager) {
+    public PlayerInputSystem(WorldManager worldManager) {
         this.worldManager = worldManager;
 
         vm = ComponentMapper.getFor(VelocityComponent.class);

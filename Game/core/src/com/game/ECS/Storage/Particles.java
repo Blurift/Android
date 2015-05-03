@@ -21,7 +21,7 @@ public class Particles {
 
     public static ParticleEffectPool.PooledEffect iceExplosion(){
         ParticleEffect projectileEffect = new ParticleEffect();
-        projectileEffect.load(Gdx.files.internal("particles/IceExplosion.p"), Gdx.files.internal("particles/"));
+        projectileEffect.load(Gdx.files.internal("particles/iceExplosion.p"), Gdx.files.internal("particles/"));
         projectileEffect.scaleEffect(0.01f);
         ParticleEffectPool projectileEffectPool = new ParticleEffectPool(projectileEffect, 1,2);
 
