@@ -59,11 +59,12 @@ public class CharacterMovementSystem extends IteratingSystem {
         StateComponent state = sm.get(entity);
         //Change state
         state.state = StateComponent.State.WALK;
-        if(vel.x == 0 && vel.y ==0){
-            state.state = StateComponent.State.STILL;
-        }
+
 
         Vector2 currentVelocity = body.body.getLinearVelocity();
+        if(currentVelocity.x == 0 && currentVelocity.y == 0){
+            state.state = StateComponent.State.STILL;
+        }
         float desiredXVel = 0;
         float desiredYVel = 0;
 

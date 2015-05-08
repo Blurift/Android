@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Component;
  */
 public class StateComponent extends Component{
 
-    public enum State{
+    public static enum State{
         STILL, WALK
     }
 

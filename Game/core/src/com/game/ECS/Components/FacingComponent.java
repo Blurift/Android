@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
  *
  */
 public class FacingComponent extends Component {
-    public enum Facing{
+    public static enum Facing{
         LEFT, RIGHT, UP, DOWN
     }
 

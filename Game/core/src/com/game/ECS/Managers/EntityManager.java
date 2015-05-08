@@ -4,14 +4,18 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.CameraComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
+import com.game.ECS.Components.HealthComponent;
+import com.game.ECS.Components.InkComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.ProjectileComponent;
@@ -109,12 +113,14 @@ public class EntityManager {
 
         //Listeners
         //Projectile
-        Family family = Family.all(ProjectileComponent.class).get();
-        engine.addEntityListener(family, new ProjectileListener());
+        Family family = Family.all(BodyComponent.class).get();
+        engine.addEntityListener(family, new BodyListener());
     }
 
     public void update(){
         engine.update((float) Time.time * gameSpeed);
+        worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/GameVars.PTM)*10, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*10) *-1));
+        //player.getComponent(BodyComponent.class).body.setLinearVelocity(0,0);
     }
 
     /**
@@ -144,12 +150,15 @@ public class EntityManager {
         entity.add(new VelocityComponent(0, 0))
                 .add(bodyComponent)
                 .add(new PlayerComponent(0))
-                .add(new SpawningComponent(0,0,0))
+                .add(new SpawningComponent(0))
                 .add(new FacingComponent())
                 .add(spriteComponent)
                 .add(new AnimationSetComponent(Assets.animPlayerDruid()))
                 .add(new StateComponent())
-                .add(new DepthComponent(-16)).add(inputComponent)
+                .add(new DepthComponent(-0.50f))
+                .add(inputComponent)
+                .add(new HealthComponent(10))
+                .add(new InkComponent(10))
                 .add(cameraComponent);
 
         engine.addEntity(entity);
@@ -161,7 +170,7 @@ public class EntityManager {
      * Entity listeners
      */
 
-    private class ProjectileListener implements EntityListener {
+    private class BodyListener implements EntityListener {
 
         @Override
         public void entityAdded(Entity entity) {

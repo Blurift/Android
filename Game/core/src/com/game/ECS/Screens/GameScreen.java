@@ -1,10 +1,13 @@
-package com.game.ECS.Screen;
+package com.game.ECS.Screens;
 
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -14,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.game.ECS.Components.PlayerInputComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Storage.Assets;
 import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
@@ -44,6 +48,8 @@ public class GameScreen implements Screen {
     private Image castSpellBtnShadow;
     private Texture castSpellBtnShadowTexture;
 
+    private float barSize;
+
     public GameScreen(Main game, Stage stage, PlayerInputComponent playerInput){
         this.game = game;
         this.stage = stage;
@@ -55,6 +61,9 @@ public class GameScreen implements Screen {
         //Screen components
         this.touchpad = createTouchpad();
         this.castSpellBtn = createCastSpellBtn();
+
+        //Scale some things
+        this.barSize = 300*scale;
 
         //Set the input as this stage
         Gdx.input.setInputProcessor(stage);
@@ -72,6 +81,8 @@ public class GameScreen implements Screen {
     //For the animation of the cast spell button
     private boolean isRising = true;
     private float moveSpeed = 10;
+
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     @Override
     public void render(float delta) {
@@ -94,6 +105,78 @@ public class GameScreen implements Screen {
                 isRising = true;
             }
         }
+
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        float barOffset = 55*scale; //Offset from bottom
+        Vector2 healthStart = new Vector2();
+        Vector2 healthEnd = new Vector2();
+        float barLength = 1;
+        if(playerInput.playerHealth != null) {
+            healthStart.x = stage.getViewport().getScreenWidth() * 0.5f - barSize * 0.5f;
+            healthStart.y = barOffset;
+
+            healthEnd.x = healthStart.x + barSize;
+            healthEnd.y = barOffset;
+
+
+            //Behind Health Bar
+            shapeRenderer.setColor(Color.BLACK);
+            //Draw fancier back bar
+
+            barLength = 1*scale;
+            for (int i = 15; i > 0; i = i - 3) {
+                shapeRenderer.rectLine(new Vector2(healthStart.x - barLength, healthStart.y),
+                        new Vector2(healthEnd.x + barLength, healthEnd.y), i*scale);
+                barLength++;
+            }
+            //Actual Health Representation
+            shapeRenderer.setColor(Color.RED);
+            healthEnd.x = healthStart.x + barSize * (playerInput.playerHealth.currentHealth /
+                    playerInput.playerHealth.maxHealth);
+            shapeRenderer.rectLine(healthStart, healthEnd, 10*scale);
+        }
+
+        if(playerInput.playerInk != null) {
+            //Draw InkBar
+            barOffset = 35 * scale; //Offset from bottom
+
+
+            //Actual Ink
+            healthStart.x = stage.getViewport().getScreenWidth() * 0.5f - barSize * 0.5f;
+            healthStart.y = barOffset;
+            healthEnd.x = healthStart.x + barSize;
+            healthEnd.y = barOffset;
+
+
+            //Behind Ink Bar
+            shapeRenderer.setColor(Color.BLACK);
+            //Draw fancier back bar
+            barLength = 1*scale;
+            for (int i = 15; i > 0; i = i - 3) {
+                shapeRenderer.rectLine(new Vector2(healthStart.x - barLength, healthStart.y),
+                        new Vector2(healthEnd.x + barLength, healthEnd.y), i*scale);
+                barLength++;
+            }
+            //Actual Health Representation
+            shapeRenderer.setColor(Color.PURPLE);
+            Vector2 healthMini = new Vector2(healthEnd);
+            healthEnd.x = healthStart.x + barSize * (playerInput.playerInk.currentInk /
+                    playerInput.playerInk.maxInk);
+            healthMini.x = (healthStart.x + 5*scale) + (barSize - 10*scale) * (playerInput.playerInk.currentInk /
+                    playerInput.playerInk.maxInk);
+            shapeRenderer.rectLine(healthStart, healthEnd, 10*scale);
+
+            shapeRenderer.setColor(Color.MAROON);
+            shapeRenderer.rectLine(new Vector2(healthStart.x + 5*scale, healthStart.y - 1*scale),
+                    new Vector2(healthMini.x, healthMini.y - 1*scale), 1*scale);
+            //Border
+        }
+
+
+        shapeRenderer.end();
+
     }
 
     @Override
@@ -131,8 +214,8 @@ public class GameScreen implements Screen {
 
     public Touchpad createTouchpad(){
         touchpadSkin = new Skin();
-        touchpadSkin.add("touchBackground", new Texture("UI/touchpad/touchBackground.png"));
-        touchpadSkin.add("touchKnob", new Texture("UI/touchpad/touchKnob.png"));
+        touchpadSkin.add("touchBackground", ResourceManager.uiKnobBG());
+        touchpadSkin.add("touchKnob", ResourceManager.uiKnob());
         touchpadStyle = new Touchpad.TouchpadStyle();
         touchBackground = touchpadSkin.getDrawable("touchBackground");
         touchKnob = touchpadSkin.getDrawable("touchKnob");
@@ -149,7 +232,7 @@ public class GameScreen implements Screen {
     }
 
     public ImageButton createCastSpellBtn(){
-        castTexture = new Texture(Assets.castSpellBtn);
+        castTexture = ResourceManager.uiCastSpellBtn();
         Skin castBtnSkin = new Skin();
         castBtnSkin.add("up", castTexture);
         castBtnSkin.add("down", castTexture);
@@ -164,11 +247,19 @@ public class GameScreen implements Screen {
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SpellAimingScreen(game, stage, playerInput));
+                //Todo remove this when SpellPreparing screen is implemented
+                if(playerInput.playerInk.currentInk > 0) {
+                    playerInput.playerInk.currentInk--;
+                    game.setScreen(new SpellAimingScreen(game, stage, playerInput));
+                }else if(playerInput.playerHealth.currentHealth > 1){
+                    playerInput.playerHealth.currentHealth--;
+                    game.setScreen(new SpellAimingScreen(game, stage, playerInput));
+                }
+
             }
         });
 
-        castSpellBtnShadowTexture = new Texture(Assets.castSpellShadow);
+        castSpellBtnShadowTexture = ResourceManager.uiCastSpellShadow();
         castSpellBtnShadow = new Image(new TextureRegion(castSpellBtnShadowTexture));
         castSpellBtnShadow.setSize(castSpellBtnShadow.getWidth()*scale, castSpellBtnShadow.getHeight()*scale);
         castSpellBtnShadow.setPosition(stage.getViewport().getCamera().viewportWidth-(45*scale+castSpellBtn.getWidth()), 40*scale);

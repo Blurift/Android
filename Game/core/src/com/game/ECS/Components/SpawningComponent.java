@@ -10,7 +10,7 @@ import com.badlogic.ashley.core.Component;
  */
 public class SpawningComponent extends Component{
     public float delay = 0f;
-    public SpawningComponent(float x, float y, float delay){
+    public SpawningComponent(float delay){
         this.delay = delay;
     }
 }

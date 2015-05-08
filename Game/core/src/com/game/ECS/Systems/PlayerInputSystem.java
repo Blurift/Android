@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.CameraComponent;
 import com.game.ECS.Components.FacingComponent;
+import com.game.ECS.Components.HealthComponent;
+import com.game.ECS.Components.InkComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
@@ -65,6 +67,22 @@ public class PlayerInputSystem extends EntitySystem{
             CameraComponent cc =  cm.get(entities.get(i));
             PositionComponent pc =  pm.get(entities.get(i));
             FacingComponent fc =  fm.get(entities.get(i));
+
+
+            //Make sure input has access to player health and ink
+            if(pic.playerHealth == null) {
+                HealthComponent playerHealth = entities.get(i).getComponent(HealthComponent.class);
+                if (playerHealth != null) {
+                    pic.playerHealth = playerHealth;
+                }
+            }
+            if(pic.playerInk == null) {
+                InkComponent playerInk = entities.get(i).getComponent(InkComponent.class);
+                if (playerInk != null) {
+                    pic.playerInk = playerInk;
+                }
+            }
+
             //Player is free to move around
             if(pic.currentState.equals(PlayerInputComponent.States.FREE))
                 vel.velocity = pic.touchpadDir;

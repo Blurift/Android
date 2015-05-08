@@ -5,15 +5,23 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Sean on 27/04/2015.
+ *
+ * The inbetween of the UI and the Player.
+ *
+ * Used for controlling aspects of the game via the UI, and receiving aspects of the game to give
+ * to the UI,
+ *
  */
 public class PlayerInputComponent extends Component {
-    public enum States{
+    public static enum States{
         FREE, DRAWING, AIMING
     }
 
     public Vector2 touchpadDir = new Vector2(0, 0);
     public Vector2 screenPos; //Touched screen position converted to world cood
     public States currentState = States.FREE;
+    public HealthComponent playerHealth;
+    public InkComponent playerInk;
 
     public Vector2 spellCast; //if null no spell is being cast, otherwise direction of spell
     //TODO rework spellcast

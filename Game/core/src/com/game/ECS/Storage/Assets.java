@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.game.ECS.Components.StateComponent;
+import com.game.ECS.Managers.ResourceManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,8 +69,8 @@ public class Assets {
         Map<StateComponent.State, Animation> right = new HashMap<StateComponent.State, Animation>();
         Map<StateComponent.State, Animation> up = new HashMap<StateComponent.State, Animation>();
         Map<StateComponent.State, Animation> down = new HashMap<StateComponent.State, Animation>();
-        Texture sheet = new Texture(druidSheet);
-        float s = 0.15f; //Anim speed
+        Texture sheet = ResourceManager.sheetDruid();
+        float s = 0.10f; //Anim speed
 
         //Still
         left.put(StateComponent.State.STILL, animate(sheet, 64, 192, 64, 64, 1, s));

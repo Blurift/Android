@@ -8,6 +8,7 @@ import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
+import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpawningComponent;
@@ -38,18 +39,18 @@ public class EnemyPrefabs {
                 WorldManager.BodyType.HUMANOID, enemy
         ));
         bodyComponent.offset.y = 0.5f;
-        spawn.x /= GameVars.PTM;
-        spawn.y /= GameVars.PTM;
-        bodyComponent.body.setTransform(spawn, bodyComponent.body.getAngle());
+        bodyComponent.body.setTransform(new Vector2( spawn.x / GameVars.PTM, spawn.y / GameVars.PTM),
+                bodyComponent.body.getAngle());
 
         enemy.add(new VelocityComponent(0, 0))
                 .add(bodyComponent)
-                .add(new PlayerComponent(0))
                 .add(new FacingComponent())
                 .add(spriteComponent)
                 .add(new AnimationSetComponent(Assets.animPlayerDruid()))
                 .add(new StateComponent())
-                .add(new DepthComponent(-16)).add(new AIComponent()).add(position);
+                .add(new DepthComponent(-0.50f))
+                .add(new AIComponent()).add(position)
+                .add(new HealthComponent(2));
 
         return enemy;
     }

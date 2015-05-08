@@ -7,18 +7,23 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.game.ECS.Components.AIComponent;
 import com.game.ECS.Components.DamageComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
+import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Storage.B2DVars;
 import com.game.ECS.Storage.Particles;
+
+import java.util.Random;
 
 
 /**
  * Created by Sean on 1/05/2015.
  *
  * Handles the contact between Box2D objects
+ * Pretty much handles attacks between different entities
  *
  */
 public class MyContactListener implements ContactListener {
@@ -27,6 +32,12 @@ public class MyContactListener implements ContactListener {
     public MyContactListener(Engine engine){
         this.engine = engine;
     }
+
+
+    //Getting random retreat time
+    Random rnd = new Random();
+    float min = 1;
+    float max = 1.5f;
 
     @Override
     public void beginContact(Contact contact) {
@@ -48,7 +59,7 @@ public class MyContactListener implements ContactListener {
             if(fb.getUserData() != null){
                 if(fb.getUserData() instanceof Entity) {
                     Entity enemy = (Entity) fb.getUserData();
-                    enemy.add(new DamageComponent());
+                    enemy.add(new DamageComponent(1));
                 }
             }
         }
@@ -68,9 +79,37 @@ public class MyContactListener implements ContactListener {
             if(fa.getUserData() != null){
                 if(fa.getUserData() instanceof Entity) {
                     Entity enemy = (Entity) fa.getUserData();
-                    enemy.add(new DamageComponent());
+                    enemy.add(new DamageComponent(1));
                 }
             }
+        }
+
+
+        if(fa.getUserData() instanceof Entity && fb.getUserData() instanceof Entity){
+            Entity a = (Entity) fa.getUserData();
+            Entity b = (Entity) fb.getUserData();
+            AIComponent aic = a.getComponent(AIComponent.class);
+            PlayerComponent pc = b.getComponent(PlayerComponent.class);
+            if(aic != null && pc != null){
+                if(aic.state == AIComponent.AIState.ATTACKING) {
+                    b.add(new DamageComponent(1));
+                    aic.state = AIComponent.AIState.RETREATING;
+                    aic.retreatTime = rnd.nextFloat() * (max - min) + min;
+                }
+            }else {
+
+                aic = b.getComponent(AIComponent.class);
+                pc = a.getComponent(PlayerComponent.class);
+                if (aic != null && pc != null) {
+                    if(aic.state == AIComponent.AIState.ATTACKING) {
+                        a.add(new DamageComponent(1));
+                        aic.state = AIComponent.AIState.RETREATING;
+                        aic.retreatTime = rnd.nextFloat() * (max - min) + min;
+
+                    }
+                }
+            }
+
         }
     }
 

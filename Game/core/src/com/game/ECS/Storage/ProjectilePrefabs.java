@@ -13,6 +13,7 @@ import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.ProjectileComponent;
 import com.game.ECS.Components.SpriteComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Managers.WorldManager;
 
 /**
@@ -27,7 +28,7 @@ public class ProjectilePrefabs {
         BodyComponent bc = new BodyComponent();
         ParticleEffectComponent pec = new ParticleEffectComponent();
 
-        sc.sprite = new Sprite(new Texture(Assets.iceSprite));
+        sc.sprite = new Sprite(ResourceManager.projIce());
         sc.sprite.setSize(2, 2); //Todo automate this
         pc.owner = owner;
         pc.speed = 15;

@@ -66,7 +66,7 @@ public class RenderSystem extends SortedIteratingSystem {
                         float e1y =  e1.getComponent(PositionComponent.class).y +
                                 e1.getComponent(DepthComponent.class).y;
                         float e2y =  e2.getComponent(PositionComponent.class).y +
-                                e1.getComponent(DepthComponent.class).y;
+                                e2.getComponent(DepthComponent.class).y;
                         if (e1y == e2y)
                             return 0;
                         return e1y > e2y ? -1 : 1;
@@ -105,9 +105,8 @@ public class RenderSystem extends SortedIteratingSystem {
                 sb.begin();
                 for(Entity entity : depthEntities){
 
-                    Vector2 pos = new Vector2();
-                    pos.x = pm.get(entity).x;
-                    pos.y = pm.get(entity).y;
+                    PositionComponent pos = pm.get(entity);
+
                     SpriteComponent sprite = sm.get(entity);
                     ParticleEffectComponent effect = pem.get(entity);
 
@@ -140,7 +139,7 @@ public class RenderSystem extends SortedIteratingSystem {
         //Render Box2D debug
         this.debugMatrix = sb.getProjectionMatrix().cpy().scale(GameVars.PTM,
                 GameVars.PTM, 0);
-        debugRenderer.render(world, debugMatrix);
+        //debugRenderer.render(world, debugMatrix);
         depthEntities.clear();
     }
 

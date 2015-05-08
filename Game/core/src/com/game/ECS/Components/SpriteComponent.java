@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Storage.Assets;
 
 /**
@@ -15,7 +16,7 @@ import com.game.ECS.Storage.Assets;
  *
  */
 public class SpriteComponent extends Component{
-    public Sprite sprite = new Sprite(new Texture(Assets.blank));
+    public Sprite sprite = new Sprite(ResourceManager.blank());
 
     public Vector2 offset = new Vector2(0,0);
 

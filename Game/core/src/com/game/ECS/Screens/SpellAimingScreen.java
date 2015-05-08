@@ -1,4 +1,4 @@
-package com.game.ECS.Screen;
+package com.game.ECS.Screens;
 
 
 import com.badlogic.gdx.Gdx;
@@ -13,10 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Storage.Assets;
 import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
-import com.game.UI.SpellAiming;
 
 /**
  * Created by Sean on 28/04/2015.
@@ -52,6 +52,8 @@ public class SpellAimingScreen implements Screen {
 
     @Override
     public void show() {
+
+
         this.stage.addActor(this.cancelSpellBtn);
         Gdx.input.setInputProcessor(multiplexer);
 
@@ -90,7 +92,7 @@ public class SpellAimingScreen implements Screen {
     }
 
     public ImageButton createCancelSpellBtn(){
-        cancelTexture = new Texture(Assets.cancelBtn);
+        cancelTexture = ResourceManager.uiCancelButton();
         Skin castBtnSkin = new Skin();
         castBtnSkin.add("up", cancelTexture);
         castBtnSkin.add("down", cancelTexture);

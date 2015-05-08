@@ -8,6 +8,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.game.ECS.Components.DamageComponent;
+import com.game.ECS.Components.HealthComponent;
+import com.game.ECS.Components.PlayerComponent;
+import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
 
 /**
@@ -19,8 +23,11 @@ import com.game.ECS.Components.SpriteComponent;
  */
 public class DamageSystem extends IteratingSystem{
 
+    Engine engine;
+
     private ComponentMapper<SpriteComponent> sm;
     private ComponentMapper<DamageComponent> dm;
+    private ComponentMapper<HealthComponent> hm;
     private static final int FLASH_AMOUNT = 2; //amount of times sprite flashes red
     private static final float RED_TIME = 0.05f; //How long sprite is red for
     private static final float CLEAR_TIME = 2; //amount of time in betwen red flashes
@@ -33,8 +40,10 @@ public class DamageSystem extends IteratingSystem{
     @Override
     public void addedToEngine(Engine engine){
         super.addedToEngine(engine);
+        this.engine = engine;
         sm = ComponentMapper.getFor(SpriteComponent.class);
         dm = ComponentMapper.getFor(DamageComponent.class);
+        hm = ComponentMapper.getFor(HealthComponent.class);
     }
 
     @Override
@@ -43,24 +52,48 @@ public class DamageSystem extends IteratingSystem{
         //Todo fix deltaTime
         SpriteComponent sc = sm.get(entity);
         DamageComponent dc = dm.get(entity);
+        HealthComponent hc = hm.get(entity);
+
+        if(hc != null){
+            hc.currentHealth-= dc.damage;
+            if(hc.currentHealth <= 0) {
+                //Todo for killing things
+                if(entity.getComponent(PlayerComponent.class) != null){
+                    entity.remove(PositionComponent.class);
+                    entity.add(new SpawningComponent(3));
+                }else
+                    engine.removeEntity(entity);
+            }
+            dc.damage = 0;
+        }
+
+
         if(sc != null) {
-            //Start of damange animation
-            if (sc.sprite.getColor() != DMG_COLOR && dc.flashes == 0) {
+            //Start of damage animation
+            if (sc.sprite.getColor().toFloatBits() != DMG_COLOR.toFloatBits() && dc.flashes == 0) {
+               // dc.originalColor = sc.sprite.getColor();
+                dc.originalColor = Color.WHITE;
                 sc.sprite.setColor(DMG_COLOR);
             }
 
             if (dc.animTimer >= RED_TIME){
-                if(sc.sprite.getColor() == Color.WHITE)
-                    sc.sprite.setColor(DMG_COLOR);
-                else if(sc.sprite.getColor() == DMG_COLOR){
+                if(dc.originalColor != null) {
+                    if (sc.sprite.getColor().toFloatBits() == dc.originalColor.toFloatBits())
+                        sc.sprite.setColor(DMG_COLOR);
+                    else if (sc.sprite.getColor().toFloatBits() == DMG_COLOR.toFloatBits()) {
+                        sc.sprite.setColor(dc.originalColor.toFloatBits());
+                        dc.flashes++;
+                    }
+                }else{
                     sc.sprite.setColor(Color.WHITE);
-                    dc.flashes++;
+                    entity.remove(DamageComponent.class);
                 }
                 dc.animTimer = 0;
-                sc.sprite.setColor(Color.BLACK);
-                entity.remove(DamageComponent.class);
-                if(dc.flashes == FLASH_AMOUNT){
 
+
+                if(dc.flashes == FLASH_AMOUNT){
+                    sc.sprite.setColor(dc.originalColor.toFloatBits());
+                    entity.remove(DamageComponent.class);
                 }
             }else{
                 dc.animTimer += 1 * Gdx.graphics.getDeltaTime();

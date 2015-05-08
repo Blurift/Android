@@ -24,7 +24,7 @@ public class WorldManager {
         world = new World(new Vector2(0,0), true);
     }
 
-    public enum BodyType{
+    public static enum BodyType{
         HUMANOID, PROJECTILE
     }
 
@@ -63,7 +63,8 @@ public class WorldManager {
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = B2DVars.BIT_HUSK;
         fixtureDef.filter.maskBits = B2DVars.BIT_COLLISION | B2DVars.BIT_HUSK;
-        body.createFixture(fixtureDef);
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(owner);
         circle.dispose();
 
         //Hitbox
@@ -76,7 +77,7 @@ public class WorldManager {
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = B2DVars.BIT_HITBOX;
         fixtureDef.filter.maskBits = B2DVars.BIT_PROJECTILE;
-        Fixture fixture = body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
         fixture.setUserData(owner);
         polygon.dispose();
         body.setLinearDamping(GameVars.DAMPING);
