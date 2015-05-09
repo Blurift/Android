@@ -119,7 +119,7 @@ public class EntityManager {
 
     public void update(){
         engine.update((float) Time.time * gameSpeed);
-        worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/GameVars.PTM)*10, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*10) *-1));
+        //worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/GameVars.PTM)*10, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*10) *-1));
         //player.getComponent(BodyComponent.class).body.setLinearVelocity(0,0);
     }
 
