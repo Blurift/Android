@@ -62,7 +62,9 @@ public class CharacterMovementSystem extends IteratingSystem {
 
 
         Vector2 currentVelocity = body.body.getLinearVelocity();
-        if(currentVelocity.x == 0 && currentVelocity.y == 0){
+        if(vel.x == 0 && vel.y == 0){
+            state.state = StateComponent.State.STILL;
+        }else if(vel.x == 0 && vel.y == 0){
             state.state = StateComponent.State.STILL;
         }
         float desiredXVel = 0;

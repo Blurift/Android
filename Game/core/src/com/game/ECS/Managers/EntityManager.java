@@ -29,6 +29,7 @@ import com.game.ECS.Systems.AIDirectorSystem;
 import com.game.ECS.Systems.AISystem;
 import com.game.ECS.Systems.DamageSystem;
 import com.game.ECS.Systems.ProjectileSystem;
+import com.game.ECS.Systems.SpellSystem;
 import com.game.ECS.Tools.MapBodyBuilder;
 import com.game.ECS.Systems.AnimationSystem;
 import com.game.ECS.Systems.CameraSystem;
@@ -68,7 +69,7 @@ public class EntityManager {
 
         //SYSTEM
         //Player Input System
-        PlayerInputSystem is = new PlayerInputSystem(worldManager);
+        PlayerInputSystem is = new PlayerInputSystem();
         engine.addSystem(is);
         //AI Controller System
         AISystem ais = new AISystem();
@@ -85,6 +86,9 @@ public class EntityManager {
         //AIDirectorSystem
         AIDirectorSystem ads = new AIDirectorSystem(mapManager, worldManager);
         engine.addSystem(ads);
+        //Spell System
+        SpellSystem sps = new SpellSystem(worldManager);
+        engine.addSystem(sps);
         //Facing System - Where the player is facing
         FacingSystem fs = new FacingSystem();
         engine.addSystem(fs);
@@ -119,8 +123,6 @@ public class EntityManager {
 
     public void update(){
         engine.update((float) Time.time * gameSpeed);
-        //worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/GameVars.PTM)*10, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*10) *-1));
-        //player.getComponent(BodyComponent.class).body.setLinearVelocity(0,0);
     }
 
     /**

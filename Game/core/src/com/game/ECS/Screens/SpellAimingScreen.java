@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
+import com.game.ECS.Components.SpellComponent;
 import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Storage.Assets;
 import com.game.ECS.Tools.ResolutionHandler;
@@ -26,6 +27,7 @@ public class SpellAimingScreen implements Screen {
     private Main game;
     private Stage stage;
     private PlayerInputComponent playerInput;
+    private SpellComponent.Spell spellType;
 
     private float scale;
     private InputMultiplexer multiplexer;
@@ -33,10 +35,11 @@ public class SpellAimingScreen implements Screen {
     private ImageButton cancelSpellBtn;
     private Texture cancelTexture;
 
-    public SpellAimingScreen(Main game, Stage stage, PlayerInputComponent playerInput) {
+    public SpellAimingScreen(Main game, Stage stage, PlayerInputComponent playerInput, SpellComponent.Spell spellType) {
         this.game = game;
         this.stage = stage;
         this.playerInput = playerInput;
+        this.spellType = spellType;
 
         //Scale of UI
         this.scale = ResolutionHandler.getScale();
@@ -125,7 +128,8 @@ public class SpellAimingScreen implements Screen {
 
                 playerInput.screenPos = null;
                 game.setScreen(new GameScreen(game, stage, playerInput));
-                playerInput.spellCast = new Vector2(screenX, screenY);
+                playerInput.spellCast = spellType;
+                playerInput.spellDir = new Vector2(screenX, screenY);
                 return true;
             }
 

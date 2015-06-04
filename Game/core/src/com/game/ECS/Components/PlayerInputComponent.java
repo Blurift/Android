@@ -23,6 +23,7 @@ public class PlayerInputComponent extends Component {
     public HealthComponent playerHealth;
     public InkComponent playerInk;
 
-    public Vector2 spellCast; //if null no spell is being cast, otherwise direction of spell
+    public SpellComponent.Spell spellCast; //if null no spell is being cast
+    public Vector2 spellDir;
     //TODO rework spellcast
 }

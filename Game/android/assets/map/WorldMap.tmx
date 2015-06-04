@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="664">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" nextobjectid="665">
  <tileset firstgid="1" name="Trees" tilewidth="64" tileheight="128">
   <tile id="0">
    <image width="64" height="128" source="objects/tree1.png"/>
@@ -93,12 +93,12 @@
  </tileset>
  <layer name="Terrain" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0sENQFAQhOF1QhPo83WkBS0oQBc8FRjJvhBxcJqNZA7f+d/dbKrMkoiI/MZiF1ZzQyvD7t2R3O+gh+Exy0qcoaihgZbcLbveb8He/RTxf/JudlH9yUXfQUREvjsAIfb0Yw==
+   eJzt0rsNgDAMhGFTAUsAe2YjVmAFetiCxwQckiMQoqA6C+mKr/5tJ6kwSyIi8huzXVjNFa0Ndu/25H4DLXSPWRbiDFkJFdTkbt71fgv27qeI/yfvRjcFvcXgou8gIiLfHVaR9L4=
   </data>
  </layer>
  <layer name="Treeline" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzNlkuO00AQht0X4CHYw4aH4AKTMQ/BCSYgEFwgDjEI1rEvkXCJJMAJWMQSK2CAnUfAhvceNrwl/hJ/KTUt2+2AZCjpU9vtblf91dVuP46iaBs8Ag87ap+Ap+AZeAPegtfgVUftO/AefABfwTfwBXzuqP0OfoCfYJ+Lov2gazsAnwfBMXD8H/g/AZ8n3f+nfwvXM5CAOShAH4zADrjdItYxxvQ4NqmZU6VffIwD7y/xPAdZw7iL3rOSsVur0j9ZYx0K6ppVzBEN18AmGDAHU29clf4NMyYNxJLw+Yy57rNd8row85ct9ZdsJdayxn8SiKvO5oxLrUq/rKmsXUwdf2O+Xo1B31tX/7oGoz/wr7nJK/KtpvXStP9T1+y/55rvl6w7sYVb7Qep72FAv/qfN/iP+eyC231vbdP0aV4Gpq9Jv9Tfxpr6txrGL0x9qTXpH7nmOpfY7qC9C+5FzbFa/3lL/TN+46q+her3gUHjCFnRUr/uEf+bJfYcvPD8y/3LgG9Zn7Sl/oR1WvWNz9ivcYjf++43H3H9ifN1/bTe/ZoJnf9Lbw/GZk/pu/W5+j8EDrvd58+Itak51X0VOv9lnB+zal/XbN2p/5B+qdmpyaOunZ5rhVuda6GzKmPupK7jFvrl7Ck5J2fuSvrps79g/5DrZL8t/t6dGP9qIf36vpi+E/qRGCQH+k+TMwbJ6w7HZRyTkimfta1/sSHjHbrV/4Q16ZvQX8p8pIw141ztLxm7fUed/gFzNTa1NqyIr85y1kdG3bnRsDDvCenvMaept7ZtbU7fds0XLfRbk/ry/yXrxun3ImeN5oF5qv8MOAv2gL0dtufAeXAJXAZHwNEO2yvgKrgOboBT4HSH7U1wC/wChHT34w==
+   eJzNllmO00AQhu0LsAiuwCK4wGTMIjjBBASCC8QhBsFz7EskXCIJcAIeYokntuHNEczLsF6BXeIvzV9K0bK7HZAMJX3qpLvdVX91tdvPoyh6AZ6Bpx21L8EueAXegffgLdjvqP0APoJP4Cv4Br6Azx2138EP8BMciaPoKOjajsHncXAKnP4H/s/A59n4/9O/g98zkII5KEEfjMAK3G8R6xhzepybNjxTp198jAPrVxgvQO6Zd9UZqxi7tTr9kw32oaSuWc0zouEW2AYD5mDqzKvTv2XmZIFYUo7PmOs+2yV/l+b5ZUv9FVuJtWrwnwbiarI541Kr0y97KnuXUMffmKtXY9B1m+pf92D0B/41N0VNvtW0XnznP4v9/nux//+SdSe2iNfnQep7GNCv/uce/wnHrsS//7e2bfo0LwPT59Mv9be1of4dz/yFqS81n/5R7K9zie0B2ofgUeSP1fovWuqf8R1X9y5Uv08MGkfIypb69Yy47yyx1+CN41/+7wV8y/5kLfWnrNO6d3zOfo1D/D6OD1hFB6Rm/7Te3ZoJ3f9L5wwm5kzp2jru+rf3z4i1qTnVcxW6/2WeG7Nq39Rs3an/kH6p2anJo+6d3mtlvL7XQndVztxJXSct9MvdU/GZgrmr6KfP/pL9Q+6Tfbe4Z3di/KuF9Ot6CX2n9CMxSA70m6ZgDJLXFeflnJORKcfa1r/YkPEO4/X3hDXpm9BfxnxkjDXns9pfMXa7RpP+AXM1NrU2rImvyQrWR07dhdGwMOuE9PeY08zZ27Y2p2+754sW+q1Jfbnfkk3z9H1RsEaLwHOq/wK4CA6Bwx22l8BlcA1cByfAyQ7bG+AmuA3ugHPgfIftXXAP/AJbU/kb
   </data>
  </layer>
  <objectgroup name="Objects">
@@ -171,5 +171,6 @@
   <object id="550" x="-8.66667" y="1000.67" width="1034.67" height="26.6667"/>
   <object id="629" x="736.667" y="443" width="28.6667" height="26"/>
   <object id="663" x="488.364" y="387.455" width="15.0909" height="8.18182"/>
+  <object id="664" x="607.636" y="639.636" width="0.909091"/>
  </objectgroup>
 </map>

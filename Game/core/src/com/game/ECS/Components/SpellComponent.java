@@ -12,9 +12,10 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class SpellComponent extends Component {
     public static enum Spell{
-        ICE_BALL, GRAVITY_SHIFT
+        FROST, GRAVITY_SHIFT
     }
 
     public Vector2 spellDir = null; //If this si null, the spell isn't a projectile
-
+    public Spell spellType;
+    public float duration;
 }

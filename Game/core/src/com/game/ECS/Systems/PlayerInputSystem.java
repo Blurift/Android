@@ -17,6 +17,7 @@ import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.ProjectileComponent;
+import com.game.ECS.Components.SpellComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Managers.WorldManager;
@@ -29,8 +30,6 @@ import javafx.scene.Camera;
  */
 public class PlayerInputSystem extends EntitySystem{
 
-    private WorldManager worldManager;
-
     private Engine engine;
     private ImmutableArray<Entity> entities;
 
@@ -40,8 +39,7 @@ public class PlayerInputSystem extends EntitySystem{
     private ComponentMapper<PositionComponent> pm;
     private ComponentMapper<FacingComponent> fm;
 
-    public PlayerInputSystem(WorldManager worldManager) {
-        this.worldManager = worldManager;
+    public PlayerInputSystem() {
 
         vm = ComponentMapper.getFor(VelocityComponent.class);
         pim = ComponentMapper.getFor(PlayerInputComponent.class);
@@ -113,16 +111,24 @@ public class PlayerInputSystem extends EntitySystem{
             }
 
             if(pic.spellCast != null){
-                Vector2 charPos = new Vector2(pc.x, pc.y);
-                Vector3 unprojected = cc.camera.unproject(new Vector3(
-                        pic.spellCast.x, pic.spellCast.y, 0));
-                Vector2 touchedPos = new Vector2(unprojected.x, unprojected.y);
+                SpellComponent spell = new SpellComponent();
+                if(pic.spellCast == SpellComponent.Spell.FROST) {
+                    Vector2 charPos = new Vector2(pc.x, pc.y);
+                    Vector3 unprojected = cc.camera.unproject(new Vector3(
+                            pic.spellDir.x, pic.spellDir.y, 0));
+                    Vector2 touchedPos = new Vector2(unprojected.x, unprojected.y);
 
-                Vector2 dir = new Vector2(touchedPos).sub(charPos).nor();
+                    Vector2 dir = new Vector2(touchedPos).sub(charPos).nor();
 
-                engine.addEntity(ProjectilePrefabs.createIce(new Vector2(pc.x, pc.y),
-                        entities.get(i), dir, worldManager));
 
+                    spell.spellDir = dir;
+                    spell.spellType = pic.spellCast;
+                }
+                if(pic.spellCast == SpellComponent.Spell.GRAVITY_SHIFT) {
+                    spell.spellType = pic.spellCast;
+                    spell.duration = 5;
+                }
+                entities.get(i).add(spell);
                 pic.spellCast = null;
             }
 
