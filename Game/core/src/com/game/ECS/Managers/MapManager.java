@@ -39,9 +39,11 @@ public class MapManager {
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private List<Vector2> playerSpawns;
     private List<Vector2> enemySpawns;
+    private List<MapObject> cameraPath;
 
     //Layers
     private MapLayer spawnLayer;
+    private MapLayer camLayer;
     private MapLayer hitboxLayer;
     private MapLayer collisionLayer;
     private MapLayer objectLayer;
@@ -54,10 +56,12 @@ public class MapManager {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / GameVars.PTM);
 
         objectLayer = tiledMap.getLayers().get("Objects");
+        camLayer = tiledMap.getLayers().get("CameraPath");
         spawnLayer = tiledMap.getLayers().get("Spawns");
 
         playerSpawns = new ArrayList<Vector2>();
         enemySpawns = new ArrayList<Vector2>();
+        cameraPath = new ArrayList<MapObject>();
     }
 
 
@@ -96,13 +100,23 @@ public class MapManager {
             if(spawn.getName().equals("PlayerSpawn")){
                 playerSpawns.add(spawnLoc);
             }
+        }
+    }
 
+    public void extractCamPath(){
+        MapObjects points = camLayer.getObjects();
+        for(MapObject point : points){
+            cameraPath.add(point);
         }
     }
 
     /**
      * Getters
      */
+
+    public List<MapObject> getCameraPath(){
+        return cameraPath;
+    }
 
     public MapLayers getMapLayers(){
         return tiledMap.getLayers();

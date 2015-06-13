@@ -48,7 +48,7 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(ResourceManager.update()) {
             game.load();
-            game.setScreen(new GameScreen(game, stage, playerInput));
+            game.setScreen(new StartMenuScreen(game, stage, playerInput));
         }
 
         // display loading information

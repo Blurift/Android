@@ -11,6 +11,9 @@ public class ResolutionHandler {
         if(Gdx.graphics.getHeight() == 1080){
             scale = 2;
         }
+        if(Gdx.graphics.getHeight() == 1440){
+            scale = 2.5f;
+        }
         return scale;
     }
 }

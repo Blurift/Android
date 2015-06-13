@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
+import com.game.ECS.Components.CamBoomComponent;
 import com.game.ECS.Components.CameraComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
@@ -52,6 +53,7 @@ public class EntityManager {
 
     private float gameSpeed = 1;
     private Entity player;
+    private Entity camBoom;
 
     public EntityManager(Engine e, SpriteBatch sb, PlayerInputComponent inputComponent){
         engine = e;
@@ -106,6 +108,8 @@ public class EntityManager {
         engine.addSystem(rs);
 
         //ENTITIES
+        //CamBoom for starting pan
+        //camBoom = createCamBoom(inputComponent);
         //Player
         player = createPlayer(inputComponent);
         //GameWorld Camera
@@ -114,6 +118,8 @@ public class EntityManager {
         mapManager.extractObjects();
         //Spawns
         mapManager.extractSpawns();
+        //CameraPath
+        mapManager.extractCamPath();
 
         //Listeners
         //Projectile
@@ -129,6 +135,19 @@ public class EntityManager {
      * Entity creation
      */
 
+    public Entity createCamBoom(PlayerInputComponent inputComponent){
+        Entity entity = new Entity();
+        //Set up camera
+        CameraComponent cameraComponent = new CameraComponent();
+        OrthographicCamera camera = new OrthographicCamera();
+        camera.setToOrtho(false, GameVars.VIRTUAL_WIDTH, GameVars.VIRTUAL_HEIGHT);
+        camera.update();
+        cameraComponent.camera = camera;
+        engine.getSystem(RenderSystem.class).setRenderCamera(camera);
+        entity.add(cameraComponent)
+                .add(new CamBoomComponent(0, 0));
+        return entity;
+    }
 
     public Entity createPlayer(PlayerInputComponent inputComponent){
         Entity entity = new Entity();
@@ -142,12 +161,14 @@ public class EntityManager {
         bodyComponent.offset.y = 0.5f;
 
         //Set up camera
+
         CameraComponent cameraComponent = new CameraComponent();
         OrthographicCamera camera = new OrthographicCamera();
         camera.setToOrtho(false, GameVars.VIRTUAL_WIDTH, GameVars.VIRTUAL_HEIGHT);
         camera.update();
         cameraComponent.camera = camera;
         engine.getSystem(RenderSystem.class).setRenderCamera(camera);
+
 
         entity.add(new VelocityComponent(0, 0))
                 .add(bodyComponent)

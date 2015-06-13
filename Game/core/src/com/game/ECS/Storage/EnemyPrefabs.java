@@ -30,7 +30,6 @@ public class EnemyPrefabs {
 
         SpriteComponent spriteComponent = new SpriteComponent();
         spriteComponent.sprite.setSize(2,2);
-        spriteComponent.sprite.setColor(Color.BLACK);
 
         PositionComponent position = new PositionComponent(
                 spawn.x, spawn.y);
@@ -46,7 +45,7 @@ public class EnemyPrefabs {
                 .add(bodyComponent)
                 .add(new FacingComponent())
                 .add(spriteComponent)
-                .add(new AnimationSetComponent(Assets.animPlayerDruid()))
+                .add(new AnimationSetComponent(Assets.animWolf()))
                 .add(new StateComponent())
                 .add(new DepthComponent(-0.50f))
                 .add(new AIComponent()).add(position)

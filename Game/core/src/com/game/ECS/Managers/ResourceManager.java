@@ -21,6 +21,12 @@ public class ResourceManager {
             Textures
         */
 
+        //Start Screen
+        manager.load("Logo/GameLogo.png", Texture.class);
+        manager.load("UI/TapToStart.png", Texture.class);
+        manager.load("UI/NewGame.png", Texture.class);
+        manager.load("UI/Exit.png", Texture.class);
+
         //UI
         manager.load("UI/castButton.png", Texture.class);
         manager.load("UI/castButtonShadow.png", Texture.class);
@@ -31,6 +37,7 @@ public class ResourceManager {
 
         //Character Sheets
         manager.load("character/DruidSheet.png", Texture.class);
+        manager.load("character/WolfSheet.png", Texture.class);
 
         //Projectiles
         manager.load("projectiles/iceball.png", Texture.class);
@@ -74,6 +81,10 @@ public class ResourceManager {
         return manager.get("character/DruidSheet.png", Texture.class);
     }
 
+    public static Texture sheetWolf() {
+        return manager.get("character/WolfSheet.png", Texture.class);
+    }
+
     public static Texture uiCastSpellBtn() {
         return manager.get("UI/castButton.png", Texture.class);
     }
@@ -97,6 +108,22 @@ public class ResourceManager {
 
     public static Texture projIce() {
         return manager.get("projectiles/iceball.png", Texture.class);
+    }
+
+    public static Texture gameLogo() {
+        return manager.get("Logo/GameLogo.png", Texture.class);
+    }
+
+    public static Texture tapToStart() {
+        return manager.get("UI/TapToStart.png", Texture.class);
+    }
+
+    public static Texture exitMenuButton() {
+        return manager.get("UI/Exit.png", Texture.class);
+    }
+
+    public static Texture newGameMenuButton() {
+        return manager.get("UI/NewGame.png", Texture.class);
     }
 
     public static Texture blank(){

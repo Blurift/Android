@@ -73,20 +73,42 @@ public class Assets {
         float s = 0.10f; //Anim speed
 
         //Still
-        left.put(StateComponent.State.STILL, animate(sheet, 64, 192, 64, 64, 1, s));
-        right.put(StateComponent.State.STILL, animate(sheet, 64, 128, 64, 64, 1, s));
-        up.put(StateComponent.State.STILL, animate(sheet, 64, 64, 64, 64, 1, s));
-        down.put(StateComponent.State.STILL, animate(sheet, 64, 0, 64, 64, 1, s));
+        left.put(StateComponent.State.STILL, animate(sheet, 0, 192, 64, 64, 1, s));
+        right.put(StateComponent.State.STILL, animate(sheet, 0, 128, 64, 64, 1, s));
+        up.put(StateComponent.State.STILL, animate(sheet, 0, 64, 64, 64, 1, s));
+        down.put(StateComponent.State.STILL, animate(sheet, 0, 0, 64, 64, 1, s));
 
         //Walking
-        left.put(StateComponent.State.WALK, animate(sheet, 64, 192, 64, 64, 1, s));
-        right.put(StateComponent.State.WALK, animate(sheet, 64, 128, 64, 64, 1, s));
-        up.put(StateComponent.State.WALK, animate(sheet, 64, 64, 64, 64, 1, s));
-        down.put(StateComponent.State.WALK, animate(sheet, 64, 0, 64, 64, 4, s));
+        left.put(StateComponent.State.WALK, animate(sheet, 0, 192, 64, 64, 5, s));
+        right.put(StateComponent.State.WALK, animate(sheet, 0, 128, 64, 64, 5, s));
+        up.put(StateComponent.State.WALK, animate(sheet, 0, 64, 64, 64, 4, s));
+        down.put(StateComponent.State.WALK, animate(sheet, 0, 0, 64, 64, 4, s));
 
         return new DirAnimation(left, right, up, down);
     };
 
+    //Player Druid
+    public static DirAnimation animWolf(){
+        Map<StateComponent.State, Animation> left = new HashMap<StateComponent.State, Animation>();
+        Map<StateComponent.State, Animation> right = new HashMap<StateComponent.State, Animation>();
+        Map<StateComponent.State, Animation> up = new HashMap<StateComponent.State, Animation>();
+        Map<StateComponent.State, Animation> down = new HashMap<StateComponent.State, Animation>();
+        Texture sheet = ResourceManager.sheetWolf();
+        float s = 0.10f; //Anim speed
 
+        //Still
+        left.put(StateComponent.State.STILL, animate(sheet, 0, 192, 64, 64, 1, s));
+        right.put(StateComponent.State.STILL, animate(sheet, 0, 128, 64, 64, 1, s));
+        up.put(StateComponent.State.STILL, animate(sheet, 0, 64, 64, 64, 1, s));
+        down.put(StateComponent.State.STILL, animate(sheet, 0, 0, 64, 64, 1, s));
+
+        //Walking
+        left.put(StateComponent.State.WALK, animate(sheet, 0, 192, 64, 64, 1, s));
+        right.put(StateComponent.State.WALK, animate(sheet, 0, 128, 64, 64, 1, s));
+        up.put(StateComponent.State.WALK, animate(sheet, 0, 64, 64, 64, 1, s));
+        down.put(StateComponent.State.WALK, animate(sheet, 0, 0, 64, 64, 1, s));
+
+        return new DirAnimation(left, right, up, down);
+    };
 
 }

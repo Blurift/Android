@@ -23,8 +23,6 @@ import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Managers.WorldManager;
 import com.game.ECS.Storage.ProjectilePrefabs;
 
-import javafx.scene.Camera;
-
 /**
  * Created by Sean on 27/04/2015.
  */
