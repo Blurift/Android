@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.game.ECS.Components.DamageComponent;
 import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.PlayerComponent;
+import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
@@ -23,6 +24,8 @@ import com.game.ECS.Components.SpriteComponent;
  */
 public class DamageSystem extends IteratingSystem{
 
+    PlayerInputComponent playerInput;
+
     Engine engine;
 
     private ComponentMapper<SpriteComponent> sm;
@@ -33,8 +36,9 @@ public class DamageSystem extends IteratingSystem{
     private static final float CLEAR_TIME = 2; //amount of time in betwen red flashes
     private static final Color DMG_COLOR = Color.RED; //Color of damage overlay
 
-    public DamageSystem() {
+    public DamageSystem(PlayerInputComponent playerInput) {
         super(Family.all(DamageComponent.class).get());
+        this.playerInput = playerInput;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class DamageSystem extends IteratingSystem{
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
-        //Todo fix deltaTime
+
         SpriteComponent sc = sm.get(entity);
         DamageComponent dc = dm.get(entity);
         HealthComponent hc = hm.get(entity);
@@ -61,8 +65,11 @@ public class DamageSystem extends IteratingSystem{
                 if(entity.getComponent(PlayerComponent.class) != null){
                     entity.remove(PositionComponent.class);
                     entity.add(new SpawningComponent(3));
-                }else
+                }else{
                     engine.removeEntity(entity);
+                    playerInput.gameScore+=1;
+                }
+
             }
             dc.damage = 0;
         }
@@ -96,7 +103,8 @@ public class DamageSystem extends IteratingSystem{
                     entity.remove(DamageComponent.class);
                 }
             }else{
-                dc.animTimer += 1 * Gdx.graphics.getDeltaTime();
+                //Todo Delta should be fixed here
+                dc.animTimer += deltaTime;
             }
 
         }

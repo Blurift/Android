@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.game.ECS.Components.AIComponent;
 import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.CamBoomComponent;
@@ -19,6 +20,7 @@ import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.InkComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PlayerInputComponent;
+import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.ProjectileComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
@@ -26,8 +28,10 @@ import com.game.ECS.Components.StateComponent;
 import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Storage.Assets;
 import com.game.ECS.Storage.GameVars;
+import com.game.ECS.Storage.ItemPrefabs;
 import com.game.ECS.Systems.AIDirectorSystem;
 import com.game.ECS.Systems.AISystem;
+import com.game.ECS.Systems.ConsumeSystem;
 import com.game.ECS.Systems.DamageSystem;
 import com.game.ECS.Systems.ProjectileSystem;
 import com.game.ECS.Systems.SpellSystem;
@@ -41,12 +45,15 @@ import com.game.ECS.Systems.RenderSystem;
 import com.game.ECS.Systems.SpawnSystem;
 import com.game.ECS.Tools.Time;
 
+import java.util.Random;
+
 /**
  * Created by Sean on 25/04/2015.
  */
 public class EntityManager {
     private Engine engine;
     private SpriteBatch sb;
+    private PlayerInputComponent inputComponent;
 
     private WorldManager worldManager;
     private MapManager mapManager;
@@ -55,9 +62,13 @@ public class EntityManager {
     private Entity player;
     private Entity camBoom;
 
+    //For item creation
+    Random random = new Random();
+
     public EntityManager(Engine e, SpriteBatch sb, PlayerInputComponent inputComponent){
         engine = e;
         this.sb = sb;
+        this.inputComponent = inputComponent;
 
         //Dependencies
         worldManager = new WorldManager();
@@ -98,8 +109,11 @@ public class EntityManager {
         AnimationSystem as = new AnimationSystem();
         engine.addSystem(as);
         //Damage System
-        DamageSystem ds = new DamageSystem();
+        DamageSystem ds = new DamageSystem(inputComponent);
         engine.addSystem(ds);
+        //Consume System
+        ConsumeSystem cons = new ConsumeSystem();
+        engine.addSystem(cons);
         //Camera System
         CameraSystem cs = new CameraSystem(2);
         engine.addSystem(cs);
@@ -128,7 +142,7 @@ public class EntityManager {
     }
 
     public void update(){
-        engine.update((float) Time.time * gameSpeed);
+        engine.update(Gdx.graphics.getDeltaTime() * inputComponent.gameSpeed);
     }
 
     /**
@@ -203,8 +217,29 @@ public class EntityManager {
         @Override
         public void entityRemoved(Entity entity) {
             Body body = entity.getComponent(BodyComponent.class).body;
+            AIComponent aic = entity.getComponent(AIComponent.class);
             if(body != null)
                 body.getWorld().destroyBody(body);
+
+            //spawn item when ai dies
+            if(aic != null){
+                float num = random.nextFloat();
+
+                PositionComponent pos = entity.getComponent(PositionComponent.class);
+
+                //Spawn Health
+                if(num >= 0 && num <= 0.33){
+
+                    engine.addEntity(ItemPrefabs.createHealthPotion(worldManager,
+                           new Vector2(pos.x, pos.y) ));
+                }
+
+                //Spawn Ink
+                if(num >= 0.34 && num <= 0.66){
+                    engine.addEntity(ItemPrefabs.createInkwell(worldManager,
+                            new Vector2(pos.x, pos.y)));
+                }
+            }
 
         }
     }

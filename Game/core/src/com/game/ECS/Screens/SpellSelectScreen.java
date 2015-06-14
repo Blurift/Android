@@ -37,6 +37,7 @@ public class SpellSelectScreen implements Screen {
         this.scale = ResolutionHandler.getScale();
 
         buttons = new LinkedList<TextButton>();
+        this.playerInput.gameSpeed = 0.1f;
     }
 
         @Override

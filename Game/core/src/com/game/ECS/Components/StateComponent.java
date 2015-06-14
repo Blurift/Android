@@ -4,6 +4,9 @@ import com.badlogic.ashley.core.Component;
 
 /**
  * Created by Sean on 27/04/2015.
+ *
+ * Animation State
+ *
  */
 public class StateComponent extends Component{
 

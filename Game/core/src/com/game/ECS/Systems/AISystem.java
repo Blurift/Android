@@ -66,8 +66,8 @@ public class AISystem extends IteratingSystem{
                 if(ai.retreatTime == 0){
                     ai.state = AIComponent.AIState.FOLLOWING;
                 }else{
-                    //TODO fix delta time
-                    ai.retreatTime-= 1*Gdx.graphics.getDeltaTime();
+                    //TODO Delta here should be fixed
+                    ai.retreatTime-= deltaTime;
                     if(ai.retreatTime < 0)
                         ai.retreatTime = 0;
                 }
@@ -83,13 +83,13 @@ public class AISystem extends IteratingSystem{
             //Slow down
             float speed = 0;
             if(ai.state == AIComponent.AIState.FOLLOWING) {
-                speed = 0.5f;
+                speed = 20f;
             }else if(ai.state == AIComponent.AIState.ATTACKING) {
-                speed = 0.8f;
+                speed = 22f;
             }else if(ai.state == AIComponent.AIState.RETREATING) {
                 dir.x-= dir.x*2;
                 dir.y-= dir.y*2;
-                speed = 0.5f;
+                speed = 21f;
             }
 
             dir.x *= speed;

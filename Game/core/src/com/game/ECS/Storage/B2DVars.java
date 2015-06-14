@@ -10,4 +10,5 @@ public class B2DVars {
     public static final short BIT_PROJECTILE = 0x0002;
     public static final short BIT_HUSK = 0x0004;
     public static final short BIT_HITBOX = 0x0008;
+    public static final short BIT_CONSUMABLE = 0x0010;
 }

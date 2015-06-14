@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -12,8 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.game.ECS.Components.PlayerInputComponent;
@@ -47,6 +50,8 @@ public class GameScreen implements Screen {
     private ImageButton castSpellBtn;
     private Image castSpellBtnShadow;
     private Texture castSpellBtnShadowTexture;
+    private Label scoreLabel;
+    private Label scoreFloatLabel;
 
     private float barSize;
 
@@ -61,6 +66,8 @@ public class GameScreen implements Screen {
         //Screen components
         this.touchpad = createTouchpad();
         this.castSpellBtn = createCastSpellBtn();
+        this.scoreLabel = createScoreLabel();
+        this.scoreFloatLabel = createScoreFloatLabel();
 
         //Scale some things
         this.barSize = 300*scale;
@@ -74,8 +81,10 @@ public class GameScreen implements Screen {
         stage.addActor(touchpad);
         stage.addActor(castSpellBtn);
         stage.addActor(castSpellBtnShadow);
-
+        stage.addActor(scoreLabel);
+        stage.addActor(scoreFloatLabel);
         this.playerInput.currentState = PlayerInputComponent.States.FREE;
+        this.playerInput.gameSpeed = 1;
     }
 
     //For the animation of the cast spell button
@@ -90,6 +99,9 @@ public class GameScreen implements Screen {
 
         playerInput.touchpadDir.x = touchpad.getKnobPercentX();
         playerInput.touchpadDir.y = touchpad.getKnobPercentY();
+
+        //Update score
+        scoreFloatLabel.setText(""+Math.round(playerInput.gameScore));
 
         //Animate cast spell button
         //TODO need to lerp book floating up and down
@@ -174,9 +186,7 @@ public class GameScreen implements Screen {
             //Border
         }
 
-
         shapeRenderer.end();
-
     }
 
     @Override
@@ -199,7 +209,8 @@ public class GameScreen implements Screen {
         touchpad.remove();
         castSpellBtn.remove();
         castSpellBtnShadow.remove();
-
+        scoreLabel.remove();
+        scoreFloatLabel.remove();
         //No longer giving input
         playerInput.touchpadDir.x = 0;
         playerInput.touchpadDir.y = 0;
@@ -268,5 +279,38 @@ public class GameScreen implements Screen {
         maxButtonHeight = castSpellBtn.getY()+10*scale;
 
         return castSpellBtn;
+    }
+
+    //Showing the label with text 'Score'
+    private Label createScoreLabel(){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("Score:",textStyle);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.05f,
+                stage.getViewport().getCamera().viewportHeight * 0.90f);
+        return text;
+    }
+
+    //Showing the label with text as the actual float score
+    private Label createScoreFloatLabel(){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("0",textStyle);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setAlignment(Align.left);
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.15f,
+                stage.getViewport().getCamera().viewportHeight * 0.90f);
+        return text;
     }
 }

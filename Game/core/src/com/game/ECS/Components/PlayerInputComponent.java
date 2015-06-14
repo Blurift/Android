@@ -27,7 +27,8 @@ public class PlayerInputComponent extends Component {
     public States currentState = States.FREE;
     public HealthComponent playerHealth;
     public InkComponent playerInk;
-    public GameState gameState;
+    public float gameScore = 0;
+    public float gameSpeed = 1;
 
     public SpellComponent.Spell spellCast; //if null no spell is being cast
     public Vector2 spellDir;

@@ -54,7 +54,7 @@ public class AnimationSystem extends IteratingSystem {
             sprite.sprite.setRegion(animation.getKeyFrame(state.time, true));
         }
 
-        //TODO Delta needs to be fixed
-        state.time += Gdx.graphics.getDeltaTime();
+        //TODO Delta should be fixed here
+        state.time += deltaTime;
     }
 }

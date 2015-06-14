@@ -112,9 +112,9 @@ public class RenderSystem extends SortedIteratingSystem {
 
                     //Draw particle effects
                     if(effect != null){
-                        //todo Fix delta
+                        //todo Delta should be fixed here
                         effect.effect.setPosition(pos.x, pos.y);
-                        effect.effect.draw(sb, Gdx.graphics.getDeltaTime());
+                        effect.effect.draw(sb, deltaTime);
                         if (effect.effect.isComplete()) {
                             effect.effect.free();
                         }
@@ -139,7 +139,7 @@ public class RenderSystem extends SortedIteratingSystem {
         //Render Box2D debug
         this.debugMatrix = sb.getProjectionMatrix().cpy().scale(GameVars.PTM,
                 GameVars.PTM, 0);
-        //debugRenderer.render(world, debugMatrix);
+        debugRenderer.render(world, debugMatrix);
         depthEntities.clear();
     }
 

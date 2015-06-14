@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.game.ECS.Components.AIComponent;
+import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.DamageComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
@@ -44,6 +45,7 @@ public class MyContactListener implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
+        //For projectiles
         if(fa.getFilterData().categoryBits == B2DVars.BIT_PROJECTILE) {
             Entity projectile = (Entity) fa.getUserData();
             Entity entity = new Entity();
@@ -84,7 +86,22 @@ public class MyContactListener implements ContactListener {
             }
         }
 
+        //For consumables
+        if(fa.getFilterData().categoryBits == B2DVars.BIT_CONSUMABLE) {
+            Entity consumable = (Entity) fa.getUserData();
+            Entity player = (Entity) fb.getUserData();
+            player.add(consumable.getComponent(ConsumableComponent.class));
+            consumable.remove(ConsumableComponent.class);
+            engine.removeEntity(consumable);
+        }if(fb.getFilterData().categoryBits == B2DVars.BIT_CONSUMABLE) {
+            Entity consumable = (Entity) fb.getUserData();
+            Entity player = (Entity) fa.getUserData();
+            player.add(consumable.getComponent(ConsumableComponent.class));
+            consumable.remove(ConsumableComponent.class);
+            engine.removeEntity(consumable);
+        }
 
+        //Anything inbetween 2 husks
         if(fa.getUserData() instanceof Entity && fb.getUserData() instanceof Entity){
             Entity a = (Entity) fa.getUserData();
             Entity b = (Entity) fb.getUserData();

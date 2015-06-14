@@ -25,7 +25,7 @@ public class WorldManager {
     }
 
     public static enum BodyType{
-        HUMANOID, PROJECTILE
+        HUMANOID, PROJECTILE, CONSUMABLE
     }
 
     private World world;
@@ -39,6 +39,8 @@ public class WorldManager {
                         hitboxW, hitboxH, hitboxOSX, hitboxOSY, owner);
             case PROJECTILE:
                 return createProjectileBody(owner);
+            case CONSUMABLE:
+                return createConsumableBody(owner);
         }
         return null;
     }
@@ -99,6 +101,28 @@ public class WorldManager {
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = B2DVars.BIT_PROJECTILE;
         fixtureDef.filter.maskBits = B2DVars.BIT_HITBOX;
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(owner);
+        shape.dispose();
+
+        return body;
+    }
+
+    public Body createConsumableBody(Entity owner){
+        Body body;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(0, 0);
+        bodyDef.fixedRotation = true;
+        body = world.createBody(bodyDef);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(0.25f/GameVars.PTM);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        fixtureDef.filter.categoryBits = B2DVars.BIT_CONSUMABLE;
+        fixtureDef.filter.maskBits = B2DVars.BIT_HUSK;
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(owner);
         shape.dispose();

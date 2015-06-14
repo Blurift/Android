@@ -31,7 +31,7 @@ public class ProjectilePrefabs {
         sc.sprite = new Sprite(ResourceManager.projIce());
         sc.sprite.setSize(2, 2); //Todo automate this
         pc.owner = owner;
-        pc.speed = 15;
+        pc.speed = 12;
         pc.dir = dir;
         bc.body = worldManager.createProjectileBody(projectile);
         bc.body.setTransform(new Vector2(pos.x/GameVars.PTM, pos.y/GameVars.PTM), bc.body.getAngle());

@@ -54,7 +54,7 @@ public class PlayerInputSystem extends EntitySystem{
                 PositionComponent.class,
                 FacingComponent.class).get());
     }
-
+    private float playerSpeed = 25;
 
     public void update(float deltaTime) {
         for (int i = 0; i < entities.size(); ++i) {
@@ -64,10 +64,16 @@ public class PlayerInputSystem extends EntitySystem{
             PositionComponent pc =  pm.get(entities.get(i));
             FacingComponent fc =  fm.get(entities.get(i));
 
-
+            HealthComponent playerHealth = entities.get(i).getComponent(HealthComponent.class);
+            //Regen player health
+            if(playerHealth.currentHealth + 0.5*deltaTime <= playerHealth.maxHealth){
+                playerHealth.currentHealth+= 0.2*deltaTime;
+            }else{
+                playerHealth.currentHealth = playerHealth.maxHealth;
+            }
             //Make sure input has access to player health and ink
             if(pic.playerHealth == null) {
-                HealthComponent playerHealth = entities.get(i).getComponent(HealthComponent.class);
+
                 if (playerHealth != null) {
                     pic.playerHealth = playerHealth;
                 }
@@ -82,6 +88,10 @@ public class PlayerInputSystem extends EntitySystem{
             //Player is free to move around
             if(pic.currentState.equals(PlayerInputComponent.States.FREE))
                 vel.velocity = pic.touchpadDir;
+            //Adjust speed
+            vel.velocity.x*=playerSpeed;
+            vel.velocity.y*=playerSpeed;
+
             //Player is aiming a spell, camera chases inbetween player and where player is touching
             if(pic.currentState.equals(PlayerInputComponent.States.AIMING) && pic.screenPos != null){
 
@@ -124,7 +134,7 @@ public class PlayerInputSystem extends EntitySystem{
                 }
                 if(pic.spellCast == SpellComponent.Spell.GRAVITY_SHIFT) {
                     spell.spellType = pic.spellCast;
-                    spell.duration = 5;
+                    spell.duration = 7;
                 }
                 entities.get(i).add(spell);
                 pic.spellCast = null;

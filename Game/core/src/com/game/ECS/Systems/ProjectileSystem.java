@@ -35,10 +35,10 @@ public class ProjectileSystem extends IteratingSystem{
         BodyComponent bc = bm.get(entity);
         PositionComponent pos = pm.get(entity);
 
-        //Todo fix delta
+        //Todo Delta fixed here
 
-        bc.body.setLinearVelocity(projc.dir.x * projc.speed * Gdx.graphics.getDeltaTime(),
-                projc.dir.y * projc.speed * Gdx.graphics.getDeltaTime());
+        bc.body.setLinearVelocity(projc.dir.x * projc.speed * deltaTime,
+                projc.dir.y * projc.speed * deltaTime);
 
         pos.x = bc.body.getPosition().x * GameVars.PTM + bc.offset.x;
         pos.y = bc.body.getPosition().y * GameVars.PTM + bc.offset.y;

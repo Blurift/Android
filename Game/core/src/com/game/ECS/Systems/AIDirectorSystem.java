@@ -32,18 +32,23 @@ public class AIDirectorSystem extends EntitySystem {
     //Todo remove
     private boolean added = false;
     private float spawnTime = 15f;
+    private float currentSpawnTime = spawnTime;
+
+    //Difficulty effects the spawn rate by removing this amount each spawn
+    private float difficulty = 0.1f;
 
     public void update(float deltatime){
-        if(spawnTime <= 0){
+        if(currentSpawnTime <= 0){
             Vector2 spawn = mapManager.getRandomEnemySpawn();
-            Entity enemy = EnemyPrefabs.createTestEnemy(worldManager, spawn);
+            Entity enemy = EnemyPrefabs.createWolf(worldManager, spawn);
 
             engine.addEntity(enemy);
             added = true;
-            spawnTime = 15;
+            currentSpawnTime = spawnTime;
+            spawnTime -= difficulty;
         }else{
-            //Todo fix delta
-            spawnTime -= 1* Gdx.graphics.getDeltaTime();
+            //Todo Delta here should be fixed
+            currentSpawnTime -= deltatime;
         }
     }
 }

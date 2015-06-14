@@ -25,7 +25,7 @@ import com.game.ECS.Managers.WorldManager;
  */
 public class EnemyPrefabs {
 
-    public static Entity createTestEnemy(WorldManager worldManager, Vector2 spawn){
+    public static Entity createWolf(WorldManager worldManager, Vector2 spawn){
         Entity enemy = new Entity();
 
         SpriteComponent spriteComponent = new SpriteComponent();
@@ -48,7 +48,8 @@ public class EnemyPrefabs {
                 .add(new AnimationSetComponent(Assets.animWolf()))
                 .add(new StateComponent())
                 .add(new DepthComponent(-0.50f))
-                .add(new AIComponent()).add(position)
+                .add(new AIComponent())
+                .add(position)
                 .add(new HealthComponent(2));
 
         return enemy;

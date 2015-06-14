@@ -104,7 +104,7 @@ public class MainMenuScreen implements Screen {
         exitGameBtn = new ImageButton(buttonStyle);
         exitGameBtn.setSize(exitGameBtn.getWidth()*scale*0.5f, exitGameBtn.getHeight()*scale*0.5f);
         exitGameBtn.setPosition((stage.getViewport().getCamera().viewportWidth * 0.5f) - (exitGameBtn.getWidth() * 0.5f),
-                (stage.getViewport().getCamera().viewportHeight * 0.45f) - (exitGameBtn.getHeight() * 0.5f));
+                (stage.getViewport().getCamera().viewportHeight * 0.40f) - (exitGameBtn.getHeight() * 0.5f));
         exitGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

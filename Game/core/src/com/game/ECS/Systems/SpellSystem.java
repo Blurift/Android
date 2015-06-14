@@ -65,7 +65,7 @@ public class SpellSystem extends IteratingSystem{
             if(bc != null){
                 bc.body.setLinearVelocity(0, 0);
             }
-            spell.duration -= 0.1*deltaTime;
+            spell.duration -= deltaTime;
             if(spell.duration <= 0){
                 entity.add(new VelocityComponent(0, 0)).remove(SpellComponent.class);
                 worldManager.getWorld().setGravity(new Vector2(0, 0));

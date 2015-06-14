@@ -35,6 +35,10 @@ public class ResourceManager {
         manager.load("UI/touchpad/touchBackground.png", Texture.class);
         manager.load("UI/touchpad/touchKnob.png", Texture.class);
 
+        //Consumable
+        manager.load("consumable/HealthPot.png", Texture.class);
+        manager.load("consumable/InkPot.png", Texture.class);
+
         //Character Sheets
         manager.load("character/DruidSheet.png", Texture.class);
         manager.load("character/WolfSheet.png", Texture.class);
@@ -75,6 +79,14 @@ public class ResourceManager {
     {
         manager.dispose();
         manager = null;
+    }
+
+    public static Texture healthPot() {
+        return manager.get("consumable/HealthPot.png", Texture.class);
+    }
+
+    public static Texture inkPot() {
+        return manager.get("consumable/InkPot.png", Texture.class);
     }
 
     public static Texture sheetDruid() {

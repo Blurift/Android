@@ -61,6 +61,7 @@ public class SpellAimingScreen implements Screen {
         Gdx.input.setInputProcessor(multiplexer);
 
         this.playerInput.currentState = PlayerInputComponent.States.AIMING;
+        this.playerInput.gameSpeed = 1;
     }
 
     @Override
