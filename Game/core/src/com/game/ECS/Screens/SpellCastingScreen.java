@@ -181,18 +181,7 @@ public class SpellCastingScreen implements Screen {
         ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
 
-        /*
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(new Color(255, 255, 255, 1));
-        for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
-            shapeRenderer.rectLine(edge.p1, edge.p2, LINE_SIZE);
-        }
-        if (lineStart != null && lineEnd != null) {
-            shapeRenderer.rectLine(lineStart, lineEnd, LINE_SIZE);
-        }
-        shapeRenderer.end();
-        */
 
 
 
@@ -210,8 +199,16 @@ public class SpellCastingScreen implements Screen {
         shapeRenderer.circle(points[6].x,points[6].y, buffer* 0.2f);
         shapeRenderer.circle(points[7].x,points[7].y, buffer* 0.2f);
         shapeRenderer.circle(points[8].x,points[8].y, buffer* 0.2f);
+        shapeRenderer.end();
 
-
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(new Color(255, 255, 255, 1));
+        for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
+            shapeRenderer.rectLine(points[edge.p1], points[edge.p2], LINE_SIZE);
+        }
+        if (startPoint >-1 && endPoint > -1) {
+            shapeRenderer.rectLine(points[startPoint], points[endPoint], LINE_SIZE);
+        }
         shapeRenderer.end();
 
     }
