@@ -13,8 +13,13 @@ import java.util.List;
  */
 public class SpellDrawing {
     public class Edge {
-        public Vector2 p1;
-        public Vector2 p2;
+        public int p1;
+        public int p2;
+
+        public boolean compare(Edge other)
+        {
+            return other.p1 == p1 && other.p2 == p2;
+        }
     }
 
     private List<Edge> edges;
@@ -23,7 +28,7 @@ public class SpellDrawing {
         edges = new LinkedList<Edge>();
     }
 
-    public void addEdge(Vector2 p1, Vector2 p2) {
+    public void addEdge(int p1, int p2) {
         Edge edge = new Edge();
         edge.p1 = p1;
         edge.p2 = p2;
@@ -38,5 +43,16 @@ public class SpellDrawing {
         edges.clear();
     }
 
+    public boolean Compare(SpellDrawing other)
+    {
+        if(other.edges.size() != edges.size())
+            return false;
 
+        for (int i = 0; i < edges.size(); i++)
+        {
+            if(!edges.get(i).compare(other.edges.get(i)))
+                return false;
+        }
+        return true;
+    }
 }
