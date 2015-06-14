@@ -82,8 +82,8 @@ public class SpellCasting implements IUIScreen{
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 Vector2 clickCoordinates = new Vector2(screenX,screenY);
-                if(lineStart!= null && lineEnd !=  null)
-                    spellDrawing.addEdge(lineStart, stage.getViewport().unproject(clickCoordinates));
+                //if(lineStart!= null && lineEnd !=  null)
+                   // spellDrawing.addEdge(lineStart, stage.getViewport().unproject(clickCoordinates));
                 lineStart = null;
                 lineEnd = null;
                 spellCheck();
@@ -131,9 +131,9 @@ public class SpellCasting implements IUIScreen{
             shapeRenderer.setAutoShapeType(true);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(new Color(255, 255, 255, 1));
-            for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
-                shapeRenderer.rectLine(edge.p1, edge.p2, LINE_SIZE);
-            }
+            //for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
+            //    shapeRenderer.rectLine(edge.p1, edge.p2, LINE_SIZE);
+            //}
             if (lineStart != null && lineEnd != null) {
                 shapeRenderer.rectLine(lineStart, lineEnd, LINE_SIZE);
             }
