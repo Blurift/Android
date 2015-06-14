@@ -126,7 +126,7 @@ public class WorldManager {
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(owner);
         shape.dispose();
-
+        body.setGravityScale(0);
         return body;
     }
 

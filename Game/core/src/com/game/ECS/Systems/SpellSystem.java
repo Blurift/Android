@@ -56,18 +56,19 @@ public class SpellSystem extends IteratingSystem{
         if(spell.spellType == SpellComponent.Spell.GRAVITY_SHIFT){
 
             //Want caster to stay still
-            worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/ GameVars.PTM)*10, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*10) *-1));
+            worldManager.getWorld().setGravity(new Vector2((Gdx.input.getAccelerometerY()/ GameVars.PTM)*5, ((Gdx.input.getAccelerometerX()/GameVars.PTM)*5) *-1));
             VelocityComponent vc = entity.getComponent(VelocityComponent.class);
             if(vc != null){
                 entity.remove(VelocityComponent.class);
             }
             BodyComponent bc = entity.getComponent(BodyComponent.class);
             if(bc != null){
-                bc.body.setLinearVelocity(0, 0);
+                bc.body.setGravityScale(0);
             }
             spell.duration -= deltaTime;
             if(spell.duration <= 0){
                 entity.add(new VelocityComponent(0, 0)).remove(SpellComponent.class);
+                bc.body.setGravityScale(1);
                 worldManager.getWorld().setGravity(new Vector2(0, 0));
             }
         }

@@ -54,7 +54,7 @@ public class PlayerInputSystem extends EntitySystem{
                 PositionComponent.class,
                 FacingComponent.class).get());
     }
-    private float playerSpeed = 25;
+    private float playerSpeed = 28;
 
     public void update(float deltaTime) {
         for (int i = 0; i < entities.size(); ++i) {
@@ -67,7 +67,7 @@ public class PlayerInputSystem extends EntitySystem{
             HealthComponent playerHealth = entities.get(i).getComponent(HealthComponent.class);
             //Regen player health
             if(playerHealth.currentHealth + 0.5*deltaTime <= playerHealth.maxHealth){
-                playerHealth.currentHealth+= 0.2*deltaTime;
+                playerHealth.currentHealth+= 0.05*deltaTime;
             }else{
                 playerHealth.currentHealth = playerHealth.maxHealth;
             }

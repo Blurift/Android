@@ -61,7 +61,11 @@ public class MyContactListener implements ContactListener {
             if(fb.getUserData() != null){
                 if(fb.getUserData() instanceof Entity) {
                     Entity enemy = (Entity) fb.getUserData();
-                    enemy.add(new DamageComponent(1));
+                    DamageComponent damage = enemy.getComponent(DamageComponent.class);
+                    if (enemy.getComponent(DamageComponent.class) == null){
+                        enemy.add(new DamageComponent(1));
+                    }
+
                 }
             }
         }
@@ -132,6 +136,9 @@ public class MyContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
+        //Stop Damaging
 
     }
 

@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Component;
  */
 public class ConsumableComponent extends Component {
     public static enum ConsumeType{
-        Health, Ink
+        Health, Ink, Life
     }
 
     public ConsumeType type;

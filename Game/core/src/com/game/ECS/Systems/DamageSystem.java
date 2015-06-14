@@ -60,17 +60,31 @@ public class DamageSystem extends IteratingSystem{
 
         if(hc != null){
             hc.currentHealth-= dc.damage;
+
+            //Vibrate for player
+            if(dc.damage != 0 && entity.getComponent(PlayerComponent.class) != null){
+                Gdx.input.vibrate(100);
+            }
             if(hc.currentHealth <= 0) {
+                entity.remove(DamageComponent.class);
+                sc.sprite.setColor(Color.WHITE);
                 //Todo for killing things
                 if(entity.getComponent(PlayerComponent.class) != null){
                     entity.remove(PositionComponent.class);
                     entity.add(new SpawningComponent(3));
+                    playerInput.lives-=1;
+                    if(playerInput.lives < 1){
+                        hc.currentHealth = 10;
+
+                        engine.removeEntity(entity);
+                       }
                 }else{
                     engine.removeEntity(entity);
                     playerInput.gameScore+=1;
                 }
-
+                return;
             }
+
             dc.damage = 0;
         }
 

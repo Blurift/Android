@@ -95,7 +95,7 @@ public class CharacterMovementSystem extends IteratingSystem {
         impulseY /= GameVars.PTM;
         impulseX *= deltaTime;
         impulseY *= deltaTime;
-        body. body.applyLinearImpulse(new Vector2((impulseX), impulseY), body.body.getWorldCenter(), true);
+        body.body.applyLinearImpulse(new Vector2((impulseX), impulseY), body.body.getWorldCenter(), true);
 
         pm.get(entity).x = body.body.getPosition().x * GameVars.PTM + body.offset.x;
         pm.get(entity).y = body.body.getPosition().y * GameVars.PTM + body.offset.y;

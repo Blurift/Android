@@ -52,6 +52,8 @@ public class GameScreen implements Screen {
     private Texture castSpellBtnShadowTexture;
     private Label scoreLabel;
     private Label scoreFloatLabel;
+    private Label livesLabel;
+    private Label livesIntLabel;
 
     private float barSize;
 
@@ -68,6 +70,8 @@ public class GameScreen implements Screen {
         this.castSpellBtn = createCastSpellBtn();
         this.scoreLabel = createScoreLabel();
         this.scoreFloatLabel = createScoreFloatLabel();
+        this.livesLabel = createLivesLabel();
+        this.livesIntLabel = createLivesIntLabel();
 
         //Scale some things
         this.barSize = 300*scale;
@@ -83,6 +87,8 @@ public class GameScreen implements Screen {
         stage.addActor(castSpellBtnShadow);
         stage.addActor(scoreLabel);
         stage.addActor(scoreFloatLabel);
+        stage.addActor(livesLabel);
+        stage.addActor(livesIntLabel);
         this.playerInput.currentState = PlayerInputComponent.States.FREE;
         this.playerInput.gameSpeed = 1;
     }
@@ -102,6 +108,8 @@ public class GameScreen implements Screen {
 
         //Update score
         scoreFloatLabel.setText(""+Math.round(playerInput.gameScore));
+        //Update lives
+        livesIntLabel.setText(""+playerInput.lives);
 
         //Animate cast spell button
         //TODO need to lerp book floating up and down
@@ -211,6 +219,8 @@ public class GameScreen implements Screen {
         castSpellBtnShadow.remove();
         scoreLabel.remove();
         scoreFloatLabel.remove();
+        livesLabel.remove();
+        livesIntLabel.remove();
         //No longer giving input
         playerInput.touchpadDir.x = 0;
         playerInput.touchpadDir.y = 0;
@@ -281,6 +291,40 @@ public class GameScreen implements Screen {
         return castSpellBtn;
     }
 
+
+    //Showing the label with text as the actual int lives
+    private Label createLivesIntLabel(){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("3",textStyle);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setAlignment(Align.left);
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.18f,
+                stage.getViewport().getCamera().viewportHeight * 0.80f);
+        return text;
+    }
+
+    //Showing the label with text 'Lives'
+    private Label createLivesLabel(){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("Lives:",textStyle);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.05f,
+                stage.getViewport().getCamera().viewportHeight * 0.80f);
+        return text;
+    }
+
     //Showing the label with text 'Score'
     private Label createScoreLabel(){
         Label text;
@@ -296,7 +340,6 @@ public class GameScreen implements Screen {
                 stage.getViewport().getCamera().viewportHeight * 0.90f);
         return text;
     }
-
     //Showing the label with text as the actual float score
     private Label createScoreFloatLabel(){
         Label text;
@@ -309,7 +352,7 @@ public class GameScreen implements Screen {
         text = new Label("0",textStyle);
         text.setFontScale(2f*scale,2f*scale);
         text.setAlignment(Align.left);
-        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.15f,
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.18f,
                 stage.getViewport().getCamera().viewportHeight * 0.90f);
         return text;
     }

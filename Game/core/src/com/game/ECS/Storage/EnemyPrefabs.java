@@ -50,7 +50,7 @@ public class EnemyPrefabs {
                 .add(new DepthComponent(-0.50f))
                 .add(new AIComponent())
                 .add(position)
-                .add(new HealthComponent(2));
+                .add(new HealthComponent(1));
 
         return enemy;
     }

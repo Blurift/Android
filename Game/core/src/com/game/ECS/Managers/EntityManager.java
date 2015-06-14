@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,6 +15,7 @@ import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.CamBoomComponent;
 import com.game.ECS.Components.CameraComponent;
+import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
 import com.game.ECS.Components.HealthComponent;
@@ -31,6 +33,7 @@ import com.game.ECS.Storage.GameVars;
 import com.game.ECS.Storage.ItemPrefabs;
 import com.game.ECS.Systems.AIDirectorSystem;
 import com.game.ECS.Systems.AISystem;
+import com.game.ECS.Systems.AnimateSystem;
 import com.game.ECS.Systems.ConsumeSystem;
 import com.game.ECS.Systems.DamageSystem;
 import com.game.ECS.Systems.ProjectileSystem;
@@ -85,7 +88,7 @@ public class EntityManager {
         PlayerInputSystem is = new PlayerInputSystem();
         engine.addSystem(is);
         //AI Controller System
-        AISystem ais = new AISystem();
+        AISystem ais = new AISystem(inputComponent);
         engine.addSystem(ais);
         //Movement System
         CharacterMovementSystem cms = new CharacterMovementSystem(0, worldManager.getWorld());
@@ -97,14 +100,17 @@ public class EntityManager {
         SpawnSystem ss = new SpawnSystem(1, mapManager);
         engine.addSystem(ss);
         //AIDirectorSystem
-        AIDirectorSystem ads = new AIDirectorSystem(mapManager, worldManager);
-        engine.addSystem(ads);
+        //AIDirectorSystem ads = new AIDirectorSystem(mapManager, worldManager);
+        //engine.addSystem(ads);
         //Spell System
         SpellSystem sps = new SpellSystem(worldManager);
         engine.addSystem(sps);
         //Facing System - Where the player is facing
         FacingSystem fs = new FacingSystem();
         engine.addSystem(fs);
+        //Animate simple sprites
+        AnimateSystem anims = new AnimateSystem();
+        engine.addSystem(anims);
         //Animation State System, setting the players current animation
         AnimationSystem as = new AnimationSystem();
         engine.addSystem(as);
@@ -123,9 +129,9 @@ public class EntityManager {
 
         //ENTITIES
         //CamBoom for starting pan
-        //camBoom = createCamBoom(inputComponent);
+        camBoom = createCamBoom();
         //Player
-        player = createPlayer(inputComponent);
+        //player = createPlayer(inputComponent);
         //GameWorld Camera
         //createCamera(player);
         //Static Objects
@@ -149,7 +155,7 @@ public class EntityManager {
      * Entity creation
      */
 
-    public Entity createCamBoom(PlayerInputComponent inputComponent){
+    public Entity createCamBoom(){
         Entity entity = new Entity();
         //Set up camera
         CameraComponent cameraComponent = new CameraComponent();
@@ -158,8 +164,10 @@ public class EntityManager {
         camera.update();
         cameraComponent.camera = camera;
         engine.getSystem(RenderSystem.class).setRenderCamera(camera);
-        entity.add(cameraComponent)
-                .add(new CamBoomComponent(0, 0));
+        Vector2 pos = mapManager.getRandomPlayerSpawn();
+        entity.add(cameraComponent);
+                //.add(new CamBoomComponent(pos.x, pos.y));
+        engine.addEntity(entity);
         return entity;
     }
 
@@ -173,17 +181,10 @@ public class EntityManager {
                 WorldManager.BodyType.HUMANOID, entity
         ));
         bodyComponent.offset.y = 0.5f;
-
-        //Set up camera
-
-        CameraComponent cameraComponent = new CameraComponent();
-        OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, GameVars.VIRTUAL_WIDTH, GameVars.VIRTUAL_HEIGHT);
-        camera.update();
-        cameraComponent.camera = camera;
-        engine.getSystem(RenderSystem.class).setRenderCamera(camera);
-
-
+        HealthComponent health = new HealthComponent(10);
+        InkComponent ink = new InkComponent(10);
+        inputComponent.playerHealth = health;
+        inputComponent.playerInk = ink;
         entity.add(new VelocityComponent(0, 0))
                 .add(bodyComponent)
                 .add(new PlayerComponent(0))
@@ -194,10 +195,10 @@ public class EntityManager {
                 .add(new StateComponent())
                 .add(new DepthComponent(-0.50f))
                 .add(inputComponent)
-                .add(new HealthComponent(10))
-                .add(new InkComponent(10))
-                .add(cameraComponent);
-
+                .add(health)
+                .add(ink)
+                .add(camBoom.getComponent(CameraComponent.class));
+        camBoom.remove(CameraComponent.class);
         engine.addEntity(entity);
         return entity;
     }
@@ -218,25 +219,53 @@ public class EntityManager {
         public void entityRemoved(Entity entity) {
             Body body = entity.getComponent(BodyComponent.class).body;
             AIComponent aic = entity.getComponent(AIComponent.class);
+            PlayerInputComponent input = inputComponent;
+            PlayerComponent player = entity.getComponent(PlayerComponent.class);
             if(body != null)
                 body.getWorld().destroyBody(body);
 
+
+            if(player != null) {
+                input.currentState = PlayerInputComponent.States.DEAD;
+                camBoom.add(entity.getComponent(CameraComponent.class));
+                AIDirectorSystem AIDir = engine.getSystem(AIDirectorSystem.class);
+                if(engine.getSystem(AIDirectorSystem.class) != null){
+                    engine.removeSystem(AIDir);
+                }
+                //Clear items and enemies
+                ImmutableArray<Entity> enemies = engine.getEntitiesFor(Family.all(AIComponent.class).get());
+                ImmutableArray<Entity> items = engine.getEntitiesFor(Family.all(
+                        ConsumableComponent.class).exclude(HealthComponent.class, InkComponent.class).get());
+                for(Entity enemy : enemies){
+                    engine.removeEntity(enemy);
+                }
+                for(Entity item : items){
+                    engine.removeEntity(item);
+                }
+            }
+
             //spawn item when ai dies
-            if(aic != null){
+            if(aic != null && input.currentState != PlayerInputComponent.States.DEAD){
                 float num = random.nextFloat();
 
                 PositionComponent pos = entity.getComponent(PositionComponent.class);
 
                 //Spawn Health
-                if(num >= 0 && num <= 0.33){
+                if(num >= 0 && num <= 0.15){
 
                     engine.addEntity(ItemPrefabs.createHealthPotion(worldManager,
                            new Vector2(pos.x, pos.y) ));
                 }
 
                 //Spawn Ink
-                if(num >= 0.34 && num <= 0.66){
+                if(num >= 0.16 && num <= 0.30){
                     engine.addEntity(ItemPrefabs.createInkwell(worldManager,
+                            new Vector2(pos.x, pos.y)));
+                }
+
+                //Spawn Life
+                if(num >= 0.975 && num <= 1){
+                    engine.addEntity(ItemPrefabs.createLife(worldManager,
                             new Vector2(pos.x, pos.y)));
                 }
             }
@@ -248,7 +277,13 @@ public class EntityManager {
      * Getters
      */
 
-    public Entity getPlayer(){
-        return player;
+    //public Entity getPlayer(){
+    //    return player;
+    //}
+
+    public WorldManager getWorldManager(){
+        return worldManager;
     }
+
+    public MapManager getMapManager(){ return mapManager; }
 }

@@ -139,7 +139,7 @@ public class RenderSystem extends SortedIteratingSystem {
         //Render Box2D debug
         this.debugMatrix = sb.getProjectionMatrix().cpy().scale(GameVars.PTM,
                 GameVars.PTM, 0);
-        debugRenderer.render(world, debugMatrix);
+        //debugRenderer.render(world, debugMatrix);
         depthEntities.clear();
     }
 

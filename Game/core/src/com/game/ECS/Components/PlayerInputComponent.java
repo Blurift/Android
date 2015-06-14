@@ -2,6 +2,7 @@ package com.game.ECS.Components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by Sean on 27/04/2015.
@@ -14,7 +15,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class PlayerInputComponent extends Component {
     public static enum States{
-        FREE, DRAWING, AIMING
+        FREE, DRAWING, AIMING, DEAD
     }
 
 
@@ -29,8 +30,9 @@ public class PlayerInputComponent extends Component {
     public InkComponent playerInk;
     public float gameScore = 0;
     public float gameSpeed = 1;
-
+    public int lives = 3;
     public SpellComponent.Spell spellCast; //if null no spell is being cast
     public Vector2 spellDir;
+    public float[] highscores;
     //TODO rework spellcast
 }

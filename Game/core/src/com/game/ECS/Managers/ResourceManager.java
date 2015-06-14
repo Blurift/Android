@@ -26,6 +26,7 @@ public class ResourceManager {
         manager.load("UI/TapToStart.png", Texture.class);
         manager.load("UI/NewGame.png", Texture.class);
         manager.load("UI/Exit.png", Texture.class);
+        manager.load("UI/Highscores.png", Texture.class);
 
         //UI
         manager.load("UI/castButton.png", Texture.class);
@@ -38,6 +39,7 @@ public class ResourceManager {
         //Consumable
         manager.load("consumable/HealthPot.png", Texture.class);
         manager.load("consumable/InkPot.png", Texture.class);
+        manager.load("consumable/ConsumeSheet.png", Texture.class);
 
         //Character Sheets
         manager.load("character/DruidSheet.png", Texture.class);
@@ -136,6 +138,14 @@ public class ResourceManager {
 
     public static Texture newGameMenuButton() {
         return manager.get("UI/NewGame.png", Texture.class);
+    }
+
+    public static Texture highscoresButton() {
+        return manager.get("UI/Highscores.png", Texture.class);
+    }
+
+    public static Texture consumeSheet(){
+        return manager.get("consumable/ConsumeSheet.png", Texture.class);
     }
 
     public static Texture blank(){

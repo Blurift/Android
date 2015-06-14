@@ -10,11 +10,13 @@ import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
 import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SpriteAnimatingComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Components.StateComponent;
 import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Managers.WorldManager;
+import com.badlogic.gdx.graphics.Color;
 
 /**
  * Created by Sean on 14/06/2015.
@@ -25,7 +27,7 @@ public class ItemPrefabs {
             Entity item = new Entity();
 
             SpriteComponent spriteComponent = new SpriteComponent();
-            spriteComponent.sprite.setSize(2,2);
+            spriteComponent.sprite.setSize(1,1);
             spriteComponent.sprite.setTexture(ResourceManager.healthPot());
 
             PositionComponent position = new PositionComponent(
@@ -44,6 +46,7 @@ public class ItemPrefabs {
                     .add(spriteComponent)
                     .add(new DepthComponent(-0.5f))
                     .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Health, 3))
+                    .add(new SpriteAnimatingComponent(Assets.healthPotAnim()))
                     .add(position);
 
             return item;
@@ -53,7 +56,7 @@ public class ItemPrefabs {
         Entity item = new Entity();
 
         SpriteComponent spriteComponent = new SpriteComponent();
-        spriteComponent.sprite.setSize(2,2);
+        spriteComponent.sprite.setSize(1,1);
         spriteComponent.sprite.setTexture(ResourceManager.inkPot());
 
         PositionComponent position = new PositionComponent(
@@ -71,6 +74,36 @@ public class ItemPrefabs {
                 .add(spriteComponent)
                 .add(new DepthComponent(-0.50f))
                 .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Ink, 10))
+                .add(new SpriteAnimatingComponent(Assets.inkPotAnim()))
+                .add(position);
+
+        return item;
+    }
+
+    public static Entity createLife(WorldManager worldManager, Vector2 spawn) {
+        Entity item = new Entity();
+
+        SpriteComponent spriteComponent = new SpriteComponent();
+        spriteComponent.sprite.setSize(1,1);
+        spriteComponent.sprite.setTexture(ResourceManager.inkPot());
+        spriteComponent.sprite.setColor(Color.GREEN);
+
+        PositionComponent position = new PositionComponent(
+                spawn.x, spawn.y);
+
+        BodyComponent bodyComponent = new BodyComponent(worldManager.createBody(
+                WorldManager.BodyType.CONSUMABLE, item
+        ));
+
+        bodyComponent.offset.y = -32f;
+        bodyComponent.body.setTransform(new Vector2( spawn.x / GameVars.PTM, spawn.y / GameVars.PTM),
+                bodyComponent.body.getAngle());
+
+        item.add(bodyComponent)
+                .add(spriteComponent)
+                .add(new DepthComponent(-0.50f))
+                .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Life, 1))
+                .add(new SpriteAnimatingComponent(Assets.inkPotAnim()))
                 .add(position);
 
         return item;

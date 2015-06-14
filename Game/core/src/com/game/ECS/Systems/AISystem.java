@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.game.ECS.Components.AIComponent;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.PlayerComponent;
+import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.VelocityComponent;
@@ -23,13 +24,15 @@ import com.game.ECS.Components.VelocityComponent;
  */
 public class AISystem extends IteratingSystem{
 
+    private PlayerInputComponent input;
     private Engine engine;
 
     private ComponentMapper<PositionComponent> pm;
     private ComponentMapper<AIComponent> aim;
 
-    public AISystem() {
+    public AISystem(PlayerInputComponent input) {
         super(Family.all(AIComponent.class, PositionComponent.class).get());
+        this.input = input;
     }
 
     public void addedToEngine(Engine engine){
@@ -98,6 +101,8 @@ public class AISystem extends IteratingSystem{
                 vel.velocity = dir;
             }
         }
-
+        if(input.currentState == PlayerInputComponent.States.DEAD){
+            //engine.removeEntity(entity);
+        }
     }
 }

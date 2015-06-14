@@ -49,6 +49,8 @@ public class Assets {
         Animation animated = new Animation(speed, frames);
         return animated;
     }
+
+    //Class of animations for multiple directions
     public static class DirAnimation{
         public Map<StateComponent.State, Animation> left, right, up, down;
 
@@ -110,5 +112,21 @@ public class Assets {
 
         return new DirAnimation(left, right, up, down);
     };
+
+    public static Animation healthPotAnim(){
+        Texture sheet = ResourceManager.consumeSheet();
+        float s = 0.19f; //Anim speed
+
+        //Still
+        return animate(sheet, 0, 0, 32, 32, 4, s);
+    }
+
+    public static Animation inkPotAnim(){
+        Texture sheet = ResourceManager.consumeSheet();
+        float s = 0.19f; //Anim speed
+
+        //Still
+        return animate(sheet, 0, 32, 32, 32, 4, s);
+    }
 
 }

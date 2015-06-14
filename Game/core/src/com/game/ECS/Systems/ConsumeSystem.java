@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.InkComponent;
+import com.game.ECS.Components.PlayerInputComponent;
 
 /**
  * Created by Sean on 14/06/2015.
@@ -57,6 +58,10 @@ public class ConsumeSystem extends EntitySystem {
                 }else{
                     ink.currentInk += consumable.amount;
                 }
+            }else if(consumable.type == ConsumableComponent.ConsumeType.Life){
+                PlayerInputComponent playerInput = entities.get(i).getComponent(PlayerInputComponent.class);
+                if(playerInput != null)
+                    playerInput.lives+=1;
             }
             entities.get(i).remove(ConsumableComponent.class);
         }
