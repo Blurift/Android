@@ -103,7 +103,6 @@ public class SpellCastingScreen implements Screen {
             public boolean touchDown (int screenX, int screenY, int pointer, int button) {
                 Vector2 clickCoordinates = new Vector2(screenX,screenY);
 
-
                 startPoint = FindClosestPoint(clickCoordinates);
 
                 return true;
@@ -158,6 +157,7 @@ public class SpellCastingScreen implements Screen {
         for(TextButton btn : buttons){
             stage.addActor(btn);
         }*/
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     private void spellCheck(){
@@ -233,6 +233,7 @@ public class SpellCastingScreen implements Screen {
         for(TextButton btn : buttons){
             btn.remove();
         }
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
