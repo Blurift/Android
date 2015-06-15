@@ -36,4 +36,13 @@ public class Particles {
 
         return projectileEffectPool.obtain();
     }
+
+    public static ParticleEffectPool.PooledEffect lifePotion(){
+        ParticleEffect spawnEffect = new ParticleEffect();
+        spawnEffect.load(Gdx.files.internal("particles/lifePotion.p"), Gdx.files.internal("particles/"));
+        spawnEffect.scaleEffect(0.01f);
+        ParticleEffectPool projectileEffectPool = new ParticleEffectPool(spawnEffect, 1,2);
+
+        return projectileEffectPool.obtain();
+    }
 }

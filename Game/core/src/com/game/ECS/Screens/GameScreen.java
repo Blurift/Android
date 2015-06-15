@@ -271,7 +271,7 @@ public class GameScreen implements Screen {
                 //Todo remove this when SpellPreparing screen is implemented
                 if(playerInput.playerInk.currentInk > 0) {
                     playerInput.playerInk.currentInk--;
-                    game.setScreen(new SpellCastingScreen(game, stage, playerInput));
+                    game.setScreen(new SpellSelectScreen(game, stage, playerInput));
                 }else if(playerInput.playerHealth.currentHealth > 1){
                     playerInput.playerHealth.currentHealth--;
                     game.setScreen(new SpellSelectScreen(game, stage, playerInput));

@@ -129,4 +129,11 @@ public class Assets {
         return animate(sheet, 0, 32, 32, 32, 4, s);
     }
 
+    public static Animation lifePotAnim(){
+        Texture sheet = ResourceManager.sheetLifePot();
+        float s = 0.19f; //Anim speed
+
+        //Still
+        return animate(sheet, 0, 0, 32, 32, 4, s);
+    }
 }

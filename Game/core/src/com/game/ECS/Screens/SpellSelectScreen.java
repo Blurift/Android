@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.SpellComponent;
@@ -26,6 +28,8 @@ public class SpellSelectScreen implements Screen {
 
     private float scale;
 
+    Table table;
+
     LinkedList<TextButton> buttons;
 
     public SpellSelectScreen(Main game, Stage stage, PlayerInputComponent playerInput) {
@@ -38,6 +42,9 @@ public class SpellSelectScreen implements Screen {
 
         buttons = new LinkedList<TextButton>();
         this.playerInput.gameSpeed = 0.1f;
+
+        table = new Table().align(Align.center);
+        table.setPosition(stage.getCamera().viewportWidth*0.5f, stage.getCamera().viewportHeight*0.5f);
     }
 
         @Override
@@ -52,7 +59,9 @@ public class SpellSelectScreen implements Screen {
                     game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST));
                 }
             });
-            buttons.add(frostBtn);
+            table.add(frostBtn).size(200*scale, 75*scale);
+            table.row();
+            table.add().size(200 * scale, 75 * scale);
 
             TextButton gravBtn = createButton(skin, Gdx.graphics.getWidth()/2,
                     Gdx.graphics.getHeight()/2 - 50*scale, "Gravity Shift");
@@ -60,14 +69,13 @@ public class SpellSelectScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     playerInput.spellCast = SpellComponent.Spell.GRAVITY_SHIFT;
-                    game.setScreen(new GameScreen(game, stage, playerInput));
+                    game.setScreen(new AccelerometerScreen(game, stage, playerInput, 7));
                 }
             });
-            buttons.add(gravBtn);
+            table.row();
+            table.add(gravBtn).size(200*scale, 75*scale);
 
-            for(TextButton btn : buttons){
-                stage.addActor(btn);
-            }
+            stage.addActor(table);
         }
 
     @Override
@@ -92,6 +100,7 @@ public class SpellSelectScreen implements Screen {
 
     @Override
     public void hide() {
+        table.remove();
         for(TextButton btn : buttons){
             btn.remove();
         }
@@ -105,7 +114,8 @@ public class SpellSelectScreen implements Screen {
 
     private TextButton createButton(Skin skin, float x, float y, String text){
         TextButton btn = new TextButton(text, skin);
-        btn.setPosition(x-btn.getWidth()/2, y-btn.getHeight()/2);
+        btn.getLabel().setFontScale(1*scale, 1*scale);
+        //btn.setPosition(x-btn.getWidth()/2, y-btn.getHeight()/2);
         return btn;
     }
 }

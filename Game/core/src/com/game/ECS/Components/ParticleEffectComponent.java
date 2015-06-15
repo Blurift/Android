@@ -11,4 +11,8 @@ import com.badlogic.gdx.utils.Array;
  */
 public class ParticleEffectComponent extends Component {
     public ParticleEffectPool.PooledEffect effect;
+
+    public ParticleEffectComponent(ParticleEffectPool.PooledEffect effect){
+        this.effect = effect;
+    }
 }

@@ -80,8 +80,7 @@ public class SpawnSystem extends EntitySystem {
             //Create spawn particle effect
             PositionComponent pos = new PositionComponent(spawn.x,
                     spawn.y);
-            ParticleEffectComponent effect = new ParticleEffectComponent();
-            effect.effect = Particles.leafSpawn();
+            ParticleEffectComponent effect = new ParticleEffectComponent(Particles.leafSpawn());
             Entity spawnEffect = new Entity();
             spawnEffect.add(pos).add(effect).add(new DepthComponent(0));
             engine.addEntity(spawnEffect);

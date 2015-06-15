@@ -40,6 +40,7 @@ public class ResourceManager {
         manager.load("consumable/HealthPot.png", Texture.class);
         manager.load("consumable/InkPot.png", Texture.class);
         manager.load("consumable/ConsumeSheet.png", Texture.class);
+        manager.load("consumable/LifePotion.png", Texture.class);
 
         //Character Sheets
         manager.load("character/DruidSheet.png", Texture.class);
@@ -146,6 +147,10 @@ public class ResourceManager {
 
     public static Texture consumeSheet(){
         return manager.get("consumable/ConsumeSheet.png", Texture.class);
+    }
+
+    public static Texture sheetLifePot(){
+        return manager.get("consumable/LifePotion.png", Texture.class);
     }
 
     public static Texture blank(){

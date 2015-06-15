@@ -54,7 +54,7 @@ public class PlayerInputSystem extends EntitySystem{
                 PositionComponent.class,
                 FacingComponent.class).get());
     }
-    private float playerSpeed = 28;
+    private float playerSpeed = 35;
 
     public void update(float deltaTime) {
         for (int i = 0; i < entities.size(); ++i) {

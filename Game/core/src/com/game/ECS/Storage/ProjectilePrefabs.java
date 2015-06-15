@@ -26,7 +26,7 @@ public class ProjectilePrefabs {
         SpriteComponent sc = new SpriteComponent();
         ProjectileComponent pc = new ProjectileComponent();
         BodyComponent bc = new BodyComponent();
-        ParticleEffectComponent pec = new ParticleEffectComponent();
+        ParticleEffectComponent pec = new ParticleEffectComponent(Particles.iceProjectile());
 
         sc.sprite = new Sprite(ResourceManager.projIce());
         sc.sprite.setSize(2, 2); //Todo automate this
@@ -35,7 +35,6 @@ public class ProjectilePrefabs {
         pc.dir = dir;
         bc.body = worldManager.createProjectileBody(projectile);
         bc.body.setTransform(new Vector2(pos.x/GameVars.PTM, pos.y/GameVars.PTM), bc.body.getAngle());
-        pec.effect = Particles.iceProjectile();
 
         //Need to flip effect
         rotateBy(dir.angle() -180f, pec.effect);

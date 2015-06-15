@@ -9,6 +9,7 @@ import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.FacingComponent;
 import com.game.ECS.Components.HealthComponent;
+import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SpriteAnimatingComponent;
 import com.game.ECS.Components.SpriteComponent;
@@ -86,7 +87,6 @@ public class ItemPrefabs {
         SpriteComponent spriteComponent = new SpriteComponent();
         spriteComponent.sprite.setSize(1,1);
         spriteComponent.sprite.setTexture(ResourceManager.inkPot());
-        spriteComponent.sprite.setColor(Color.GREEN);
 
         PositionComponent position = new PositionComponent(
                 spawn.x, spawn.y);
@@ -103,8 +103,10 @@ public class ItemPrefabs {
                 .add(spriteComponent)
                 .add(new DepthComponent(-0.50f))
                 .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Life, 1))
-                .add(new SpriteAnimatingComponent(Assets.inkPotAnim()))
-                .add(position);
+                .add(new SpriteAnimatingComponent(Assets.lifePotAnim()))
+                .add(position)
+                .add(new ParticleEffectComponent(Particles.lifePotion()));
+
 
         return item;
     }

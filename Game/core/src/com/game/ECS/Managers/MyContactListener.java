@@ -52,8 +52,7 @@ public class MyContactListener implements ContactListener {
 
             PositionComponent pos = new PositionComponent(entity.getComponent(PositionComponent.class).x,
                     entity.getComponent(PositionComponent.class).y);
-            ParticleEffectComponent effect = new ParticleEffectComponent();
-            effect.effect = Particles.iceExplosion();
+            ParticleEffectComponent effect = new ParticleEffectComponent(Particles.iceExplosion());
 
             entity.add(pos).add(effect).add(new DepthComponent(0));
             engine.addEntity(entity);
@@ -75,8 +74,7 @@ public class MyContactListener implements ContactListener {
 
             PositionComponent pos = new PositionComponent(projectile.getComponent(PositionComponent.class).x,
                     projectile.getComponent(PositionComponent.class).y);
-            ParticleEffectComponent effect = new ParticleEffectComponent();
-            effect.effect = Particles.iceExplosion();
+            ParticleEffectComponent effect = new ParticleEffectComponent(Particles.iceExplosion());
 
             //TODO make an OnHit variable for Projectile, which stores an entity: Clear this entity after use
             entity.add(pos).add(effect).add(new DepthComponent(0));

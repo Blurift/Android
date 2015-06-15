@@ -2,6 +2,7 @@ package com.game.ECS.Storage;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.game.ECS.Components.AIComponent;
 import com.game.ECS.Components.AnimationSetComponent;
@@ -15,6 +16,7 @@ import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Components.StateComponent;
 import com.game.ECS.Components.VelocityComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Managers.WorldManager;
 
 /**
@@ -30,7 +32,8 @@ public class EnemyPrefabs {
 
         SpriteComponent spriteComponent = new SpriteComponent();
         spriteComponent.sprite.setSize(2,2);
-
+        TextureRegion texture = new TextureRegion(ResourceManager.sheetWolf(), 0,0,32,32);
+        spriteComponent.sprite.setRegion(texture);
         PositionComponent position = new PositionComponent(
                 spawn.x, spawn.y);
 
