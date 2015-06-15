@@ -5,15 +5,18 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.SpellComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 import com.game.SpellSystem.SpellDrawing;
@@ -47,7 +50,8 @@ public class SpellCastingScreen implements Screen {
 
     float buffer = Gdx.graphics.getHeight()/4;
 
-
+    private ImageButton cancelSpellBtn;
+    private Texture cancelTexture;
 
     //Line drawing
     private float LINE_SIZE = 10f; // TODO change on resolution
@@ -55,6 +59,11 @@ public class SpellCastingScreen implements Screen {
     int startPoint = -1;
     int endPoint = -1;
     Vector2 currentPoint = null;
+
+    float maxX;
+    float maxY;
+    float minX;
+    float minY;
 
     public SpellCastingScreen(Main game, final Stage stage, PlayerInputComponent playerInput) {
         this.game = game;
@@ -97,6 +106,13 @@ public class SpellCastingScreen implements Screen {
         spellWind.addEdge(3,5);
         spellWind.addEdge(6,8);
 
+        maxX = Gdx.graphics.getWidth()*0.75f;
+        minX = Gdx.graphics.getWidth()*0.25f;
+        maxY = Gdx.graphics.getHeight()*0.85f;
+        minY = Gdx.graphics.getHeight()*0.15f;
+
+        this.cancelSpellBtn = createCancelSpellBtn();
+
         spellDrawing = new SpellDrawing();
         //Set up drawing line input
         multiplexer.addProcessor(stage);
@@ -126,6 +142,17 @@ public class SpellCastingScreen implements Screen {
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 currentPoint = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
+
+
+                if(currentPoint.x > maxX)
+                    currentPoint.x = maxX;
+                if(currentPoint.x < minX)
+                    currentPoint.x = minX;
+                if(currentPoint.y > maxY)
+                    currentPoint.y = maxY;
+                if(currentPoint.y < minY)
+                    currentPoint.y = minY;
+
                 //endPoint = FindClosestPoint(clickCoordinates);
                 return true;
             }
@@ -160,6 +187,8 @@ public class SpellCastingScreen implements Screen {
         for(TextButton btn : buttons){
             stage.addActor(btn);
         }*/
+        this.stage.addActor(this.cancelSpellBtn);
+
         Gdx.input.setInputProcessor(multiplexer);
     }
 
@@ -168,11 +197,16 @@ public class SpellCastingScreen implements Screen {
 
             if(spellDrawing.Compare(spellFire))
             { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
-            if(spellDrawing.Compare(spellWater))
+            else if(spellDrawing.Compare(spellWater))
             { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
-            if(spellDrawing.Compare(spellWind))
+            else if(spellDrawing.Compare(spellWind))
             { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
+            else game.setScreen(new GameScreen(game, stage, playerInput));
 
+            if(playerInput.playerInk.currentInk>0)
+                playerInput.playerInk.currentInk-=1;
+            else
+                playerInput.playerHealth.currentHealth-=1;
             spellDrawing.clearEdges();
             //ui.activateUIScreen(ui.getSpellAiming());
         }
@@ -233,15 +267,13 @@ public class SpellCastingScreen implements Screen {
 
     @Override
     public void hide() {
-        for(TextButton btn : buttons){
-            btn.remove();
-        }
+        this.cancelSpellBtn.remove();
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void dispose() {
-
+        cancelTexture.dispose();
     }
 
 
@@ -267,5 +299,29 @@ public class SpellCastingScreen implements Screen {
         }
 
         return closest;
+    }
+
+    public ImageButton createCancelSpellBtn(){
+        cancelTexture = ResourceManager.uiCancelButton();
+        Skin castBtnSkin = new Skin();
+        castBtnSkin.add("up", cancelTexture);
+        castBtnSkin.add("down", cancelTexture);
+        castBtnSkin.add("over", cancelTexture);
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = castBtnSkin.getDrawable("up");
+        buttonStyle.down = castBtnSkin.getDrawable("down");
+        buttonStyle.over = castBtnSkin.getDrawable("over");
+        cancelSpellBtn = new ImageButton(buttonStyle);
+        cancelSpellBtn.setSize(cancelSpellBtn.getWidth()*scale, cancelSpellBtn.getHeight()*scale);
+        cancelSpellBtn.setPosition(stage.getViewport().getCamera().viewportWidth - (45*scale + cancelSpellBtn.getWidth()),
+                stage.getViewport().getCamera().viewportHeight - (45*scale + cancelSpellBtn.getHeight()));
+        cancelSpellBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new GameScreen(game, stage, playerInput));
+            }
+        });
+
+        return cancelSpellBtn;
     }
 }

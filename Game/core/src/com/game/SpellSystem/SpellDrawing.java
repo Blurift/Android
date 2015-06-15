@@ -18,11 +18,11 @@ public class SpellDrawing {
 
         public boolean compare(Edge other)
         {
-            return other.p1 == p1 && other.p2 == p2;
+            return (other.p1 == p1 && other.p2 == p2) || (other.p1 == p2 && other.p2 == p1);
         }
     }
 
-    private List<Edge> edges;
+    private LinkedList<Edge> edges;
 
     public SpellDrawing() {
         edges = new LinkedList<Edge>();
@@ -48,9 +48,21 @@ public class SpellDrawing {
         if(other.edges.size() != edges.size())
             return false;
 
-        for (int i = 0; i < edges.size(); i++)
+        LinkedList<Edge> edgesLeft = (LinkedList<Edge>)edges.clone();
+
+        for (int i = 0; i < other.edges.size(); i++)
         {
-            if(!edges.get(i).compare(other.edges.get(i)))
+            boolean foundEdge = false;
+            for (int j = 0; j < edgesLeft.size(); j++)
+            {
+                if(other.edges.get(i).compare(edgesLeft.get(j)))
+                {
+                    edgesLeft.remove(j);
+                    foundEdge = true;
+                    break;
+                }
+            }
+            if (!foundEdge)
                 return false;
         }
         return true;
