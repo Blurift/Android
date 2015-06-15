@@ -6,10 +6,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -45,6 +47,13 @@ public class SpellCastingScreen implements Screen {
     private SpellDrawing spellFire;
     private SpellDrawing spellWater;
     private SpellDrawing spellWind;
+
+    private Texture castTexture;
+    private float minButtonHeight;
+    private float maxButtonHeight;
+    private ImageButton castSpellBtn;
+    private Image castSpellBtnShadow;
+    private Texture castSpellBtnShadowTexture;
 
     Vector2[] points;
 
@@ -187,7 +196,10 @@ public class SpellCastingScreen implements Screen {
         for(TextButton btn : buttons){
             stage.addActor(btn);
         }*/
+
+        playerInput.gameSpeed = 0.1f;
         this.stage.addActor(this.cancelSpellBtn);
+        this.stage.addActor(this.castSpellBtn);
 
         Gdx.input.setInputProcessor(multiplexer);
     }
@@ -196,7 +208,7 @@ public class SpellCastingScreen implements Screen {
         if(spellDrawing.getEdges().size() == 3){
 
             if(spellDrawing.Compare(spellFire))
-            { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
+            { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.GRAVITY_SHIFT)); }
             else if(spellDrawing.Compare(spellWater))
             { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
             else if(spellDrawing.Compare(spellWind))
@@ -268,12 +280,16 @@ public class SpellCastingScreen implements Screen {
     @Override
     public void hide() {
         this.cancelSpellBtn.remove();
+        this.castSpellBtn.remove();
+        playerInput.gameSpeed = 1f;
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void dispose() {
         cancelTexture.dispose();
+        castSpellBtnShadowTexture.dispose();
+        castTexture.dispose();
     }
 
 
@@ -323,5 +339,36 @@ public class SpellCastingScreen implements Screen {
         });
 
         return cancelSpellBtn;
+    }
+
+    public ImageButton createCastSpellBtn(){
+        castTexture = ResourceManager.uiCastSpellBtn();
+        Skin castBtnSkin = new Skin();
+        castBtnSkin.add("up", castTexture);
+        castBtnSkin.add("down", castTexture);
+        castBtnSkin.add("over", castTexture);
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = castBtnSkin.getDrawable("up");
+        buttonStyle.down = castBtnSkin.getDrawable("down");
+        buttonStyle.over = castBtnSkin.getDrawable("over");
+        castSpellBtn = new ImageButton(buttonStyle);
+        castSpellBtn.setSize(castSpellBtn.getWidth()*scale, castSpellBtn.getHeight()*scale);
+        castSpellBtn.setPosition(stage.getViewport().getCamera().viewportWidth - (45*scale + castSpellBtn.getWidth()), 40*scale);
+        castSpellBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new SpellCastingScreen(game, stage, playerInput));
+            }
+        });
+
+        castSpellBtnShadowTexture = ResourceManager.uiCastSpellShadow();
+        castSpellBtnShadow = new Image(new TextureRegion(castSpellBtnShadowTexture));
+        castSpellBtnShadow.setSize(castSpellBtnShadow.getWidth()*scale, castSpellBtnShadow.getHeight()*scale);
+        castSpellBtnShadow.setPosition(stage.getViewport().getCamera().viewportWidth-(45*scale+castSpellBtn.getWidth()), 40*scale);
+        //For animating Cast Spell button...
+        minButtonHeight = castSpellBtn.getY();
+        maxButtonHeight = castSpellBtn.getY()+10*scale;
+
+        return castSpellBtn;
     }
 }
