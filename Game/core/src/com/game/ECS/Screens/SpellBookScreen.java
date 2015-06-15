@@ -34,6 +34,8 @@ public class SpellBookScreen implements Screen {
 
         //Scale of UI
         this.scale = ResolutionHandler.getScale();
+
+        this.cancelSpellBtn = createCancelSpellBtn();
     }
 
     @Override
@@ -64,12 +66,12 @@ public class SpellBookScreen implements Screen {
 
     @Override
     public void hide() {
-
+        cancelSpellBtn.remove();
     }
 
     @Override
     public void dispose() {
-
+        cancelTexture.dispose();
     }
 
     public ImageButton createCancelSpellBtn(){
@@ -89,7 +91,7 @@ public class SpellBookScreen implements Screen {
         cancelSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game, stage, playerInput));
+                game.setScreen(new SpellCastingScreen(game, stage, playerInput));
             }
         });
 
