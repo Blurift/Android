@@ -101,8 +101,5 @@ public class AISystem extends IteratingSystem{
                 vel.velocity = dir;
             }
         }
-        if(input.currentState == PlayerInputComponent.States.DEAD){
-            //engine.removeEntity(entity);
-        }
     }
 }
