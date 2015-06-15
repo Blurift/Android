@@ -19,6 +19,7 @@ import com.game.Main;
 import com.game.SpellSystem.SpellDrawing;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 
 /**
@@ -53,6 +54,7 @@ public class SpellCastingScreen implements Screen {
 
     int startPoint = -1;
     int endPoint = -1;
+    Vector2 currentPoint = null;
 
     public SpellCastingScreen(Main game, final Stage stage, PlayerInputComponent playerInput) {
         this.game = game;
@@ -101,29 +103,30 @@ public class SpellCastingScreen implements Screen {
         multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-                Vector2 clickCoordinates = new Vector2(screenX,screenY);
+                Vector2 clickCoordinates = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
 
                 startPoint = FindClosestPoint(clickCoordinates);
-
                 return true;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                Vector2 clickCoordinates = new Vector2(screenX,screenY);
+                endPoint = FindClosestPoint(currentPoint);
+
                 if(startPoint > -1 && endPoint > -1)
                     spellDrawing.addEdge(startPoint, endPoint);
 
                 startPoint = -1;
                 endPoint = -1;
+                currentPoint = null;
 
                 spellCheck();
                 return true;
             }
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                Vector2 clickCoordinates = new Vector2(screenX,screenY);
-                endPoint = FindClosestPoint(clickCoordinates);
+                currentPoint = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
+                //endPoint = FindClosestPoint(clickCoordinates);
                 return true;
             }
         });
@@ -164,11 +167,11 @@ public class SpellCastingScreen implements Screen {
         if(spellDrawing.getEdges().size() == 3){
 
             if(spellDrawing.Compare(spellFire))
-            {}
+            { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
             if(spellDrawing.Compare(spellWater))
-            {}
+            { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
             if(spellDrawing.Compare(spellWind))
-            {}
+            { game.setScreen(new SpellAimingScreen(game, stage, playerInput, SpellComponent.Spell.FROST)); }
 
             spellDrawing.clearEdges();
             //ui.activateUIScreen(ui.getSpellAiming());
@@ -199,15 +202,15 @@ public class SpellCastingScreen implements Screen {
         shapeRenderer.circle(points[6].x,points[6].y, buffer* 0.2f);
         shapeRenderer.circle(points[7].x,points[7].y, buffer* 0.2f);
         shapeRenderer.circle(points[8].x,points[8].y, buffer* 0.2f);
-        shapeRenderer.end();
+        //shapeRenderer.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        //shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(new Color(255, 255, 255, 1));
         for (SpellDrawing.Edge edge : spellDrawing.getEdges()) {
             shapeRenderer.rectLine(points[edge.p1], points[edge.p2], LINE_SIZE);
         }
-        if (startPoint >-1 && endPoint > -1) {
-            shapeRenderer.rectLine(points[startPoint], points[endPoint], LINE_SIZE);
+        if (startPoint >-1 && currentPoint != null) {
+            shapeRenderer.rectLine(points[startPoint], currentPoint, LINE_SIZE);
         }
         shapeRenderer.end();
 
@@ -255,9 +258,11 @@ public class SpellCastingScreen implements Screen {
 
         for(int i = 0; i < 9; i++)
         {
-            if(Vector2.dst(p.x,p.y,points[i].x,points[i].y) < distance)
+            float d = Vector2.dst(p.x,p.y,points[i].x,points[i].y);
+            if(d < distance)
             {
                 closest = i;
+                distance = d;
             }
         }
 
