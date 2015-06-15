@@ -357,7 +357,7 @@ public class SpellCastingScreen implements Screen {
         castSpellBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SpellCastingScreen(game, stage, playerInput));
+                game.setScreen(new SpellBookScreen(game, stage, playerInput));
             }
         });
 
