@@ -29,7 +29,7 @@ public class FacingSystem extends IteratingSystem{
         }else if(facing.dir.y <= 0.60f && facing.dir.y> -0.60f && facing.dir.x < 0){
             facing.facing = FacingComponent.Facing.LEFT;
         }else if(facing.dir.x <= 0.80f && facing.dir.x > -0.80f && facing.dir.y > 0){
-            facing.facing = FacingComponent.Facing.UP;;
+            facing.facing = FacingComponent.Facing.UP;
         }else if(facing.dir.x <= 0.80f && facing.dir.x > -0.80f && facing.dir.y < 0){
             facing.facing = FacingComponent.Facing.DOWN;
         }

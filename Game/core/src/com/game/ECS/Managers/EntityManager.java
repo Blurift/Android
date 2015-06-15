@@ -144,7 +144,7 @@ public class EntityManager {
         //Listeners
         //Projectile
         Family family = Family.all(BodyComponent.class).get();
-        engine.addEntityListener(family, new BodyListener());
+        engine.addEntityListener(family, new MyEntityListener());
     }
 
     public void update(){
@@ -208,7 +208,7 @@ public class EntityManager {
      * Entity listeners
      */
 
-    private class BodyListener implements EntityListener {
+    private class MyEntityListener implements EntityListener {
 
         @Override
         public void entityAdded(Entity entity) {
