@@ -21,7 +21,10 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 13/06/2015.
+ * Created by Keirron on 13/06/2015.
+ *
+ * Shows when the player has ran out of lives.
+ *
  */
 public class GameOverScreen implements Screen {
 
@@ -72,6 +75,14 @@ public class GameOverScreen implements Screen {
         stage.addActor(newGameBtn);
         stage.addActor(highscoresGameBtn);
         stage.addActor(exitGameBtn);
+        if (game.currentMusic != ResourceManager.gameOverMusic()) {
+            if (game.currentMusic != null)
+                game.currentMusic.stop();
+            game.currentMusic = ResourceManager.gameOverMusic();
+            game.currentMusic.play();
+            game.currentMusic.setLooping(true);
+            game.currentMusic.setVolume(0.5f);
+        }
     }
 
 
@@ -179,6 +190,7 @@ public class GameOverScreen implements Screen {
         exitGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 Gdx.app.exit();
             }
         });
@@ -205,6 +217,7 @@ public class GameOverScreen implements Screen {
         highscoresGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 game.setScreen(new HighscoreScreen(game, stage, playerInput));
             }
         });
@@ -229,6 +242,7 @@ public class GameOverScreen implements Screen {
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 game.getEngine().addSystem(new AIDirectorSystem(
                         game.getEntityManager().getMapManager(),
                         game.getEntityManager().getWorldManager()));

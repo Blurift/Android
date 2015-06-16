@@ -6,14 +6,15 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.game.ECS.Components.AIComponent;
 import com.game.ECS.Components.AnimationSetComponent;
 import com.game.ECS.Components.BodyComponent;
-import com.game.ECS.Components.CamBoomComponent;
 import com.game.ECS.Components.CameraComponent;
 import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.DepthComponent;
@@ -23,7 +24,7 @@ import com.game.ECS.Components.InkComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
-import com.game.ECS.Components.ProjectileComponent;
+import com.game.ECS.Components.SoundSetComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Components.StateComponent;
@@ -46,7 +47,6 @@ import com.game.ECS.Systems.FacingSystem;
 import com.game.ECS.Systems.PlayerInputSystem;
 import com.game.ECS.Systems.RenderSystem;
 import com.game.ECS.Systems.SpawnSystem;
-import com.game.ECS.Tools.Time;
 
 import java.util.Random;
 
@@ -185,6 +185,20 @@ public class EntityManager {
         InkComponent ink = new InkComponent(10);
         inputComponent.playerHealth = health;
         inputComponent.playerInk = ink;
+
+        SoundSetComponent sounds = new SoundSetComponent();
+        sounds.damageTaken = new Array<Sound>();
+        sounds.damageTaken.add(ResourceManager.soundDruidDmg1());
+        sounds.damageTaken.add(ResourceManager.soundDruidDmg2());
+        sounds.damageTaken.add(ResourceManager.soundDruidDmg3());
+        sounds.damageTaken.add(ResourceManager.soundDruidDmg4());
+
+        sounds.step = ResourceManager.soundDruidWalk();
+
+        sounds.death = new Array<Sound>();
+        sounds.death.add(ResourceManager.soundDruidDeath1());
+        sounds.death.add(ResourceManager.soundDruidDeath2());
+
         entity.add(new VelocityComponent(0, 0))
                 .add(bodyComponent)
                 .add(new PlayerComponent(0))
@@ -197,7 +211,8 @@ public class EntityManager {
                 .add(inputComponent)
                 .add(health)
                 .add(ink)
-                .add(camBoom.getComponent(CameraComponent.class));
+                .add(camBoom.getComponent(CameraComponent.class))
+                .add(sounds);
         camBoom.remove(CameraComponent.class);
         engine.addEntity(entity);
         return entity;
@@ -258,7 +273,7 @@ public class EntityManager {
                 }
 
                 //Spawn Ink
-                if(num >= 0.16 && num <= 0.30){
+                if(num >= 0.16 && num <= 0.45){
                     engine.addEntity(ItemPrefabs.createInkwell(worldManager,
                             new Vector2(pos.x, pos.y)));
                 }

@@ -23,7 +23,7 @@ import java.util.LinkedList;
 
 
 /**
- * Created by Sean on 13/05/2015.
+ * Created by Keirron on 13/05/2015.
  *
  * Screen for aiming accelerometer spells
  *
@@ -65,8 +65,17 @@ public class AccelerometerScreen implements Screen {
         }
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
+    float vibrateTimer = 0.2f;
+    float currentTime = vibrateTimer;
     @Override
     public void render(float delta) {
+        //Vibrate phone
+        if(currentTime<0) {
+            Gdx.input.vibrate(40);
+            currentTime = vibrateTimer;
+        }else{
+            currentTime-=delta;
+        }
         currentDuration -= delta;
         if(currentDuration <= 0) {
             game.setScreen(new GameScreen(game, stage, playerInput));
@@ -142,10 +151,10 @@ public class AccelerometerScreen implements Screen {
         textStyle = new Label.LabelStyle();
         textStyle.font = font;
 
-        text = new Label("Move phone around...",textStyle);
+        text = new Label("Move device around...",textStyle);
         text.setAlignment(Align.center);
         text.setFontScale(4f*scale,4f*scale);
-        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.5f,
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.4f,
                 stage.getViewport().getCamera().viewportHeight * 0.66f);
         return text;
     }

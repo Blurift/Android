@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.FacingComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SoundSetComponent;
 import com.game.ECS.Components.StateComponent;
 import com.game.ECS.Components.VelocityComponent;
 import com.game.ECS.Storage.GameVars;
@@ -52,20 +53,30 @@ public class CharacterMovementSystem extends IteratingSystem {
         super.update(deltaTime);
         world.step(1f/60f, 6, 2);
     }
-
     public void processEntity(Entity entity, float deltaTime) {
         BodyComponent body = bm.get(entity);
         Vector2 vel = vm.get(entity).velocity;
         StateComponent state = sm.get(entity);
         //Change state
-        state.state = StateComponent.State.WALK;
+        SoundSetComponent sounds = entity.getComponent(SoundSetComponent.class);
 
 
         Vector2 currentVelocity = body.body.getLinearVelocity();
+
         if(vel.x == 0 && vel.y == 0){
+            if(sounds != null && sounds.step != null)
+                sounds.step.stop();
             state.state = StateComponent.State.STILL;
-        }else if(vel.x == 0 && vel.y == 0){
-            state.state = StateComponent.State.STILL;
+        }else{
+            if(state.state != StateComponent.State.WALK) {
+                if(sounds != null){
+                    if(sounds.step != null){
+                        sounds.step.loop();
+                        sounds.step.play();
+                    }
+                }
+                state.state = StateComponent.State.WALK;
+            }
         }
         float desiredXVel = 0;
         float desiredYVel = 0;

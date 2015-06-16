@@ -19,7 +19,7 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 13/06/2015.
+ * Created by Keirron on 13/06/2015.
  */
 public class HighscoreScreen implements Screen {
 
@@ -125,6 +125,7 @@ public class HighscoreScreen implements Screen {
         exitGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 game.setScreen(new MainMenuScreen(game, stage, playerInput));
             }
         });

@@ -14,7 +14,7 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 6/05/2015.
+ * Created by Keirron on 6/05/2015.
  */
 public class LoadingScreen implements Screen {
 

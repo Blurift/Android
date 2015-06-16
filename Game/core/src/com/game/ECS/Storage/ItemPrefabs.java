@@ -11,6 +11,7 @@ import com.game.ECS.Components.FacingComponent;
 import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SoundEffectComponent;
 import com.game.ECS.Components.SpriteAnimatingComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Components.StateComponent;
@@ -48,6 +49,7 @@ public class ItemPrefabs {
                     .add(new DepthComponent(-0.5f))
                     .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Health, 3))
                     .add(new SpriteAnimatingComponent(Assets.healthPotAnim()))
+                    .add(new SoundEffectComponent(ResourceManager.soundPickUp()))
                     .add(position);
 
             return item;
@@ -76,6 +78,7 @@ public class ItemPrefabs {
                 .add(new DepthComponent(-0.50f))
                 .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Ink, 10))
                 .add(new SpriteAnimatingComponent(Assets.inkPotAnim()))
+                .add(new SoundEffectComponent(ResourceManager.soundPickUp()))
                 .add(position);
 
         return item;
@@ -105,6 +108,7 @@ public class ItemPrefabs {
                 .add(new ConsumableComponent(ConsumableComponent.ConsumeType.Life, 1))
                 .add(new SpriteAnimatingComponent(Assets.lifePotAnim()))
                 .add(position)
+                .add(new SoundEffectComponent(ResourceManager.soundPickUp()))
                 .add(new ParticleEffectComponent(Particles.lifePotion()));
 
 

@@ -26,7 +26,7 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 26/04/2015.
+ * Created by Keirron on 26/04/2015.
  *
  * Screen containing the HUD for the game.
  *
@@ -91,6 +91,14 @@ public class GameScreen implements Screen {
         stage.addActor(livesIntLabel);
         this.playerInput.currentState = PlayerInputComponent.States.FREE;
         this.playerInput.gameSpeed = 1;
+        if (game.currentMusic != ResourceManager.gameMusic()){
+            if (game.currentMusic != null)
+                    game.currentMusic.stop();
+            game.currentMusic = ResourceManager.gameMusic();
+            game.currentMusic.play();
+            game.currentMusic.setLooping(true);
+            game.currentMusic.setVolume(0.5f);
+        }
     }
 
     //For the animation of the cast spell button
@@ -269,11 +277,9 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 //Todo remove this when SpellPreparing screen is implemented
-                if(playerInput.playerInk.currentInk > 0) {
-                    playerInput.playerInk.currentInk--;
-                    game.setScreen(new SpellCastingScreen(game, stage, playerInput));
-                }else if(playerInput.playerHealth.currentHealth > 1){
-                    playerInput.playerHealth.currentHealth--;
+                if(playerInput.playerHealth.currentHealth >= 4 ||
+                        playerInput.playerInk.currentInk > 0){
+                    Gdx.input.vibrate(75);
                     game.setScreen(new SpellCastingScreen(game, stage, playerInput));
                 }
 

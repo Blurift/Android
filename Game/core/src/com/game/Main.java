@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,6 +27,8 @@ public class Main extends Game {
     private Engine engine;
     private SpriteBatch sb;
     private PlayerInputComponent inputComponent;
+
+    public Music currentMusic;
 
     @Override
     public void create() {

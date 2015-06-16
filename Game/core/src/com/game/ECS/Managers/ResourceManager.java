@@ -2,8 +2,10 @@ package com.game.ECS.Managers;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
 /**
@@ -27,6 +29,30 @@ public class ResourceManager {
         manager.load("UI/NewGame.png", Texture.class);
         manager.load("UI/Exit.png", Texture.class);
         manager.load("UI/Highscores.png", Texture.class);
+
+        //Music
+        manager.load("Music/MenuMusic.mp3", Music.class);
+        manager.load("Music/GameMusic.ogg", Music.class);
+        manager.load("Music/GameOverMusic.ogg", Music.class);
+
+        //Sound effects
+        manager.load("soundeffects/druid/Damage1.wav", Sound.class);
+        manager.load("soundeffects/druid/Damage2.wav", Sound.class);
+        manager.load("soundeffects/druid/Damage3.wav", Sound.class);
+        manager.load("soundeffects/druid/Damage4.wav", Sound.class);
+        manager.load("soundeffects/druid/Death1.wav", Sound.class);
+        manager.load("soundeffects/druid/Death2.wav", Sound.class);
+        manager.load("soundeffects/druid/Walk.wav", Sound.class);
+
+        manager.load("soundeffects/wolf/Damage1.wav", Sound.class);
+        manager.load("soundeffects/wolf/Death1.wav", Sound.class);
+        manager.load("soundeffects/wolf/Death2.wav", Sound.class);
+        manager.load("soundeffects/wolf/Death3.wav", Sound.class);
+        manager.load("soundeffects/wolf/Lunge1.wav", Sound.class);
+        manager.load("soundeffects/wolf/Lunge2.wav", Sound.class);
+        manager.load("soundeffects/wolf/Lunge3.wav", Sound.class);
+
+        manager.load("soundeffects/PickUp.wav", Sound.class);
 
         //UI
         manager.load("UI/castButton.png", Texture.class);
@@ -151,6 +177,70 @@ public class ResourceManager {
 
     public static Texture sheetLifePot(){
         return manager.get("consumable/LifePotion.png", Texture.class);
+    }
+
+    //Music
+
+    public static Music menuMusic(){
+        return manager.get("Music/MenuMusic.mp3", Music.class);
+    }
+    public static Music gameOverMusic(){
+        return manager.get("Music/GameOverMusic.ogg", Music.class);
+    }
+    public static Music gameMusic(){
+        return manager.get("Music/GameMusic.ogg", Music.class);
+    }
+
+    //Sound effects
+    public static Sound soundDruidDmg1(){
+        return manager.get("soundeffects/druid/Damage1.wav", Sound.class);
+    }
+    public static Sound soundDruidDmg2(){
+        return manager.get("soundeffects/druid/Damage2.wav", Sound.class);
+    }
+    public static Sound soundDruidDmg3(){
+        return manager.get("soundeffects/druid/Damage3.wav", Sound.class);
+    }
+    public static Sound soundDruidDmg4(){
+        return manager.get("soundeffects/druid/Damage4.wav", Sound.class);
+    }
+
+    public static Sound soundDruidWalk(){
+        return manager.get("soundeffects/druid/Walk.wav", Sound.class);
+    }
+
+    public static Sound soundDruidDeath1(){
+        return manager.get("soundeffects/druid/Death1.wav", Sound.class);
+    }
+    public static Sound soundDruidDeath2(){
+        return manager.get("soundeffects/druid/Death2.wav", Sound.class);
+    }
+
+    public static Sound soundWolfDmg1(){
+        return manager.get("soundeffects/wolf/Damage1.wav", Sound.class);
+    }
+    public static Sound soundWolfLunge1(){
+        return manager.get("soundeffects/wolf/Lunge1.wav", Sound.class);
+    }
+    public static Sound soundWolfLunge2(){
+        return manager.get("soundeffects/wolf/Lunge2.wav", Sound.class);
+    }
+    public static Sound soundWolfLunge3(){
+        return manager.get("soundeffects/wolf/Lunge3.wav", Sound.class);
+    }
+
+    public static Sound soundWolfDeath1(){
+        return manager.get("soundeffects/wolf/Death1.wav", Sound.class);
+    }
+    public static Sound soundWolfDeath2(){
+        return manager.get("soundeffects/wolf/Death2.wav", Sound.class);
+    }
+    public static Sound soundWolfDeath3(){
+        return manager.get("soundeffects/wolf/Death3.wav", Sound.class);
+    }
+
+    public static Sound soundPickUp(){
+        return manager.get("soundeffects/PickUp.wav", Sound.class);
     }
 
     public static Texture blank(){

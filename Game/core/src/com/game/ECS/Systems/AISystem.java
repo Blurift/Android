@@ -6,15 +6,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.game.ECS.Components.AIComponent;
-import com.game.ECS.Components.BodyComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
-import com.game.ECS.Components.SpawningComponent;
+import com.game.ECS.Components.SoundSetComponent;
 import com.game.ECS.Components.VelocityComponent;
+
+import java.util.Random;
 
 /**
  * Created by Sean on 3/05/2015.
@@ -42,7 +42,7 @@ public class AISystem extends IteratingSystem{
         pm = ComponentMapper.getFor(PositionComponent.class);
         aim = ComponentMapper.getFor(AIComponent.class);
     }
-
+    Random rdmSound = new Random();
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         //Todo Players should probably be found a different way
@@ -76,7 +76,19 @@ public class AISystem extends IteratingSystem{
                 }
 
             }else if(Math.abs(dis.x) < r && Math.abs(dis.y) < r){
-                ai.state = AIComponent.AIState.ATTACKING;
+                if(ai.state != AIComponent.AIState.ATTACKING) {
+                    SoundSetComponent sounds = entity.getComponent(SoundSetComponent.class);
+                    if(sounds != null){
+                        if(sounds.lunge != null){
+                            if(sounds.currentSound != null)
+                                sounds.currentSound.stop();
+                            sounds.currentSound = sounds.lunge.get(rdmSound.nextInt(sounds.lunge.size));
+                            sounds.currentSound.play(0.5f);
+
+                        }
+                    }
+                    ai.state = AIComponent.AIState.ATTACKING;
+                }
             }else{
                 ai.state = AIComponent.AIState.FOLLOWING;
             }

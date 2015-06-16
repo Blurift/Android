@@ -14,6 +14,7 @@ import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SoundEffectComponent;
 import com.game.ECS.Storage.B2DVars;
 import com.game.ECS.Storage.Particles;
 
@@ -94,12 +95,18 @@ public class MyContactListener implements ContactListener {
             Entity player = (Entity) fb.getUserData();
             player.add(consumable.getComponent(ConsumableComponent.class));
             consumable.remove(ConsumableComponent.class);
+            SoundEffectComponent sound = consumable.getComponent(SoundEffectComponent.class);
+            if(sound != null && sound.sound != null)
+                sound.sound.play(0.3f);
             engine.removeEntity(consumable);
         }if(fb.getFilterData().categoryBits == B2DVars.BIT_CONSUMABLE) {
             Entity consumable = (Entity) fb.getUserData();
             Entity player = (Entity) fa.getUserData();
             player.add(consumable.getComponent(ConsumableComponent.class));
             consumable.remove(ConsumableComponent.class);
+            SoundEffectComponent sound = consumable.getComponent(SoundEffectComponent.class);
+            if(sound != null && sound.sound != null)
+                sound.sound.play(0.3f);
             engine.removeEntity(consumable);
         }
 

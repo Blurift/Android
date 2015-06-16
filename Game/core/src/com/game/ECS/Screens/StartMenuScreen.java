@@ -14,7 +14,10 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 13/06/2015.
+ * Created by Keirron on 13/06/2015.
+ *
+ * Shown when the game first starts up.
+ *
  */
 public class StartMenuScreen implements Screen {
 
@@ -52,6 +55,15 @@ public class StartMenuScreen implements Screen {
         stage.addActor(gameLogo);
         stage.addActor(tapToStart);
         Gdx.input.setInputProcessor(multiplexer);
+        if (game.currentMusic != ResourceManager.menuMusic()) {
+            if (game.currentMusic != null)
+                game.currentMusic.stop();
+            game.currentMusic = ResourceManager.menuMusic();
+            game.currentMusic.play();
+            game.currentMusic.setLooping(true);
+            game.currentMusic.setVolume(0.5f);
+        }
+
     }
 
 
@@ -129,6 +141,7 @@ public class StartMenuScreen implements Screen {
         return new InputAdapter() {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                Gdx.input.vibrate(75);
                 game.setScreen(new MainMenuScreen(game, stage, playerInput));
                 return true;
             }

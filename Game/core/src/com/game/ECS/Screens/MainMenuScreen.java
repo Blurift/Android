@@ -15,9 +15,10 @@ import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Systems.AIDirectorSystem;
 import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
+import com.badlogic.gdx.audio.Music;
 
 /**
- * Created by Sean on 13/06/2015.
+ * Created by Keirron on 13/06/2015.
  */
 public class MainMenuScreen implements Screen {
 
@@ -31,6 +32,8 @@ public class MainMenuScreen implements Screen {
     private ImageButton newGameBtn;
     private ImageButton exitGameBtn;
     private ImageButton highscoresGameBtn;
+
+
 
     public MainMenuScreen(Main game, Stage stage, PlayerInputComponent playerInput){
         this.game = game;
@@ -113,6 +116,7 @@ public class MainMenuScreen implements Screen {
         exitGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 Gdx.app.exit();
             }
         });
@@ -136,6 +140,7 @@ public class MainMenuScreen implements Screen {
         highscoresGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
                 game.setScreen(new HighscoreScreen(game, stage, playerInput));
             }
         });
@@ -162,6 +167,8 @@ public class MainMenuScreen implements Screen {
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.vibrate(75);
+                //Stop music
                 game.getEngine().addSystem(new AIDirectorSystem(
                         game.getEntityManager().getMapManager(),
                         game.getEntityManager().getWorldManager()));

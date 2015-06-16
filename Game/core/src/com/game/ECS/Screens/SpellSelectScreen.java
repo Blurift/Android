@@ -18,7 +18,10 @@ import java.util.LinkedList;
 
 
 /**
- * Created by Sean on 13/05/2015.
+ * Created by Keirron on 13/05/2015.
+ *
+ * Used for debugging spells. Lists spells to cast.
+ *
  */
 public class SpellSelectScreen implements Screen {
 

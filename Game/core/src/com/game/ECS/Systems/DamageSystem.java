@@ -12,8 +12,11 @@ import com.game.ECS.Components.HealthComponent;
 import com.game.ECS.Components.PlayerComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.SoundSetComponent;
 import com.game.ECS.Components.SpawningComponent;
 import com.game.ECS.Components.SpriteComponent;
+
+import java.util.Random;
 
 /**
  * Created by Sean on 1/05/2015.
@@ -50,6 +53,7 @@ public class DamageSystem extends IteratingSystem{
         hm = ComponentMapper.getFor(HealthComponent.class);
     }
 
+    Random rdmSound = new Random();
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
@@ -69,6 +73,16 @@ public class DamageSystem extends IteratingSystem{
                 entity.remove(DamageComponent.class);
                 sc.sprite.setColor(Color.WHITE);
                 //Todo for killing things
+                SoundSetComponent sounds = entity.getComponent(SoundSetComponent.class);
+                if(sounds != null){
+                    if(sounds.death != null){
+                        if(sounds.currentSound != null)
+                            sounds.currentSound.stop();
+                        sounds.currentSound = sounds.death.get(rdmSound.nextInt(sounds.death.size));
+                        sounds.currentSound.play(0.5f);
+
+                    }
+                }
                 if(entity.getComponent(PlayerComponent.class) != null){
                     entity.remove(PositionComponent.class);
                     entity.add(new SpawningComponent(3));
@@ -84,7 +98,18 @@ public class DamageSystem extends IteratingSystem{
                 }
                 return;
             }
+            if(dc.damage != 0 && entity.getComponent(PlayerComponent.class) != null){
+                SoundSetComponent sounds = entity.getComponent(SoundSetComponent.class);
+                if(sounds != null){
+                    if(sounds.damageTaken != null){
+                        if(sounds.currentSound != null)
+                            sounds.currentSound.stop();
+                        sounds.currentSound = sounds.damageTaken.get(rdmSound.nextInt(sounds.damageTaken.size));
+                        sounds.currentSound.play(0.5f);
 
+                    }
+                }
+            }
             dc.damage = 0;
         }
 

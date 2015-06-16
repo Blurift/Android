@@ -6,11 +6,14 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.SpellComponent;
@@ -20,7 +23,10 @@ import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
 /**
- * Created by Sean on 28/04/2015.
+ * Created by Keirron on 28/04/2015.
+ *
+ * Used for aiming projectile spells.
+ *
  */
 public class SpellAimingScreen implements Screen {
 
@@ -34,6 +40,8 @@ public class SpellAimingScreen implements Screen {
 
     private ImageButton cancelSpellBtn;
     private Texture cancelTexture;
+
+    private Label adviceLbl;
 
     public SpellAimingScreen(Main game, Stage stage, PlayerInputComponent playerInput, SpellComponent.Spell spellType) {
         this.game = game;
@@ -51,6 +59,7 @@ public class SpellAimingScreen implements Screen {
         //Screen components
         this.cancelSpellBtn = createCancelSpellBtn();
 
+        this.adviceLbl = createAdviceLabel();
     }
 
     @Override
@@ -62,6 +71,7 @@ public class SpellAimingScreen implements Screen {
 
         this.playerInput.currentState = PlayerInputComponent.States.AIMING;
         this.playerInput.gameSpeed = 1;
+        stage.addActor(adviceLbl);
     }
 
     @Override
@@ -87,6 +97,7 @@ public class SpellAimingScreen implements Screen {
     @Override
     public void hide() {
         this.cancelSpellBtn.remove();
+        adviceLbl.remove();
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -126,7 +137,7 @@ public class SpellAimingScreen implements Screen {
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+                Gdx.input.vibrate(90);
                 playerInput.screenPos = null;
                 game.setScreen(new GameScreen(game, stage, playerInput));
                 playerInput.spellCast = spellType;
@@ -150,8 +161,25 @@ public class SpellAimingScreen implements Screen {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
                 playerInput.screenPos = new Vector2(screenX, screenY);
+                adviceLbl.remove();
                 return true;
             }
         };
+    }
+
+    private Label createAdviceLabel(){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("Touch and drag on screen to aim, release to fire...",textStyle);
+        text.setAlignment(Align.center);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setPosition(stage.getViewport().getCamera().viewportWidth * 0.35f,
+                stage.getViewport().getCamera().viewportHeight * 0.66f);
+        return text;
     }
 }
