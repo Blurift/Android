@@ -33,6 +33,8 @@ public class PlayerInputComponent extends Component {
     public int lives = 3;
     public SpellComponent.Spell spellCast; //if null no spell is being cast
     public Vector2 spellDir;
+    public int healthPots = 2;
+    public int inkPots = 3;
     public float[] highscores;
     //TODO rework spellcast
 }

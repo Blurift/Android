@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.game.ECS.Components.PlayerInputComponent;
@@ -134,37 +134,45 @@ public class SpellCastingScreen implements Screen {
         multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-                Vector2 clickCoordinates = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
+                setCurrentPoint(new Vector2(screenX,Gdx.graphics.getHeight()-screenY));
                 adviceLbl.remove();
                 spellListLbl.remove();
-                startPoint = FindClosestPoint(clickCoordinates);
+                startPoint = FindClosestPoint(currentPoint);
+
+
                 return true;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 endPoint = FindClosestPoint(currentPoint);
-
-                if(startPoint > -1 && endPoint > -1) {
-                    spellDrawing.addEdge(startPoint, endPoint);
-                    if(playerInput.playerInk.currentInk>0)
-                        playerInput.playerInk.currentInk-=1;
-                    else if(playerInput.playerHealth.currentHealth>1)
-                        playerInput.playerHealth.currentHealth-=1;
+                if(startPoint!=endPoint) {
+                    if (startPoint > -1 && endPoint > -1) {
+                        spellDrawing.addEdge(startPoint, endPoint);
+                        if (playerInput.playerInk.currentInk > 0)
+                            playerInput.playerInk.currentInk -= 1;
+                        else if (playerInput.playerHealth.currentHealth > 1)
+                            playerInput.playerHealth.currentHealth -= 1;
+                    }
+                    spellCheck();
                 }
-
                 startPoint = -1;
                 endPoint = -1;
                 currentPoint = null;
 
-                spellCheck();
+
                 return true;
             }
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                currentPoint = new Vector2(screenX,Gdx.graphics.getHeight()-screenY);
+                setCurrentPoint(new Vector2(screenX,Gdx.graphics.getHeight()-screenY));
 
+                //endPoint = FindClosestPoint(clickCoordinates);
+                return true;
+            }
 
+            private void setCurrentPoint(Vector2 point){
+                currentPoint = point;
                 if(currentPoint.x > maxX)
                     currentPoint.x = maxX;
                 if(currentPoint.x < minX)
@@ -173,9 +181,6 @@ public class SpellCastingScreen implements Screen {
                     currentPoint.y = maxY;
                 if(currentPoint.y < minY)
                     currentPoint.y = minY;
-
-                //endPoint = FindClosestPoint(clickCoordinates);
-                return true;
             }
         });
         //Scale some things
@@ -183,6 +188,15 @@ public class SpellCastingScreen implements Screen {
 
         this.spellListLbl = createSpellListLabel();
         this.adviceLbl = createAdviceLabel();
+
+        if (game.currentMusic != ResourceManager.CastSpellMusic()){
+            if (game.currentMusic != null)
+                game.currentMusic.stop();
+            game.currentMusic = ResourceManager.CastSpellMusic();
+            game.currentMusic.play();
+            game.currentMusic.setLooping(true);
+            game.currentMusic.setVolume(1f);
+        }
     }
 
     @Override
@@ -357,11 +371,12 @@ public class SpellCastingScreen implements Screen {
 
         for(int i = 0; i < 9; i++)
         {
-            float d = Vector2.dst(p.x,p.y,points[i].x,points[i].y);
-            if(d < distance)
-            {
-                closest = i;
-                distance = d;
+            if(p !=null) {
+                float d = Vector2.dst(p.x, p.y, points[i].x, points[i].y);
+                if (d < distance) {
+                    closest = i;
+                    distance = d;
+                }
             }
         }
 

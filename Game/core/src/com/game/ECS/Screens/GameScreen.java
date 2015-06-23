@@ -16,9 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.game.ECS.Components.ConsumableComponent;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Storage.Assets;
@@ -55,6 +56,11 @@ public class GameScreen implements Screen {
     private Label livesLabel;
     private Label livesIntLabel;
 
+    private Label healthPotionsLbl;
+    private Label inkPotionsLbl;
+    private ImageButton healthPotBtn;
+    private ImageButton inkPotBtn;
+
     private float barSize;
 
     public GameScreen(Main game, Stage stage, PlayerInputComponent playerInput){
@@ -72,9 +78,20 @@ public class GameScreen implements Screen {
         this.scoreFloatLabel = createScoreFloatLabel();
         this.livesLabel = createLivesLabel();
         this.livesIntLabel = createLivesIntLabel();
+        this.healthPotionsLbl = createPotQtyLbl(stage.getViewport().getScreenWidth() * 0.25f + 50*scale,
+                20*scale);
+        this.inkPotionsLbl = createPotQtyLbl(stage.getViewport().getScreenWidth() * 0.75f -75*scale + 50*scale,
+                20*scale);
+        this.healthPotBtn = healthBtn(stage.getViewport().getScreenWidth() * 0.25f,
+                20*scale, ConsumableComponent.ConsumeType.Health, ResourceManager.healthPot());
+        this.healthPotBtn.setSize(75*scale,75*scale);
+        this.inkPotBtn = inkBtn(stage.getViewport().getScreenWidth() * 0.75f - 75*scale,
+                20*scale, ConsumableComponent.ConsumeType.Ink, ResourceManager.inkPot());
+        this.inkPotBtn.setSize(75*scale,75*scale);
+        //this.inkPotionsLbl = createPotQtyLbl(1,1);
 
         //Scale some things
-        this.barSize = 300*scale;
+        this.barSize = 200*scale;
 
         //Set the input as this stage
         Gdx.input.setInputProcessor(stage);
@@ -89,6 +106,11 @@ public class GameScreen implements Screen {
         stage.addActor(scoreFloatLabel);
         stage.addActor(livesLabel);
         stage.addActor(livesIntLabel);
+        stage.addActor(healthPotBtn);
+        stage.addActor(inkPotBtn);
+        stage.addActor(healthPotionsLbl);
+        stage.addActor(inkPotionsLbl);
+
         this.playerInput.currentState = PlayerInputComponent.States.FREE;
         this.playerInput.gameSpeed = 1;
         if (game.currentMusic != ResourceManager.gameMusic()){
@@ -96,6 +118,7 @@ public class GameScreen implements Screen {
                     game.currentMusic.stop();
             game.currentMusic = ResourceManager.gameMusic();
             game.currentMusic.play();
+            game.currentMusic.setPosition(game.musicTime);
             game.currentMusic.setLooping(true);
             game.currentMusic.setVolume(0.5f);
         }
@@ -202,7 +225,20 @@ public class GameScreen implements Screen {
             //Border
         }
 
+        //Potion slots
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.rect(stage.getViewport().getScreenWidth() * 0.25f,
+                20*scale,
+                75*scale,
+                75*scale);
+        shapeRenderer.rect(stage.getViewport().getScreenWidth() * 0.75f,
+                20*scale,
+                -75*scale,
+                75*scale);
         shapeRenderer.end();
+
+        healthPotionsLbl.setText(""+playerInput.healthPots);
+        inkPotionsLbl.setText(""+playerInput.inkPots);
     }
 
     @Override
@@ -229,6 +265,10 @@ public class GameScreen implements Screen {
         scoreFloatLabel.remove();
         livesLabel.remove();
         livesIntLabel.remove();
+        healthPotionsLbl.remove();
+        inkPotionsLbl.remove();
+        healthPotBtn.remove();
+        inkPotBtn.remove();
         //No longer giving input
         playerInput.touchpadDir.x = 0;
         playerInput.touchpadDir.y = 0;
@@ -280,6 +320,7 @@ public class GameScreen implements Screen {
                 if(playerInput.playerHealth.currentHealth >= 4 ||
                         playerInput.playerInk.currentInk > 0){
                     Gdx.input.vibrate(75);
+                    game.musicTime = game.currentMusic.getPosition();
                     game.setScreen(new SpellCastingScreen(game, stage, playerInput));
                 }
 
@@ -297,6 +338,91 @@ public class GameScreen implements Screen {
         return castSpellBtn;
     }
 
+    //Show potions
+    private Label createPotQtyLbl(float x, float y){
+        Label text;
+        Label.LabelStyle textStyle;
+        BitmapFont font = new BitmapFont();
+
+        textStyle = new Label.LabelStyle();
+        textStyle.font = font;
+
+        text = new Label("3",textStyle);
+        text.setFontScale(2f*scale,2f*scale);
+        text.setAlignment(Align.left);
+        text.setPosition(x,y);
+        return text;
+    }
+
+    private ImageButton healthBtn(float x, float y, ConsumableComponent.ConsumeType type,
+                                   Texture texture){
+        Texture castTexture = texture;
+        Skin castBtnSkin = new Skin();
+        castBtnSkin.add("up", castTexture);
+        castBtnSkin.add("down", castTexture);
+        castBtnSkin.add("over", castTexture);
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = castBtnSkin.getDrawable("up");
+        buttonStyle.down = castBtnSkin.getDrawable("down");
+        buttonStyle.over = castBtnSkin.getDrawable("over");
+        ImageButton castSpellBtn = new ImageButton(buttonStyle);
+        castSpellBtn.setSize(castSpellBtn.getWidth()*scale, castSpellBtn.getHeight()*scale);
+        castSpellBtn.setPosition(x, y);
+        castSpellBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //Todo remove this when SpellPreparing screen is implemented
+                if(playerInput.healthPots > 0
+                        && playerInput.playerHealth.currentHealth !=
+                        playerInput.playerHealth.maxHealth){
+                    playerInput.playerHealth.currentHealth+=3;
+                    if(playerInput.playerHealth.currentHealth >
+                            playerInput.playerHealth.maxHealth)
+                        playerInput.playerHealth.currentHealth = playerInput.playerHealth.maxHealth;
+                    playerInput.healthPots--;
+                    ResourceManager.soundDrinkPotion().play();
+                }
+
+            }
+        });
+
+        return castSpellBtn;
+    }
+
+    private ImageButton inkBtn(float x, float y, ConsumableComponent.ConsumeType type,
+                                  Texture texture){
+        Texture castTexture = texture;
+        Skin castBtnSkin = new Skin();
+        castBtnSkin.add("up", castTexture);
+        castBtnSkin.add("down", castTexture);
+        castBtnSkin.add("over", castTexture);
+        ImageButton.ImageButtonStyle buttonStyle = new ImageButton.ImageButtonStyle();
+        buttonStyle.up = castBtnSkin.getDrawable("up");
+        buttonStyle.down = castBtnSkin.getDrawable("down");
+        buttonStyle.over = castBtnSkin.getDrawable("over");
+        ImageButton castSpellBtn = new ImageButton(buttonStyle);
+        castSpellBtn.setSize(castSpellBtn.getWidth()*scale, castSpellBtn.getHeight()*scale);
+        castSpellBtn.setPosition(x, y);
+        castSpellBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //Todo remove this when SpellPreparing screen is implemented
+                if(playerInput.inkPots > 0
+                        && playerInput.playerInk.currentInk !=
+                        playerInput.playerInk.maxInk){
+                    playerInput.playerInk.currentInk+=10;
+                    if(playerInput.playerInk.currentInk >
+                            playerInput.playerInk.maxInk)
+                        playerInput.playerInk.currentInk = playerInput.playerInk.maxInk;
+                    playerInput.inkPots--;
+                    ResourceManager.soundDrinkPotion().play();
+                }
+
+            }
+        });
+
+        return castSpellBtn;
+    }
 
     //Showing the label with text as the actual int lives
     private Label createLivesIntLabel(){

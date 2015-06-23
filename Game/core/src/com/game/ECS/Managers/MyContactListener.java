@@ -13,6 +13,7 @@ import com.game.ECS.Components.DamageComponent;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PlayerComponent;
+import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.PositionComponent;
 import com.game.ECS.Components.SoundEffectComponent;
 import com.game.ECS.Storage.B2DVars;
@@ -93,20 +94,40 @@ public class MyContactListener implements ContactListener {
         if(fa.getFilterData().categoryBits == B2DVars.BIT_CONSUMABLE) {
             Entity consumable = (Entity) fa.getUserData();
             Entity player = (Entity) fb.getUserData();
-            player.add(consumable.getComponent(ConsumableComponent.class));
-            consumable.remove(ConsumableComponent.class);
+            ConsumableComponent consumeComp = consumable.getComponent(ConsumableComponent.class);
+            //player.add(consumable.getComponent(ConsumableComponent.class));
+            //consumable.remove(ConsumableComponent.class);
             SoundEffectComponent sound = consumable.getComponent(SoundEffectComponent.class);
             if(sound != null && sound.sound != null)
                 sound.sound.play(0.3f);
+            PlayerInputComponent input = player.getComponent(PlayerInputComponent.class);
+            if(consumeComp != null) {
+                if (consumeComp.type == ConsumableComponent.ConsumeType.Health)
+                    input.healthPots++;
+                if (consumeComp.type == ConsumableComponent.ConsumeType.Ink)
+                    input.inkPots++;
+            }else{
+                player.add(consumable.getComponent(ConsumableComponent.class));
+            }
             engine.removeEntity(consumable);
         }if(fb.getFilterData().categoryBits == B2DVars.BIT_CONSUMABLE) {
             Entity consumable = (Entity) fb.getUserData();
             Entity player = (Entity) fa.getUserData();
-            player.add(consumable.getComponent(ConsumableComponent.class));
-            consumable.remove(ConsumableComponent.class);
+            ConsumableComponent consumeComp = consumable.getComponent(ConsumableComponent.class);
+            //player.add(consumable.getComponent(ConsumableComponent.class));
+            //consumable.remove(ConsumableComponent.class);
             SoundEffectComponent sound = consumable.getComponent(SoundEffectComponent.class);
             if(sound != null && sound.sound != null)
                 sound.sound.play(0.3f);
+            PlayerInputComponent input = player.getComponent(PlayerInputComponent.class);
+            if(consumeComp != null) {
+                if (consumeComp.type == ConsumableComponent.ConsumeType.Health)
+                    input.healthPots++;
+                if (consumeComp.type == ConsumableComponent.ConsumeType.Ink)
+                    input.inkPots++;
+            }else{
+                player.add(consumable.getComponent(ConsumableComponent.class));
+            }
             engine.removeEntity(consumable);
         }
 
