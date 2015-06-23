@@ -1,4 +1,4 @@
-package blurift.runecaster.android;
+package blurift.runecaster;
 
 import android.os.Bundle;
 
