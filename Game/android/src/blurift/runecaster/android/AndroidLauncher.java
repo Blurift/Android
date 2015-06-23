@@ -1,4 +1,4 @@
-package unisa.blogs001.android;
+package blurift.runecaster.android;
 
 import android.os.Bundle;
 
