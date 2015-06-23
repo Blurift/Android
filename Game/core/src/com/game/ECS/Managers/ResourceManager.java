@@ -34,6 +34,7 @@ public class ResourceManager {
         manager.load("Music/MenuMusic.mp3", Music.class);
         manager.load("Music/GameMusic.ogg", Music.class);
         manager.load("Music/GameOverMusic.ogg", Music.class);
+        manager.load("Music/SpellCastingMusic.mp3", Music.class);
 
         //Sound effects
         manager.load("soundeffects/druid/Damage1.wav", Sound.class);
@@ -53,6 +54,7 @@ public class ResourceManager {
         manager.load("soundeffects/wolf/Lunge3.wav", Sound.class);
 
         manager.load("soundeffects/PickUp.wav", Sound.class);
+        manager.load("soundeffects/DrinkPotion.wav", Sound.class);
 
         //UI
         manager.load("UI/castButton.png", Texture.class);
@@ -190,7 +192,9 @@ public class ResourceManager {
     public static Music gameMusic(){
         return manager.get("Music/GameMusic.ogg", Music.class);
     }
-
+    public static Music CastSpellMusic(){
+        return manager.get("Music/SpellCastingMusic.mp3", Music.class);
+    }
     //Sound effects
     public static Sound soundDruidDmg1(){
         return manager.get("soundeffects/druid/Damage1.wav", Sound.class);
@@ -241,6 +245,10 @@ public class ResourceManager {
 
     public static Sound soundPickUp(){
         return manager.get("soundeffects/PickUp.wav", Sound.class);
+    }
+
+    public static Sound soundDrinkPotion(){
+        return manager.get("soundeffects/DrinkPotion.wav", Sound.class);
     }
 
     public static Texture blank(){

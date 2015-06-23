@@ -12,10 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.game.ECS.Components.PlayerInputComponent;
 import com.game.ECS.Components.SpellComponent;
+import com.game.ECS.Managers.ResourceManager;
 import com.game.ECS.Tools.ResolutionHandler;
 import com.game.Main;
 
@@ -62,6 +63,16 @@ public class AccelerometerScreen implements Screen {
         public void show() {
             stage.addActor(moveLbl);
             playerInput.gameSpeed = 1;
+
+            if (game.currentMusic != ResourceManager.gameMusic()){
+                if (game.currentMusic != null)
+                    game.currentMusic.stop();
+                game.currentMusic = ResourceManager.gameMusic();
+                game.currentMusic.play();
+                game.currentMusic.setPosition(game.musicTime);
+                game.currentMusic.setLooping(true);
+                game.currentMusic.setVolume(0.5f);
+            }
         }
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();

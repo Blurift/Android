@@ -29,6 +29,7 @@ public class Main extends Game {
     private PlayerInputComponent inputComponent;
 
     public Music currentMusic;
+    public float musicTime = 0;
 
     @Override
     public void create() {
@@ -76,7 +77,7 @@ public class Main extends Game {
         stage.draw();
 
 
-        fps.log();
+        //fps.log();
 
 
     }
