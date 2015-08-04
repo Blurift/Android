@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.math.Matrix4;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.game.ECS.Components.DepthComponent;
 import com.game.ECS.Components.ParticleEffectComponent;
 import com.game.ECS.Components.PositionComponent;
+import com.game.ECS.Components.ShaderComponent;
 import com.game.ECS.Components.SpriteComponent;
 import com.game.ECS.Managers.MapManager;
 import com.game.ECS.Storage.GameVars;
@@ -119,6 +121,13 @@ public class RenderSystem extends SortedIteratingSystem {
                             effect.effect.free();
                         }
                     }
+
+                    ShaderComponent shaderComponent = entity.getComponent(ShaderComponent.class);
+
+                    if(shaderComponent != null){
+                        sb.setShader(shaderComponent.shaderProgram);
+                    }
+
                     //Draw sprite centred at position
                     if(sprite != null) {
                         sprite.sprite.setPosition(pos.x - sprite.sprite.getWidth() * 0.5f + sprite.offset.x,
@@ -126,6 +135,9 @@ public class RenderSystem extends SortedIteratingSystem {
                         sprite.sprite.draw(sb);
                     }
 
+                    if(shaderComponent != null){
+                        sb.setShader(SpriteBatch.createDefaultShader());
+                    }
 
                 }
                 sb.end();
